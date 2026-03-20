@@ -9,6 +9,8 @@ node_modules
 build
 dist
 out
+stitch
+Markdown
 **/node_modules
 **/.next
 **/build
@@ -17,3 +19,5 @@ out
 **/.superdesign
 **/skills-lock.json
 **/.agents
+**/stitch
+**/Markdown
