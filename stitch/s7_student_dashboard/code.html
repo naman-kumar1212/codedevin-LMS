@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Dashboard - Codedevin LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2463eb",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111621",
+            },
+            fontFamily: {
+              "display": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-size: 24px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen max-w-[1280px] mx-auto overflow-x-hidden bg-background-light dark:bg-background-dark">
+<!-- Sidebar -->
+<aside class="w-[240px] flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between py-6">
+<div class="flex flex-col gap-8">
+<!-- Logo -->
+<div class="px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">code</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-sm font-bold leading-none tracking-tight">Codedevin LMS</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">Student Portal</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="text-sm">My Courses</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="text-sm">Browse</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">video_chat</span>
+<span class="text-sm">Live Classes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">workspace_premium</span>
+<span class="text-sm">Certificates</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="text-sm">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<span class="text-sm">Help</span>
+</a>
+</nav>
+</div>
+<!-- Profile at Bottom -->
+<div class="px-3">
+<div class="flex items-center gap-3 px-3 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile photo of Priya smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHJbuKSL-HI2QzboD6B530F2W2G3OO5IxHkYyZIYGO-QDZxEjymCOJg4X8G_jR16N5SylkmZVvFwdNXyvP6sfLEWhSgga-faysRpTN4Zf1CHhftCGoZqQxOad5uWr5mBsPqmIdQo6xziGJVSQPTx1cxZx1CPaLAMZssfi4GI93oGDhyBlwEJI4XFP-rDkkh98fkbAC3nhfWipDUAnKlJCH5t5xce9mDCjL4DmZbybeVXCLHHabQK6UjG6AE8KoWh0xlMwmaLLSIpc"/>
+<div class="flex flex-col min-w-0">
+<p class="text-sm font-semibold truncate">Priya Sharma</p>
+<p class="text-xs text-slate-500 truncate">Premium Student</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<!-- Topbar -->
+<header class="h-16 flex items-center justify-between px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1">
+<h2 class="text-lg font-bold">Dashboard</h2>
+<div class="max-w-md w-full ml-8">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search courses, lessons, help..." type="text"/>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5 overflow-hidden">
+<img class="w-full h-full rounded-full object-cover" data-alt="Student avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOK_8P41E8u39tTTLmjIlhzQXtRfUmsZ-8dFzh6NLvFGjPNIjcGp87vWRbdAmXK_bVwrTsDxcX4Gz3zt7f8Gr7UO42EkKZelgcMA2uT-L8yKcZQuJepiOslECy5XyhU2Dn7_BcwofuAe-2ylbQNp9e__f3yB0wZcNsZi523ZuUva_lhQpnSy0SoAUXPHz0XhSRhoOIgE5BuhxV53wlCssChHmW_focY5G5wij8uKiNqoTaHJMsvd3pPi0S8Ym8mgvN3omat8rM2vo"/>
+</div>
+</div>
+</header>
+<div class="p-8 overflow-y-auto">
+<!-- Greeting -->
+<div class="mb-8">
+<h1 class="text-3xl font-black tracking-tight mb-2">Welcome back, Priya 👋</h1>
+<p class="text-slate-500 dark:text-slate-400">You've completed 75% of your weekly learning goal. Keep it up!</p>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">library_books</span>
+<span class="text-xs font-bold text-green-500 flex items-center">+2</span>
+</div>
+<p class="text-sm font-medium text-slate-500">Courses Enrolled</p>
+<p class="text-2xl font-bold">12</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-purple-500 bg-purple-500/10 p-2 rounded-lg">task_alt</span>
+<span class="text-xs font-bold text-green-500 flex items-center">+5</span>
+</div>
+<p class="text-sm font-medium text-slate-500">Lessons Completed</p>
+<p class="text-2xl font-bold">45</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-amber-500 bg-amber-500/10 p-2 rounded-lg">military_tech</span>
+<span class="text-xs font-bold text-slate-400 flex items-center">New!</span>
+</div>
+<p class="text-sm font-medium text-slate-500">Certificates Earned</p>
+<p class="text-2xl font-bold">3</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-emerald-500 bg-emerald-500/10 p-2 rounded-lg">schedule</span>
+<span class="text-xs font-bold text-primary flex items-center">8.2h avg</span>
+</div>
+<p class="text-sm font-medium text-slate-500">Hours Learned</p>
+<p class="text-2xl font-bold">128</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Section: Continue Learning -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold">Continue Learning</h3>
+<a class="text-sm font-semibold text-primary" href="#">View all courses</a>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Course 1 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-center">
+<div class="w-24 h-24 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="JavaScript code on a screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnehvssSKUuj0l-zxuo2QpoZG2L4T26gfSnTOXDEj_75Agq6vOTUyR3HwS3b7_Usc4E_pECDlZfvfdYElMrYV7O9DlrBpnWbE3vpSUE2mRZmksnRvDV3mTgQ4KQ-RjWySKLJVjTxMb38ZN9Pqd_d9QVoHYvcmJIK7756RPRYJxZSIer86_3j2iQNCuHKaF96LOvRMSnMVyjobgzTKnu1ITBwCi9_tp7ZJzFZm2P1mMmcqyFNLh7we-kYSHbphl91oZPp1tfNxtRLs"/>
+</div>
+<div class="flex-1 min-w-0 w-full">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-base truncate">Full-stack React &amp; Node.js Masterclass</h4>
+<span class="text-xs font-medium text-slate-500">Lesson 14 of 32</span>
+</div>
+<p class="text-xs text-slate-500 mb-4">Instructor: Devid Miller</p>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-1">
+<div class="bg-primary h-full w-[45%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-600 dark:text-slate-400">45% Complete</span>
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-opacity">Continue</button>
+</div>
+</div>
+</div>
+<!-- Course 2 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-center">
+<div class="w-24 h-24 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Python programming book and laptop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcp9VM-XTWVFawOyk35G-fMWJalxhRPTUc6rK426RzBtLd6_vxXSMK8QkAyz4XPi1VToPmUfWgMJL0MXHkHd7bzIoL9zlSma-3EYefxez_HH7ehK71HCnzRzA8oLSR-LnICmQGgneqlS5KMYin1-tMonPHn9lE-v0DeOI8RI3eH-i0VesIP0lgwygcVx6hm4JMEo-NRqgaYRN76LoENfZL6zf5ySX9pV0P8s6_RwajlaJO58gL_-Lob7WDr-RBtbjFdBX9ToyfQvc"/>
+</div>
+<div class="flex-1 min-w-0 w-full">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-base truncate">Advanced Python for Data Science</h4>
+<span class="text-xs font-medium text-slate-500">Lesson 8 of 20</span>
+</div>
+<p class="text-xs text-slate-500 mb-4">Instructor: Sarah Chen</p>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-1">
+<div class="bg-primary h-full w-[40%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-600 dark:text-slate-400">40% Complete</span>
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-opacity">Continue</button>
+</div>
+</div>
+</div>
+<!-- Course 3 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-center">
+<div class="w-24 h-24 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="UI design elements on screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGIQDXXfl4oe09wBNZvkuCO0KRAd2WWMp_lmXqQDd_85ZT2NewcK82FH6hKCUS6M6GBsquy_-7vHtUZl-T_t-qRxzl48GFgMe9g4NjCJYEfqtlsr3xTU4HN9M7tHqAN_h6eau_l9N_WxuyeSek_nEIuAqKDGlw1VJNMwTFZEDcJ02vfr-anE1161ifVku2pMoFbrTnfodlwlUHxFuQBrD4fJ8phlBLAgX7MxS3DoHm7YXqDGMQeV3Ea_YYB6KNizTAWBzAXHEK7y4"/>
+</div>
+<div class="flex-1 min-w-0 w-full">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-base truncate">UI/UX Principles for Modern Apps</h4>
+<span class="text-xs font-medium text-slate-500">Lesson 22 of 25</span>
+</div>
+<p class="text-xs text-slate-500 mb-4">Instructor: Alex Rivers</p>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-1">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-600 dark:text-slate-400">88% Complete</span>
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-opacity">Continue</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Live Classes & Certificates -->
+<div class="flex flex-col gap-8">
+<!-- Upcoming Live Classes -->
+<section class="flex flex-col gap-4">
+<h3 class="text-lg font-bold">Upcoming Live Classes</h3>
+<div class="flex flex-col gap-3">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 mb-3">
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-lg text-xs font-bold">Today, 4 PM</div>
+<span class="text-xs text-slate-500">60 mins</span>
+</div>
+<h4 class="font-bold text-sm mb-1">Advanced React Patterns &amp; Hooks</h4>
+<p class="text-xs text-slate-500 mb-4">with Michael Scott</p>
+<button class="w-full py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90">Join Class</button>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 mb-3">
+<div class="bg-slate-100 dark:bg-slate-800 text-slate-500 px-3 py-1 rounded-lg text-xs font-bold">Tomorrow, 10 AM</div>
+<span class="text-xs text-slate-500">45 mins</span>
+</div>
+<h4 class="font-bold text-sm mb-1">Intro to System Design</h4>
+<p class="text-xs text-slate-500 mb-4">with Emily Watson</p>
+<button class="w-full py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-bold rounded-lg cursor-not-allowed">Set Reminder</button>
+</div>
+</div>
+</section>
+<!-- Recent Certificates -->
+<section class="flex flex-col gap-4">
+<h3 class="text-lg font-bold">Recent Certificates</h3>
+<div class="flex flex-col gap-3">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-sm font-bold truncate">Frontend Web Development</h4>
+<div class="flex gap-3 mt-1">
+<a class="text-[10px] font-bold text-primary hover:underline" href="#">Download</a>
+<a class="text-[10px] font-bold text-primary hover:underline" href="#">Verify</a>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-sm font-bold truncate">Intro to JavaScript</h4>
+<div class="flex gap-3 mt-1">
+<a class="text-[10px] font-bold text-primary hover:underline" href="#">Download</a>
+<a class="text-[10px] font-bold text-primary hover:underline" href="#">Verify</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

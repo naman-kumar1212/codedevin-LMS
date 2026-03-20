@@ -1,0 +1,26 @@
+import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
+import { PrismaModule } from '../prisma/prisma.module';
+import { MediaController } from './media.controller';
+import { MediaService } from './media.service';
+import { LocalMediaProvider } from './local-media.provider';
+import { MEDIA_PROVIDER } from './media.interface';
+
+@Module({
+  imports: [
+    MulterModule.register({}),
+    PrismaModule,
+  ],
+  controllers: [MediaController],
+  providers: [
+    MediaService,
+    {
+      provide: MEDIA_PROVIDER,
+      useClass: LocalMediaProvider,
+      // To migrate to Cloudflare: swap LocalMediaProvider with CloudflareStreamProvider
+    },
+    LocalMediaProvider,
+  ],
+  exports: [MediaService],
+})
+export class MediaModule {}

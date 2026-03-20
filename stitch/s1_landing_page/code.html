@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Codedevin LMS - Master In-Demand Skills</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "footer-dark": "#0F172A",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header / Navigation -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Codedevin</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Browse Courses</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Login</a>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all">
+                        Register
+                    </button>
+</nav>
+<div class="md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Section -->
+<section class="max-w-[1280px] mx-auto px-6 py-16 md:py-24">
+<div class="flex flex-col lg:flex-row items-center gap-12">
+<div class="flex-1 flex flex-col gap-6 text-center lg:text-left">
+<h1 class="text-4xl md:text-6xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+                            Learn In-Demand Skills. <span class="text-primary">Get Certified.</span>
+</h1>
+<p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto lg:mx-0">
+                            Master the latest technologies with our expert-led courses and earn industry-recognized certifications to launch your career in tech.
+                        </p>
+<div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 transition-all">
+                                Browse Courses
+                            </button>
+<button class="border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">play_circle</span>
+                                Watch Demo
+                            </button>
+</div>
+</div>
+<div class="flex-1 w-full max-w-[600px]">
+<div class="aspect-video bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent"></div>
+<img alt="Hero Illustration" class="w-full h-full object-cover" data-alt="Modern workspace with laptop showing code" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRs0t_-hw1IBN1m_8Ny39_I2LFRXFnmlln5Rlo081bQi7vhSsJvzFLYHVPjswvAf7PgreKA9ujFPrhMmNKuxpqy7Tjo2cbOEd2k8O-DFlvZNIjsHYwKYnOFPBnPulIgRGxuoyZ89zHlUysjN0zkAZozlKWZbQy-TV58cdIRPtZKCoeBwBQGKKytu-nMYe01z0lEONNk4b6tdoYq3YdSaxMJt77vVs4G21HWMkLuQmyTIXGqFqyFixD8NZDkXVELTKxtFG9ZzKkTjA"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="bg-white dark:bg-slate-900/50 py-12 border-y border-slate-100 dark:border-slate-800">
+<div class="max-w-[1280px] mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="flex flex-col items-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+<span class="text-primary font-black text-3xl mb-1">1,200+</span>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Students</span>
+</div>
+<div class="flex flex-col items-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+<span class="text-primary font-black text-3xl mb-1">24</span>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Expert Courses</span>
+</div>
+<div class="flex flex-col items-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+<span class="text-primary font-black text-3xl mb-1">98%</span>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Completion Rate</span>
+</div>
+<div class="flex flex-col items-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+<span class="text-primary font-black text-3xl mb-1">500+</span>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Certificates Issued</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Courses -->
+<section class="max-w-[1280px] mx-auto px-6 py-20">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Featured Courses</h2>
+<p class="text-slate-500 dark:text-slate-400">Hand-picked premium content for your growth</p>
+</div>
+<a class="text-primary font-bold hover:underline flex items-center gap-1" href="#">
+                        View All Courses <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Course Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all">
+<div class="aspect-video overflow-hidden">
+<img alt="Full Stack Web Dev" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of keyboard and developer screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgMUyFcX3w0tEq98YaUhjhjorDl5PCMDKbzjfZr15dw0mTcE2zh5pSljeI5OU3xvzpYbrOxzzavkg4kiOll5HrXCwEaQgS75XUjeUX8GH5cR9kIRgl6uPz1GMPC7kh2kyEoCLGPMtqhpUio77Gr7XXbYdYsMq2srh01OALqBhQ33ByBi1iCqBTU9QOp-g0_ILsi7rBObwIycace47Y_-Djv6bIIfRFUf_8QAXwrlmkITc47CuVs0RqhDhAFsbrUVCvk7EmfqsWAzM"/>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Full Stack Web Development</h3>
+<div class="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">menu_book</span> 12 Modules</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 450 Enrolled</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-2xl font-black text-slate-900 dark:text-white">₹999</span>
+<button class="text-primary font-bold px-4 py-2 bg-primary/10 rounded-lg hover:bg-primary hover:text-white transition-all">Enroll Now</button>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all">
+<div class="aspect-video overflow-hidden">
+<img alt="Data Science Essentials" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Data visualization graphs on a monitor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHdvJNEfcmFIHqD90kBS_Rq8dQIKrP_3VWoP1OsrOJ4X5lfUUz4Z6OPj42BThQ-wHa_aKGMIf1aT1_WOfu5DaBCy8xIE169C4FDese8ND5UvGoz-PKjrwVCtrpxais7d8IkfdVwiPZBvBeWRi9AqcQaajCrTkHhKdGdOemQja4MwZumC1V6cPB6fE6K2MJx8mgJxV5UsyV8eshdUP2BtKlhN0jwpbzPDrk88JiFJN-piOENg3xcD9gsaTEeWCVAVNYATWCD10DqgI"/>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Data Science Essentials</h3>
+<div class="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">menu_book</span> 8 Modules</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 320 Enrolled</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-2xl font-black text-green-600">Free</span>
+<button class="text-primary font-bold px-4 py-2 bg-primary/10 rounded-lg hover:bg-primary hover:text-white transition-all">Enroll Now</button>
+</div>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all">
+<div class="aspect-video overflow-hidden">
+<img alt="UI/UX Masterclass" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="UI/UX design sketches and digital tablet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuZoUHKE9wTF8-FjQ9tsBsYYY382AvLiUWL0T0aD-mAGBWuEGjf1ErhkyUdm1Ldpk-_2PH6A5i6rL6yYhsbqr7Ae6UOCNjnOu1y5oZl57GAXQj061MP052Jd08r5t7vMxkmQrE7WUs5UpkENQtauUhPDJaEpJ8HMskCDOu0sOCBLDos25bWu4p-H-sTNiIHdNKCaz0wGuM3c77Eo24C9TEKTWA2R0hu23mnRwt02nlsm2H0oufaQQiMJJThaKUV5FNPqDS9MzGCJg"/>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">UI/UX Design Masterclass</h3>
+<div class="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">menu_book</span> 10 Modules</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 210 Enrolled</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-2xl font-black text-slate-900 dark:text-white">₹999</span>
+<button class="text-primary font-bold px-4 py-2 bg-primary/10 rounded-lg hover:bg-primary hover:text-white transition-all">Enroll Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="bg-slate-50 dark:bg-slate-900/30 py-24">
+<div class="max-w-[1280px] mx-auto px-6">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">How It Works</h2>
+<p class="text-slate-500 dark:text-slate-400">Start your transformation in three simple steps</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+<!-- Connector Lines (Desktop) -->
+<div class="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 border-t-2 border-dashed border-slate-200 dark:border-slate-700 -z-0"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="size-20 bg-primary text-white rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined text-4xl">search</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Browse &amp; Enroll</h3>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed">Choose from our curated collection of expert-led courses across multiple domains.</p>
+</div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="size-20 bg-primary text-white rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined text-4xl">school</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Learn</h3>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed">Engage with high-quality video content, projects, and interactive quizzes.</p>
+</div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="size-20 bg-primary text-white rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined text-4xl">verified</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Get Certified</h3>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed">Pass the final assessment and receive your industry-recognized digital certificate.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="max-w-[1280px] mx-auto px-6 py-20">
+<div class="bg-primary rounded-[2rem] p-8 md:p-16 text-center text-white relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/50 to-blue-800/50 opacity-50"></div>
+<div class="relative z-10 max-w-2xl mx-auto">
+<h2 class="text-3xl md:text-5xl font-black mb-6">Ready to start learning?</h2>
+<p class="text-primary-100 text-lg mb-10 opacity-90">Join thousands of students who are already advancing their careers with Codedevin.</p>
+<button class="bg-white text-primary hover:bg-slate-50 px-10 py-4 rounded-xl font-black text-lg transition-all shadow-xl shadow-black/10">
+                            Get Started Free
+                        </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-footer-dark text-slate-300 py-16">
+<div class="max-w-[1280px] mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+<h2 class="text-xl font-bold">Codedevin</h2>
+</div>
+<p class="text-sm leading-relaxed opacity-70">
+                            The modern learning management system designed to empower students with industry-relevant skills and certifications.
+                        </p>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Quick Links</h4>
+<ul class="flex flex-col gap-3 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Browse Courses</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Learning Paths</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Success Stories</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">For Teams</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Support</h4>
+<ul class="flex flex-col gap-3 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Community</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Connect</h4>
+<div class="flex gap-4 mb-6">
+<a class="size-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined text-xl">share</span>
+</a>
+<a class="size-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined text-xl">language</span>
+</a>
+</div>
+<p class="text-sm opacity-70">Subscribe to our newsletter</p>
+<div class="mt-3 flex">
+<input class="bg-slate-800 border-none rounded-l-lg px-4 py-2 text-sm w-full focus:ring-1 focus:ring-primary" placeholder="Your email" type="email"/>
+<button class="bg-primary px-4 py-2 rounded-r-lg">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-12 border-t border-slate-800 text-center text-xs opacity-50">
+                    © 2024 Codedevin LMS. All rights reserved.
+                </div>
+</div>
+</footer>
+</div>
+</body></html>

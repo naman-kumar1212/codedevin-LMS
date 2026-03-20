@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Achievement – Code Devin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0f1f3d;
+            --navy-mid: #1a3260;
+            --accent: #00b4d8;
+            --accent-light: #90e0ef;
+            --gold: #c9a84c;
+            --gold-light: #f0d080;
+            --white: #ffffff;
+            --off-white: #f8f9fc;
+            --gray-light: #e8ecf4;
+            --gray: #8a94aa;
+            --text: #1a2340;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: 1060px 750px;
+            margin: 0;
+        }
+
+        body {
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 1060px;
+            height: 750px;
+            position: relative;
+            background: var(--white);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ── LEFT RIBBON ── */
+        .ribbon {
+            width: 220px;
+            flex-shrink: 0;
+            background: var(--navy);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            overflow: hidden;
+        }
+
+        .ribbon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(135deg,
+                    transparent,
+                    transparent 18px,
+                    rgba(255, 255, 255, 0.03) 18px,
+                    rgba(255, 255, 255, 0.03) 36px);
+        }
+
+        .ribbon-logo {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 18px;
+        }
+
+        /* Code Devin "< >" logo mark */
+        .ribbon-logo svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .ribbon-brand {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .ribbon-brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+
+        .ribbon-brand-name span {
+            color: var(--accent);
+        }
+
+        .ribbon-divider {
+            width: 50px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 22px auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ribbon-seal {
+            position: relative;
+            z-index: 2;
+            margin-top: 10px;
+        }
+
+        .ribbon-seal svg {
+            width: 130px;
+            height: 130px;
+        }
+
+        .ribbon-courses {
+            margin-top: 30px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .ribbon-courses-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-light);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .ribbon-course-item {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.65);
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main {
+            flex: 1;
+            position: relative;
+            padding: 50px 55px 40px 55px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* decorative corner accents */
+        .corner {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+        }
+
+        .corner-tl {
+            top: 16px;
+            left: 16px;
+            border-top: 2px solid var(--gold);
+            border-left: 2px solid var(--gold);
+        }
+
+        .corner-tr {
+            top: 16px;
+            right: 16px;
+            border-top: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
+        }
+
+        .corner-bl {
+            bottom: 16px;
+            left: 16px;
+            border-bottom: 2px solid var(--gold);
+            border-left: 2px solid var(--gold);
+        }
+
+        .corner-br {
+            bottom: 16px;
+            right: 16px;
+            border-bottom: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
+        }
+
+        /* header row */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 36px;
+        }
+
+        .cert-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        .cert-date {
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* body text */
+        .completed-label {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .student-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 62px;
+            font-weight: 600;
+            color: var(--navy);
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .completed-text {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 24px;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .completed-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .course-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.15;
+            margin-bottom: 18px;
+            max-width: 560px;
+            letter-spacing: -0.5px;
+        }
+
+        .course-desc {
+            font-size: 12.5px;
+            color: var(--gray);
+            line-height: 1.7;
+            max-width: 520px;
+            margin-bottom: 30px;
+        }
+
+        /* horizontal gold rule */
+        .rule {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 40%, transparent 100%);
+            margin: 10px 0 26px;
+        }
+
+        /* signatures */
+        .signatures {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .sig-block {}
+
+        .sig-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-style: italic;
+            font-weight: 600;
+            color: var(--navy-mid);
+            border-bottom: 1px solid var(--gray-light);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            min-width: 160px;
+            display: inline-block;
+        }
+
+        .sig-role {
+            font-size: 11.5px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .sig-role strong {
+            color: var(--text);
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* verify block */
+        .verify {
+            position: absolute;
+            bottom: 42px;
+            right: 55px;
+            text-align: right;
+        }
+
+        .verify-label {
+            font-size: 10px;
+            color: var(--gray);
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        .verify-url {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* accent line under nav */
+        .accent-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 60%, transparent 100%);
+        }
+
+        /* subtle bg watermark */
+        .watermark {
+            position: absolute;
+            bottom: -20px;
+            right: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 160px;
+            font-weight: 700;
+            color: rgba(15, 31, 61, 0.025);
+            letter-spacing: -10px;
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- LEFT RIBBON -->
+        <div class="ribbon">
+            <div class="ribbon-logo">
+                <!-- Code Devin logo mark -->
+                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+                    <circle cx="40" cy="40" r="30" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4 3" />
+                    <text x="40" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14"
+                        font-weight="700" fill="#00b4d8">&lt;/&gt;</text>
+                    <text x="40" y="52" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8"
+                        font-weight="500" fill="rgba(255,255,255,0.6)" letter-spacing="1">CODE DEVIN</text>
+                </svg>
+            </div>
+
+            <div class="ribbon-brand">
+                <div class="ribbon-brand-name">Code <span>Devin</span></div>
+            </div>
+
+            <div class="ribbon-divider"></div>
+
+            <!-- Seal -->
+            <div class="ribbon-seal">
+                <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="65" cy="65" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+                    <circle cx="65" cy="65" r="52" fill="none" stroke="#c9a84c" stroke-width="1.5"
+                        stroke-dasharray="3 2" />
+                    <circle cx="65" cy="65" r="44" fill="rgba(255,255,255,0.05)" stroke="rgba(201,168,76,0.4)"
+                        stroke-width="1" />
+
+                    <!-- rotating text path -->
+                    <path id="circle-path" d="M 65,65 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="none" />
+                    <text font-family="DM Sans,sans-serif" font-size="8.5" font-weight="600"
+                        fill="rgba(255,255,255,0.7)" letter-spacing="3">
+                        <textPath href="#circle-path" startOffset="2%">COURSE CERTIFICATE · CODE DEVIN ·</textPath>
+                    </text>
+
+                    <text x="65" y="58" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"
+                        fill="rgba(255,255,255,0.5)" font-weight="500" letter-spacing="1">CERTIFIED</text>
+                    <text x="65" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16"
+                        fill="#c9a84c" font-weight="700">✓</text>
+                    <text x="65" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7.5"
+                        fill="rgba(255,255,255,0.45)" font-weight="400" letter-spacing="0.5">ACHIEVEMENT</text>
+                </svg>
+            </div>
+
+            <!-- Course list sidebar -->
+            <div class="ribbon-courses">
+                <div class="ribbon-courses-title">Courses Completed</div>
+                <div class="ribbon-course-item">HTML & CSS Fundamentals</div>
+                <div class="ribbon-course-item">JavaScript Essentials</div>
+                <div class="ribbon-course-item">React & Frontend Dev</div>
+                <div class="ribbon-course-item">Backend with Node.js</div>
+            </div>
+        </div>
+
+        <!-- MAIN CERTIFICATE BODY -->
+        <div class="main">
+            <div class="accent-bar"></div>
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            <div class="watermark">CD</div>
+
+            <div class="top-row">
+                <div class="cert-label">Course Certificate</div>
+                <div class="cert-date">{{DATE}}</div>
+            </div>
+
+            <div class="completed-label">This is to certify that</div>
+
+            <div class="student-name">{{STUDENT_NAME}}</div>
+
+            <p class="completed-text">
+                has successfully completed the online, non-credit professional certification
+                authorized by <strong>Code Devin</strong> and offered through our global learning platform.
+            </p>
+
+            <div class="course-title">{{COURSE_NAME}}</div>
+
+            <p class="course-desc">
+                This certification verifies that the individual has demonstrated a comprehensive
+                understanding of core principles and practical applications required for
+                professional excellence. The recipient has successfully passed all required
+                assessments and projects with mastery.
+            </p>
+
+            <div class="rule"></div>
+
+            <div class="signatures">
+                <div class="sig-block">
+                    <div class="sig-name">Ken Fitzpatrick</div>
+                    <div class="sig-role">
+                        <strong>Ken Fitzpatrick</strong>
+                        CEO, Code Devin
+                    </div>
+                </div>
+                <div class="sig-block">
+                    <div class="sig-name">Ted Weissberg</div>
+                    <div class="sig-role">
+                        <strong>Ted Weissberg</strong>
+                        Executive Chairman, Code Devin
+                    </div>
+                </div>
+            </div>
+
+            <div class="verify">
+                <div class="verify-label">Verify this certificate at:</div>
+                <a class="verify-url" href="#">codedevin.com/verify/{{CERTIFICATE_CODE}}</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

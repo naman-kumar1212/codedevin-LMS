@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Course Builder | Codedevin LMS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#AC54FF",
+                        "secondary": "#6a9bcc",
+                        "background-light": "#faf9f5",
+                        "background-dark": "#141413",
+                    },
+                    fontFamily: {
+                        "display": ["Poppins", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.375rem",
+                        "lg": "0.75rem",
+                        "xl": "1.25rem",
+                        "2xl": "1.75rem",
+                        "full": "9999px"
+                    },
+                    backdropBlur: {
+                        "xl": "24px",
+                        "2xl": "40px"
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-display { font-family: 'Poppins', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-card {
+            background: rgba(20, 20, 19, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .stepper-line {
+            height: 2px;
+            background: linear-gradient(90deg, #AC54FF 0%, #cbd5e1 100%);
+        }
+        .dark .stepper-line {
+            background: linear-gradient(90deg, #AC54FF 0%, #334155 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary/20">
+    <!-- Top Navigation Bar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-white/20 dark:border-slate-800/50 bg-white/30 dark:bg-slate-950/30 backdrop-blur-md px-10 py-5 sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="size-10 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined text-2xl">school</span>
+            </div>
+            <div class="flex flex-col">
+                <h2 class="text-slate-900 dark:text-slate-50 text-lg font-bold leading-none tracking-tight">Codedevin LMS</h2>
+                <p class="text-primary text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Curriculum Studio</p>
+            </div>
+        </div>
+        <div class="flex flex-1 justify-end gap-10 items-center">
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-all" href="a1_admin_dashboard.html">Dashboard</a>
+                <a class="text-primary text-sm font-bold border-b-2 border-primary pb-1 tracking-wide" href="a2_course_list_admin.html">Courses</a>
+                <a class="text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-all" href="a4_students_admin.html">Students</a>
+                <a class="text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-all" href="#">Reports</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <button class="cursor-pointer font-bold text-slate-600 dark:text-slate-300 text-sm hover:text-primary transition-colors">
+                    Save Draft
+                </button>
+                <div class="size-11 rounded-2xl bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 overflow-hidden bg-cover bg-center border border-white/40 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvRJwJCZU8R2n9ZoiRDHrfE9uwQ3NKleCF_4CNmFVCLtqMr59r2J_yB-fQCMR5KWmP0_HW1f_MWGQfhsH_nY7XSZnaTYsSHgtf3vKAFj1H5wJ2Uwpf0xbGW_Mrifo9JKnoVtEr-jt89K9PDSjib082nufylaJZdB5BkVkEWSLmWj9fhPi09Y0ORp_-HHIYcVFlE_AIfwIZ2HJOidXSHc3M40LbSfNBlK26XXjRl4WvD4pt-kl6UNurKwIrTTqyTerKkZ33G6sLelw");'></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-8 py-12 relative">
+        <!-- Background Accents -->
+        <div class="absolute top-0 right-0 -mr-40 -mt-20 size-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -ml-40 -mb-20 size-[600px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <!-- Header & Stepper Section -->
+        <div class="mb-12">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Advanced <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">React Patterns</span></h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2 text-lg font-medium flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">fingerprint</span>
+                        Course ID: ADV-RCT-2024
+                    </p>
+                </div>
+                <button class="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    Publish Course
+                </button>
+            </div>
+
+            <!-- Multi-step Stepper -->
+            <div class="grid grid-cols-5 gap-0 relative max-w-5xl mx-auto">
+                <!-- Step 1 (Completed) -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center w-full">
+                        <div class="flex-1"></div>
+                        <div class="z-10 flex items-center justify-center size-12 rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 border-4 border-emerald-100 dark:border-emerald-500/20">
+                            <span class="material-symbols-outlined text-2xl font-bold">check</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-emerald-500"></div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-[0.2em]">Step 1</p>
+                        <p class="text-sm font-bold text-slate-900 dark:text-slate-100 mt-1">Basic Details</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 (Active) -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center w-full">
+                        <div class="flex-1 h-1 bg-emerald-500"></div>
+                        <div class="z-10 flex items-center justify-center size-14 rounded-full bg-primary text-white shadow-2xl shadow-primary/30 border-4 border-primary/20 ring-4 ring-primary/10 -mt-1">
+                            <span class="text-lg font-black tracking-tighter">02</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[10px] font-extrabold text-primary uppercase tracking-[0.2em]">Active</p>
+                        <p class="text-sm font-bold text-primary mt-1">Curriculum</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 (Pending) -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center w-full">
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                        <div class="z-10 flex items-center justify-center size-12 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400">
+                            <span class="text-sm font-bold">03</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em]">Step 3</p>
+                        <p class="text-sm font-bold text-slate-400 mt-1">Course Content</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 (Pending) -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center w-full">
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                        <div class="z-10 flex items-center justify-center size-12 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400">
+                            <span class="text-sm font-bold">04</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em]">Step 4</p>
+                        <p class="text-sm font-bold text-slate-400 mt-1">Assessments</p>
+                    </div>
+                </div>
+
+                <!-- Step 5 (Pending) -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center w-full">
+                        <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-800"></div>
+                        <div class="z-10 flex items-center justify-center size-12 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400">
+                            <span class="text-sm font-bold">05</span>
+                        </div>
+                        <div class="flex-1"></div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em]">Step 5</p>
+                        <p class="text-sm font-bold text-slate-400 mt-1">Final Review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Builder Main Interface -->
+        <div class="flex flex-col lg:flex-row gap-10 items-stretch">
+            <!-- Left Panel: Module List -->
+            <aside class="w-full lg:w-[420px] glass-card rounded-[2.5rem] border border-white/40 dark:border-slate-800/50 flex flex-col shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
+                <div class="p-8 border-b border-slate-200/30 dark:border-slate-800/50 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <div class="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-lg">view_quilt</span>
+                        </div>
+                        Curriculum Structural Modules
+                    </h3>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-6 space-y-4 max-h-[600px] scrollbar-hide">
+                    <!-- Module Item Active -->
+                    <div class="group flex items-center gap-4 p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-primary shadow-xl shadow-primary/10 relative cursor-pointer ring-4 ring-primary/5">
+                        <div class="text-primary/40 cursor-grab group-hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined">drag_indicator</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[10px] font-extrabold text-primary uppercase tracking-widest">Module 01</p>
+                            <h4 class="font-bold text-slate-900 dark:text-white mt-1">Introduction to Patterns</h4>
+                        </div>
+                        <button class="text-slate-300 hover:text-red-500 transition-colors">
+                            <span class="material-symbols-outlined text-xl">delete</span>
+                        </button>
+                    </div>
+
+                    <!-- Module Item -->
+                    <div class="group flex items-center gap-4 p-6 rounded-2xl bg-white/50 dark:bg-slate-900/30 border border-slate-200/50 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-900 hover:border-primary/30 transition-all duration-300 cursor-pointer">
+                        <div class="text-slate-300 dark:text-slate-700 cursor-grab group-hover:text-slate-400 transition-colors">
+                            <span class="material-symbols-outlined">drag_indicator</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Module 02</p>
+                            <h4 class="font-bold text-slate-700 dark:text-slate-300 mt-1">Compound Components</h4>
+                        </div>
+                        <button class="text-slate-200 dark:text-slate-800 hover:text-red-500 transition-colors">
+                            <span class="material-symbols-outlined text-xl">delete</span>
+                        </button>
+                    </div>
+
+                    <!-- Module Item -->
+                    <div class="group flex items-center gap-4 p-6 rounded-2xl bg-white/50 dark:bg-slate-900/30 border border-slate-200/50 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-900 hover:border-primary/30 transition-all duration-300 cursor-pointer">
+                        <div class="text-slate-300 dark:text-slate-700 cursor-grab group-hover:text-slate-400 transition-colors">
+                            <span class="material-symbols-outlined">drag_indicator</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Module 03</p>
+                            <h4 class="font-bold text-slate-700 dark:text-slate-300 mt-1">Render Props Strategy</h4>
+                        </div>
+                        <button class="text-slate-200 dark:text-slate-800 hover:text-red-500 transition-colors">
+                            <span class="material-symbols-outlined text-xl">delete</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-slate-50/80 dark:bg-slate-900/80 border-t border-slate-200/30 dark:border-slate-800/50">
+                    <button class="w-full flex items-center justify-center gap-3 py-4 bg-white dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl text-slate-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all font-bold group">
+                        <span class="material-symbols-outlined group-hover:scale-125 transition-transform">add_circle</span>
+                        Add New Module
+                    </button>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mt-4">Structural integrity: 03 Modules deployed</p>
+                </div>
+            </aside>
+
+            <!-- Right Panel: Lesson List -->
+            <section class="flex-1 glass-card rounded-[2.5rem] border border-white/40 dark:border-slate-800/50 flex flex-col shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden h-fit">
+                <div class="p-10 border-b border-slate-200/30 dark:border-slate-800/50 bg-white/50 dark:bg-slate-950/50 backdrop-blur-md sticky top-0 z-10 transition-all">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-extrabold uppercase tracking-widest mb-3">
+                                Currently Editing
+                            </div>
+                            <h3 class="font-extrabold text-2xl text-slate-900 dark:text-white">Module 1: Foundational Concepts</h3>
+                            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm font-medium">Deploy and manage granular learning units for this module.</p>
+                        </div>
+                        <button class="bg-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined">add_task</span>
+                            Add Lesson Unit
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-10 space-y-8 max-h-[700px]">
+                    <!-- Lesson Unit Editor -->
+                    <div class="p-8 rounded-[2rem] border border-primary/20 bg-primary/[0.02] dark:bg-primary/[0.05] relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 -mr-16 -mt-16 size-48 bg-primary/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                        <h5 class="text-xs font-extra-bold text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                            <div class="size-6 rounded-lg bg-primary/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[14px]">edit_note</span>
+                            </div>
+                            New Lesson Architecture
+                        </h5>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                            <div class="md:col-span-2">
+                                <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Lesson Title</label>
+                                <input class="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-300" placeholder="e.g. Compositional Logic" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Time Estimate (min)</label>
+                                <input class="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-300" placeholder="15" type="number"/>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Unit Classification</label>
+                                <select class="w-full px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none cursor-pointer">
+                                    <option>Cinema (Video)</option>
+                                    <option>Manuscript (Text)</option>
+                                    <option>Workshop (Code)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-end gap-4">
+                            <button class="text-slate-400 font-bold text-xs uppercase tracking-widest px-6 py-4 hover:text-slate-600 transition-colors">Discard</button>
+                            <button class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.05] active:scale-[0.95]">Deploy Unit</button>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Units List -->
+                    <div class="space-y-4">
+                        <!-- Lesson 1 -->
+                        <div class="flex items-center gap-6 p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/50 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 group">
+                            <div class="size-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">play_circle_filled</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest">Unit 1.1 • Cinema</p>
+                                <h5 class="font-bold text-lg text-slate-900 dark:text-slate-200 mt-0.5">The Philosophy of Patterns</h5>
+                                <p class="text-[11px] text-slate-400 font-medium mt-1 uppercase tracking-wider">Duration: 08:45 minutes</p>
+                            </div>
+                            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                                <button class="size-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-primary rounded-xl transition-all">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="size-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 rounded-xl transition-all">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2 -->
+                        <div class="flex items-center gap-6 p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/50 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 group">
+                            <div class="size-14 rounded-2xl bg-fuchsia-50 dark:bg-fuchsia-950/40 flex items-center justify-center text-fuchsia-500 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">auto_stories</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-extrabold text-fuchsia-400 uppercase tracking-widest">Unit 1.2 • Manuscript</p>
+                                <h5 class="font-bold text-lg text-slate-900 dark:text-slate-200 mt-0.5">Evolution of Composition</h5>
+                                <p class="text-[11px] text-slate-400 font-medium mt-1 uppercase tracking-wider">Duration: 12:00 minutes</p>
+                            </div>
+                            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                                <button class="size-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-primary rounded-xl transition-all">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="size-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 rounded-xl transition-all">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-10 bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-200/30 dark:border-slate-800/50 flex justify-between items-center rounded-b-[2.5rem]">
+                    <button class="flex items-center gap-3 text-slate-400 font-bold hover:text-primary transition-all uppercase text-[10px] tracking-widest">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span>
+                        Previous Configuration
+                    </button>
+                    <button class="bg-primary text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-4 hover:shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        Next Pipeline: Content
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Status Bar -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 py-4 px-10 hidden md:flex justify-between items-center z-[100]">
+        <div class="flex items-center gap-10">
+            <span class="flex items-center gap-3 text-emerald-500 font-bold text-[10px] uppercase tracking-widest">
+                <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Cloud Pipeline Active
+            </span>
+            <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Last synchronized: 2 mins ago</span>
+        </div>
+        <div class="flex items-center gap-8 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <span class="text-primary tracking-[0.2em]">Studio Mode</span>
+            <span class="text-slate-200 dark:text-slate-800">|</span>
+            <span>Version Protocol 4.2.1</span>
+        </div>
+    </footer>
+</body>
+</html>

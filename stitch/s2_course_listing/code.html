@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>All Courses | Codedevin LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 lg:px-20 py-3">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="text-primary">
+<svg class="size-8" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_543)">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+</g>
+<defs><clippath id="clip0_6_543"><rect fill="white" height="48" width="48"></rect></clippath></defs>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-black leading-tight tracking-tight">Codedevin</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Courses</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Mentors</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Pricing</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">About</a>
+</nav>
+<div class="flex items-center gap-3">
+<button class="hidden sm:flex h-10 px-4 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold">Log In</button>
+<button class="flex h-10 px-4 items-center justify-center rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">Sign Up</button>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-[1280px] mx-auto px-4 lg:px-20 py-12">
+<!-- Header Section -->
+<div class="mb-10">
+<h1 class="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">All Courses</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl">
+                    Expand your skills with our library of industry-leading courses. From frontend mastery to advanced cloud architecture.
+                </p>
+</div>
+<!-- Filter & Search Bar -->
+<div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-12 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex w-full md:w-auto p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+<button class="flex-1 md:w-24 px-4 py-2 text-sm font-semibold rounded-md bg-white dark:bg-slate-700 text-primary shadow-sm">All</button>
+<button class="flex-1 md:w-24 px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400">Free</button>
+<button class="flex-1 md:w-24 px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400">Paid</button>
+</div>
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full h-11 pl-10 pr-4 rounded-lg border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Search for courses, skills, or topics..." type="text"/>
+</div>
+</div>
+<!-- Course Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Course Card 1 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="React code on a monitor with neon lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAS1qgnPcfFTo1Sg-xF0kBUoLyRa-q2ND2q6Mk3O15tIIvy3OQIbe-vdj1tsCzeORfiBKLNxWdAHPx1bkPKptD27QLKlghe9tKaA9Hjib4WRbu3WIkF4FsF9m7rSWRew1trvTJveH7OgYENGl0k4rvxhtMbMJ-lRF6CyIz-UfFKuyfyfYMGxsJMfly5IUQGipGw1bG3kxnBLsDdnhN7DBlfZjV9l79k-zQ3HKQgY2jy3t9qkFGDgk7xlfoOrSvb4Q1EdUVtLfCcKL8')"></div>
+<div class="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded">Best Seller</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Development</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$99.99</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">Advanced React Design Patterns</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">Master compound components, render props, HOCs, and building highly reusable UI libraries from scratch.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                12 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                1.2k Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Data visualization graphs and Python branding" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCF9xnitH16T_cz18_gd99fvU6GbBshy08aceZHSy8OaIfqnA8C7BGymA8XbibFDHWsHaelpEuQ1z631sqpwsg9MC9tF5SD25zwFt-GIqPgAoeZ7t5uw5Lj6pyaeRxbzxppcKHoj8K3JN3IWNYxzc9JdZ95CQQeNZcHgsFAykMtNxcHH5iM-Pa6lDcK7l94uYmlj2F3N7ac_DTp19yudnTVd4CJDIr0Vb3cnuxc5ETBsQoRb3nSodSvhS693DUOsab1Da1MJNhMfS0')"></div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Data Science</span>
+<span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">Free</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">Python for Data Analytics</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">Learn the essentials of Pandas, NumPy, and Matplotlib to clean and visualize complex datasets.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                8 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                5.4k Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Sleek UI design layout on a laptop screen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-6kLmazSaT-i4fGxIjCAulVdc5ziGUXewKgw_xqrPgcp2E1DWLC-gg-RF0xLCPJfVlB6PC22Ix0jUYlKR7QPpzI2gEchB8H2fXSH17yLPmHkJ1bFNROU_4XbSMnDGR9_eEsHx9OSYIyWQLjoNuAtZ1u9Z4XSdQ01aW-H1Q2vxaW0kgwazRjahao7vd_ZvgCz8TQxUb2bD9cb2sJ2BrjI7_zl9z49Vd7Mvsj4L7qbIipH--Jj0IdYjmhb7Z-fdE9GTK5BaOTfsT4E')"></div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Design</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$49.99</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">UI/UX Design Essentials</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">From wireframing to high-fidelity prototyping. Master Figma and design principles that work.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                10 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                800 Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+<!-- Course Card 4 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Web development environment with various code windows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_ZvelzPuKU002D5uduICbshQVcpF0Z-0XdSK_dDwcfOTmWH_s7hq9KlMKKoL7d4C3iepkHpMv4d1OKkb0eSWPTcpAdzECoDUWGM-0CGepbOnQclY3ygSwVZn7ZBO-Eg0JsHElsTRw-0GTQKLKVBMKAMSFOBGXOB5qQWaapVPxzWBY7mJpkyF5wPcNTWUksKzsR3Z2c1MiJ-zebmywSl2W3BmZhTJKp7p40hmgIVxEMrTqyWkslLDNZCZj4qdpNl1B9aXpt04X_cM')"></div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Development</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$149.99</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">Fullstack Web Dev Mastery</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">Go from zero to deployment with the MERN stack. Includes Node.js, Express, and MongoDB.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                24 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                2.1k Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+<!-- Course Card 5 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Neural network visualization with bright blue lines" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvryG5JvxaOJVBF39DL_cb_PTVwhAVftQXw6OEZu0z190EulN36ewTJENYWYmWnk7QfPsQTUPvg4hF266ATPC6zH8YHAVB-iJhJ2CFfpoD1IV7LtLZOdw3unj2KtO27PsgxRpsJoRAs5BcnMFppT7RPfZsWdQfA7sA4xlOwW0exLiu4kSxn4E-CRl81KXk1l0zFFx2fFV27ncuRYV38mBJP4QxKg7JnbAnP9A3U0wdLTg2TuZUErFfKc75l22Q5j9tdFLCFDjulwE')"></div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-purple-600 uppercase tracking-wider">AI / ML</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$129.99</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">Machine Learning 101</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">Foundations of neural networks, supervised learning, and real-world AI applications.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                15 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                1.5k Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+<!-- Course Card 6 -->
+<div class="flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all group">
+<div class="relative aspect-video overflow-hidden">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Global network cloud computing illustration" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXpZyG6cnQzs3ZAE5uXXl3bfBLeteovuOGOkXlSKM9E1T418MqDskdK4UaHDrbyuGF3WgMFfp82juQ6TP4RcpO2wnMtkx-7GNk8D74K_z4WDwqXtNKPFe71LAuebu1yDobA55ThnfZf1g9RaTmGPQrCUkM1z6yyAsmjCzJL8vWdiCHl-4oMauV3VOch9lb0BdJAnTQLXl-scxsCtf5QVkb-Bmx-6CekbipMvk98UXZ6xIPK9USjTM2vjHdLCRoVn_GJWciXtp0qSA')"></div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-3">
+<span class="text-xs font-bold text-sky-600 uppercase tracking-wider">Cloud</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$89.99</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">AWS Cloud Architect</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">Prepare for the SAA-C03 exam with hands-on labs and architecture deep dives.</p>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-medium mb-6">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                11 Modules
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                                900 Enrolled
+                            </div>
+</div>
+<button class="mt-auto w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">View Course</button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-16 flex items-center justify-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold shadow-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 lg:px-20 py-12">
+<div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 mb-6">
+<div class="text-primary">
+<svg class="size-6" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Codedevin</h2>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Empowering developers to reach their full potential through high-quality video courses and mentorship.
+                    </p>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Explore</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">All Courses</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Learning Paths</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Community</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Mentorship</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Company</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">About Us</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Contact</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Newsletter</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Get the latest course updates and dev news.</p>
+<div class="flex gap-2">
+<input class="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-sm" placeholder="Email" type="email"/>
+<button class="bg-primary text-white h-10 px-4 rounded-lg text-sm font-bold">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1280px] mx-auto mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-500 dark:text-slate-400 text-xs">© 2024 Codedevin LMS. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">chat</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">groups</span></a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
