@@ -97,59 +97,55 @@ export default function PaymentModal({
         onLoad={() => setSdkLoaded(true)}
       />
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-2xl rounded-[2.5rem] font-sans antialiased text-slate-900">
-          <div className="p-10 text-center bg-white relative overflow-hidden">
-            {/* Subtle background glow */}
-            <div className="absolute -top-24 -right-24 size-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -left-24 size-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            
+        <DialogContent className="max-w-md p-0 overflow-hidden border bg-white shadow-xl rounded-2xl font-sans antialiased text-slate-900">
+          <div className="p-8 text-center relative overflow-hidden">
             <div className="relative z-10">
-              <div className="size-20 rounded-3xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-8 rotate-3 hover:rotate-0 transition-transform duration-500 shadow-sm border border-primary/5">
-                <ShoppingCart size={40} strokeWidth={2.5} />
+              <div className="size-16 rounded-2xl bg-primary/5 text-primary flex items-center justify-center mx-auto mb-6">
+                <ShoppingCart size={32} strokeWidth={2} />
               </div>
               
-              <DialogHeader className="p-0 mb-3">
-                <DialogTitle className="text-3xl font-black text-slate-900 tracking-tight text-center">
+              <DialogHeader className="p-0 mb-2">
+                <DialogTitle className="text-2xl font-bold text-slate-900 tracking-tight text-center">
                   Confirm Enrollment
                 </DialogTitle>
-                <DialogDescription className="text-slate-500 font-semibold text-center text-sm mt-3 leading-relaxed">
+                <DialogDescription className="text-slate-500 font-medium text-sm mt-2 leading-relaxed">
                   You're about to gain lifetime access to 
-                  <span className="text-slate-900 font-black decoration-primary/30 underline underline-offset-4 ml-1">
+                  <span className="text-slate-900 font-semibold ml-1">
                     {courseTitle}
                   </span>
                 </DialogDescription>
               </DialogHeader>
               
-              <div className="mt-10 bg-slate-50/50 rounded-[2.5rem] p-10 border border-slate-100 shadow-inner group transition-colors hover:bg-slate-50 duration-500">
-                <div className="flex justify-between items-center mb-5">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Course Valuation</span>
-                  <Badge variant="outline" className="font-bold border-primary/20 bg-white text-primary px-3 py-1 rounded-lg">₹{amount}</Badge>
+              <div className="mt-8 bg-slate-50 rounded-xl p-6 border border-slate-200 text-left">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Course Value</span>
+                  <Badge variant="outline" className="font-semibold border-primary/20 bg-white text-primary px-2.5 py-0.5 rounded-md">₹{amount}</Badge>
                 </div>
-                <Separator className="my-5 bg-slate-200/60" />
+                <Separator className="my-4 bg-slate-200" />
                 <div className="flex justify-between items-end">
-                  <div className="text-left">
-                    <span className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Payable</span>
-                    <span className="text-sm font-black text-slate-900">Final Invoice</span>
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Payable</span>
+                    <span className="text-sm font-semibold text-slate-900">Final Invoice</span>
                   </div>
-                  <span className="text-4xl font-black text-primary tracking-tighter tabular-nums drop-shadow-sm">₹{amount}</span>
+                  <span className="text-3xl font-bold text-slate-900 tracking-tight tabular-nums">₹{amount}</span>
                 </div>
               </div>
 
-              <div className="mt-12 flex flex-col gap-5">
+              <div className="mt-8 flex flex-col gap-3">
                 <Button
                   size="lg"
                   onClick={() => sdkLoaded && handlePayment()}
                   disabled={createPaymentMutation.isPending}
-                  className="w-full h-16 rounded-[1.25rem] font-black text-lg shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all bg-primary hover:bg-primary/95 text-white border-none"
+                  className="w-full h-12 rounded-xl font-semibold text-base shadow-sm bg-primary hover:bg-primary/90 text-white transition-colors"
                 >
                   {createPaymentMutation.isPending ? (
                     <>
-                      <Loader2 size={24} className="animate-spin mr-3" />
+                      <Loader2 size={20} className="animate-spin mr-2" />
                       Processing...
                     </>
                   ) : (
                     <>
-                      <CreditCard size={22} className="mr-3" strokeWidth={2.5} />
+                      <CreditCard size={20} className="mr-2" strokeWidth={2} />
                       Secure Checkout
                     </>
                   )}
@@ -157,26 +153,25 @@ export default function PaymentModal({
                 <Button
                   variant="ghost"
                   onClick={onClose}
-                  className="w-full h-12 rounded-xl text-slate-400 font-bold hover:text-slate-900 hover:bg-slate-50 transition-all uppercase text-[10px] tracking-widest"
+                  className="w-full h-10 rounded-lg text-slate-500 font-medium hover:text-slate-900 hover:bg-slate-100 transition-colors"
                 >
-                  Cancel Transaction
+                  Cancel
                 </Button>
               </div>
 
-              <div className="mt-10 flex items-center justify-center gap-2">
-                <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 shadow-sm">
-                  <ShieldCheck size={16} className="text-primary" />
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">
+              <div className="mt-6 flex items-center justify-center">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-md border border-slate-200">
+                  <ShieldCheck size={14} className="text-emerald-600" />
+                  <span className="text-xs font-medium text-slate-600">
                     Bank-Grade 256-bit Encryption
                   </span>
                 </div>
               </div>
               
-              <div className="mt-6 flex flex-col items-center gap-1 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700">
-                <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em]">
-                  Powered by Razorpay Global Infrastructure
+              <div className="mt-6 flex flex-col items-center gap-1 text-slate-400">
+                <p className="text-[10px] font-medium uppercase tracking-wider">
+                  Powered by Razorpay
                 </p>
-                <div className="h-px w-8 bg-slate-200" />
               </div>
             </div>
           </div>

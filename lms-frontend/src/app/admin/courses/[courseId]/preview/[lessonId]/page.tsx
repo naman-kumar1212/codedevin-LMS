@@ -111,8 +111,34 @@ export default function AdminLessonPreviewPage() {
   }, [courseId, router]);
 
   const handleDurationChange = (newDuration: number) => {
+    const duration = Math.floor(newDuration);
     if (lesson && (!lesson.durationSeconds || lesson.durationSeconds === 0)) {
-       setLesson(prev => prev ? { ...prev, durationSeconds: Math.floor(newDuration) } : null);
+       // Update local lesson state
+       setLesson(prev => prev ? { ...prev, durationSeconds: duration } : null);
+       
+       // Update course state to refresh sidebar
+       setCourse((prevCourse: any) => {
+         if (!prevCourse) return prevCourse;
+         const updatedModules = prevCourse.modules?.map((mod: any) => ({
+           ...mod,
+           lessons: mod.lessons?.map((l: any) => 
+             l.id === lessonId ? { ...l, durationSeconds: duration } : l
+           )
+         }));
+         return { ...prevCourse, modules: updatedModules };
+       });
+
+       // Update progress state to refresh sidebar
+       setProgress((prevProgress: any) => {
+         if (!prevProgress) return prevProgress;
+         const updatedModules = prevProgress.modules?.map((mod: any) => ({
+           ...mod,
+           lessons: mod.lessons?.map((l: any) => 
+             l.lessonId === lessonId ? { ...l, durationSeconds: duration } : l
+           )
+         }));
+         return { ...prevProgress, modules: updatedModules };
+       });
     }
   };
 
@@ -138,7 +164,7 @@ export default function AdminLessonPreviewPage() {
     if (!seconds) return '00:00';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const sidebarModules = useMemo(() => {

@@ -131,19 +131,19 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 max-w-2xl border-none shadow-2xl rounded-[2rem] overflow-hidden font-sans antialiased bg-white">
+      <DialogContent className="p-0 max-w-2xl border bg-white shadow-xl rounded-xl overflow-hidden font-sans antialiased">
         <DialogTitle className="sr-only">Command Center</DialogTitle>
         <DialogDescription className="sr-only">Search the administrative registry for students, courses, or payments.</DialogDescription>
-        <div className="relative flex items-center p-6 border-b border-border bg-slate-50/20">
-          <Search size={20} className="text-primary mr-4" strokeWidth={2.5} />
+        <div className="relative flex items-center p-4 border-b border-slate-200 bg-slate-50/50">
+          <Search size={20} className="text-primary mr-3" strokeWidth={2} />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search the administrative registry..."
-            className="flex-1 bg-transparent border-none outline-none text-lg font-bold text-foreground placeholder:text-muted-foreground/40"
+            placeholder="Search the registry..."
+            className="flex-1 bg-transparent border-none outline-none text-base font-semibold text-slate-900 placeholder:text-slate-400"
           />
           <div className="flex items-center gap-3">
             {isLoading && <Loader2 size={18} className="animate-spin text-primary" />}
@@ -152,49 +152,49 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setQuery('')}
-                className="size-7 rounded-lg hover:bg-muted"
+                className="size-7 rounded-md hover:bg-slate-200/50"
               >
-                <X size={14} className="text-muted-foreground" />
+                <X size={14} className="text-slate-500" />
               </Button>
             )}
-            <Badge variant="outline" className="hidden sm:flex h-6 rounded-md px-1.5 font-black text-[10px] text-muted-foreground/60 border-border/40 bg-white">
+            <Badge variant="outline" className="hidden sm:flex h-6 rounded px-1.5 font-medium text-[10px] text-slate-400 border-slate-200 bg-white">
               ESC
             </Badge>
           </div>
         </div>
 
         <ScrollArea className="max-h-[60vh]">
-          <div className="p-4">
+          <div className="p-3">
             {!query ? (
-              <div className="py-20 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
-                <div className="size-20 bg-muted/30 rounded-3xl flex items-center justify-center text-muted-foreground/20 mb-6 shadow-inner">
-                  <CommandIcon size={36} strokeWidth={1.5} />
+              <div className="py-16 flex flex-col items-center justify-center text-center animate-in fade-in duration-300">
+                <div className="size-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 mb-4">
+                  <CommandIcon size={32} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-lg font-black text-foreground tracking-tight">Global Command Center</h3>
-                <p className="text-sm font-semibold text-muted-foreground/60 mt-1 max-w-xs">
+                <h3 className="text-base font-semibold text-slate-900 tracking-tight">Global Command Center</h3>
+                <p className="text-sm text-slate-500 mt-1 max-w-xs">
                   Instantly access students, curriculum details, or transactional records.
                 </p>
               </div>
             ) : results.length === 0 && !isLoading ? (
-              <div className="py-20 text-center animate-in fade-in duration-500">
-                <p className="text-lg font-black text-foreground">Null results detected</p>
-                <p className="text-sm font-semibold text-muted-foreground/60 mt-1">No matches found for "{query}" across the registry.</p>
+              <div className="py-16 text-center animate-in fade-in duration-300">
+                <p className="text-base font-semibold text-slate-900">No results found</p>
+                <p className="text-sm text-slate-500 mt-1">No matches found for "{query}".</p>
               </div>
             ) : (
-              <div className="space-y-6 py-2">
+              <div className="space-y-4 py-2">
                 {['student', 'course', 'payment'].map((type) => {
                   const groupResults = results.filter(r => r.type === type);
                   if (groupResults.length === 0) return null;
 
                   return (
-                    <div key={type} className="animate-in slide-in-from-left-2 duration-300">
-                      <div className="flex items-center gap-2 px-3 mb-3">
-                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-                          {type === 'student' ? 'Student Profiles' : type === 'course' ? 'Curriculum' : 'Transactions'}
+                    <div key={type} className="animate-in slide-in-from-left-1 duration-200">
+                      <div className="flex items-center gap-2 px-3 mb-2">
+                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+                          {type === 'student' ? 'Students' : type === 'course' ? 'Courses' : 'Payments'}
                         </span>
-                        <Separator className="flex-1 opacity-40" />
+                        <Separator className="flex-1" />
                       </div>
-                      <div className="space-y-1.5 px-1">
+                      <div className="space-y-1">
                         {groupResults.map((result) => {
                           const globalIndex = results.indexOf(result);
                           const isSelected = globalIndex === activeIndex;
@@ -208,39 +208,36 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
                               }}
                               onMouseEnter={() => setActiveIndex(globalIndex)}
                               className={cn(
-                                "w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 group text-left border border-transparent mb-1",
+                                "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-150 text-left border",
                                 isSelected 
-                                  ? "bg-primary border-primary/20 shadow-2xl shadow-primary/20 scale-[1.01] z-10" 
-                                  : "hover:bg-slate-50"
+                                  ? "bg-primary/5 border-primary/20" 
+                                  : "bg-transparent border-transparent hover:bg-slate-50"
                               )}
                             >
                               <div className={cn(
-                                "size-11 rounded-xl flex items-center justify-center transition-all",
-                                isSelected ? "bg-white/20 text-white rotate-2" : "bg-muted text-muted-foreground group-hover:text-primary group-hover:scale-110"
+                                "size-10 rounded-lg flex items-center justify-center transition-colors",
+                                isSelected ? "bg-primary/10 text-primary" : "bg-slate-100 text-slate-500 group-hover:text-primary"
                               )}>
-                                {type === 'student' && <Users size={20} />}
-                                {type === 'course' && <BookOpen size={20} />}
-                                {type === 'payment' && <CreditCard size={20} />}
+                                {type === 'student' && <Users size={18} />}
+                                {type === 'course' && <BookOpen size={18} />}
+                                {type === 'payment' && <CreditCard size={18} />}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className={cn(
-                                  "text-sm font-black leading-tight truncate tracking-tight",
-                                  isSelected ? "text-white" : "text-foreground"
+                                  "text-sm font-semibold leading-tight truncate",
+                                  isSelected ? "text-primary" : "text-slate-900"
                                 )}>
                                   {result.title}
                                 </p>
-                                <p className={cn(
-                                  "text-[10px] font-bold mt-1 truncate uppercase tracking-widest",
-                                  isSelected ? "text-white/60" : "text-muted-foreground/60"
-                                )}>
+                                <p className="text-xs text-slate-500 mt-0.5 truncate tracking-wide">
                                   {result.subtitle}
                                 </p>
                               </div>
                               <ArrowRight
-                                size={18}
+                                size={16}
                                 className={cn(
-                                  "transition-all duration-300",
-                                  isSelected ? "text-white translate-x-0 opacity-100" : "text-muted-foreground/20 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
+                                  "transition-all duration-200",
+                                  isSelected ? "text-primary translate-x-0 opacity-100" : "text-slate-300 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
                                 )}
                               />
                             </button>
@@ -255,13 +252,10 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
           </div>
         </ScrollArea>
 
-        <div className="bg-muted/30 px-6 py-3 border-t border-border flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2"><ArrowRight size={12} className="text-primary/40 rotate-180" /> <ArrowRight size={12} className="text-primary/40 rotate-0" /> Navigate</span>
-            <span className="flex items-center gap-2 tracking-[0.3em] font-black underline underline-offset-4 decoration-primary/30">ENTER</span> to Select
-          </div>
-          <div className="flex items-center gap-1 opacity-40">
-            Registry Search v1.0
+        <div className="bg-slate-50 px-4 py-2 border-t border-slate-200 flex items-center justify-between text-[11px] font-medium text-slate-500">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5"><ArrowRight size={12} className="text-slate-400 rotate-180" /> <ArrowRight size={12} className="text-slate-400 rotate-0" /> Navigate</span>
+            <span className="flex items-center gap-1.5"><span className="border border-slate-300 rounded px-1 bg-white">Enter</span> Select</span>
           </div>
         </div>
       </DialogContent>

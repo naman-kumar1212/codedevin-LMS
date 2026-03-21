@@ -323,7 +323,10 @@ export default function CreateCoursePage() {
     }
   };
 
-  const handleAddQuiz = (moduleId: string) => setActiveQuizModuleId(moduleId);
+  const handleAddQuiz = (moduleId: string) => {
+    setActiveQuizModuleId(moduleId);
+    setStep(4);
+  };
 
   const handleQuizSaved = (moduleId: string, quiz: any) => {
     setModules((prev) =>
@@ -350,7 +353,7 @@ export default function CreateCoursePage() {
   // ──────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-32 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Hidden file input for uploads */}
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelected} />
 
@@ -367,93 +370,71 @@ export default function CreateCoursePage() {
 
       {/* Add Module Dialog */}
       <Dialog open={isAddModuleOpen} onOpenChange={setIsAddModuleOpen}>
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none shadow-2xl rounded-[2rem] font-sans antialiased bg-white">
-          <div className="p-10">
-            <div className="size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6">
-              <Plus size={28} strokeWidth={2.5} />
-            </div>
-            <DialogHeader className="p-0 mb-6">
-              <DialogTitle className="text-2xl font-black text-slate-900 tracking-tight">Add New Module</DialogTitle>
-              <DialogDescription className="text-slate-500 font-semibold text-sm mt-2">
+        <DialogContent className="sm:max-w-md bg-white">
+          <div className="p-6">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-xl font-bold text-slate-900">Add New Module</DialogTitle>
+              <DialogDescription className="text-slate-500 text-sm">
                 Create a new section for your course curriculum.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Module Title</label>
+                <label className="text-sm font-medium text-slate-700 ml-1 block">Module Title</label>
                 <Input
                   placeholder="e.g. Introduction to React"
                   value={newModuleTitle}
                   onChange={(e) => setNewModuleTitle(e.target.value)}
-                  className="h-14 font-bold text-lg bg-slate-50/50 border-slate-200 rounded-xl focus:bg-white focus:ring-primary/10 transition-all"
+                  className="h-10 text-sm bg-white border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                 />
               </div>
             </div>
+            <div className="flex gap-3 justify-end mt-6">
+              <Button type="button" variant="outline" onClick={() => setIsAddModuleOpen(false)} className="h-10 px-4 rounded-md">
+                Cancel
+              </Button>
+              <Button type="button" onClick={confirmAddModule} disabled={!newModuleTitle.trim()} className="h-10 px-4 rounded-md bg-primary hover:bg-primary/90 text-white">
+                Create Module
+              </Button>
+            </div>
           </div>
-          <DialogFooter className="px-10 py-6 bg-slate-50 border-t border-slate-100 sm:justify-start gap-3">
-            <Button 
-              className="flex-1 h-12 rounded-xl font-black bg-primary text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-              onClick={confirmAddModule} 
-              disabled={!newModuleTitle.trim()}
-            >
-              Create Module
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="h-12 rounded-xl font-bold text-slate-400 hover:text-slate-900 transition-all"
-              onClick={() => setIsAddModuleOpen(false)}
-            >
-              Cancel
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!moduleToDelete} onOpenChange={(open) => !open && setModuleToDelete(null)}>
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none shadow-2xl rounded-[2rem] font-sans antialiased bg-white">
-          <div className="p-10">
-            <div className="size-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mb-6">
-              <Trash2 size={28} strokeWidth={2.5} />
-            </div>
-            <DialogHeader className="p-0 mb-6">
-              <DialogTitle className="text-2xl font-black text-red-600 tracking-tight">Delete Module?</DialogTitle>
-              <DialogDescription className="text-slate-500 font-semibold text-sm mt-2">
+        <DialogContent className="sm:max-w-md bg-white">
+          <div className="p-6">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-xl font-bold text-slate-900">Delete Module?</DialogTitle>
+              <DialogDescription className="text-slate-500 text-sm mt-2">
                 This action cannot be undone. All lessons within this module will be permanently removed from the curriculum.
               </DialogDescription>
             </DialogHeader>
+            <div className="flex gap-3 justify-end mt-6">
+              <Button variant="outline" onClick={() => setModuleToDelete(null)} className="h-10 px-4 rounded-md">
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDeleteModule} className="h-10 px-4 rounded-md">
+                Delete
+              </Button>
+            </div>
           </div>
-          <DialogFooter className="px-10 py-6 bg-red-50/30 border-t border-red-100 sm:justify-start gap-3">
-            <Button 
-              variant="destructive" 
-              className="flex-1 h-12 rounded-xl font-black shadow-lg shadow-red-200 hover:scale-[1.02] active:scale-[0.98] transition-all"
-              onClick={confirmDeleteModule}
-            >
-              Delete Permanently
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="h-12 rounded-xl font-bold text-slate-400 hover:text-slate-900 transition-all"
-              onClick={() => setModuleToDelete(null)}
-            >
-              Keep Module
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* ── Page Header ──────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
             <span>Curriculum</span>
             <ChevronRight className="size-3" />
-            <span className="text-primary">Creation Tool</span>
+            <span className="text-primary">Create Course</span>
           </nav>
-          <h1 className="text-4xl font-bold text-slate-900 tracking-tight">
-            Create New <span className="text-primary">Course</span>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Create Course
           </h1>
-          <p className="text-slate-500 mt-2 font-medium max-w-xl">
+          <p className="text-slate-500 mt-2 text-sm max-w-xl">
             Design a high-quality learning experience with modules, media content, quizzes, and more.
           </p>
         </div>
@@ -494,32 +475,32 @@ export default function CreateCoursePage() {
 
         {/* ── Step 1: Basic Info ────────────────────────────────────────── */}
         {step === 1 && (
-          <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-slate-900">General Information</h2>
-              <p className="text-slate-500 mt-2 font-medium">Provide the basic identity and description of your new course.</p>
+          <div className="p-8">
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-slate-900">General Information</h2>
+              <p className="text-slate-500 mt-1 text-sm">Provide the basic identity and description of your new course.</p>
             </div>
 
-            <form onSubmit={handleStep1Submit} className="space-y-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Course Title</label>
+            <form onSubmit={handleStep1Submit} className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-1.5 flex flex-col">
+                  <label className="text-sm font-medium text-slate-700">Course Title</label>
                   <input
                     required
                     type="text"
                     value={basicInfo.title}
                     onChange={(e) => setBasicInfo({ ...basicInfo, title: e.target.value })}
                     placeholder="e.g. Advanced Financial Management"
-                    className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-6 text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
+                    className="w-full h-10 bg-white border border-slate-200 rounded-md px-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Category Registry</label>
+                <div className="space-y-1.5 flex flex-col">
+                  <label className="text-sm font-medium text-slate-700">Category</label>
                   <Select
                     value={basicInfo.category}
                     onValueChange={(val) => setBasicInfo({ ...basicInfo, category: val })}
                   >
-                    <SelectTrigger className="w-full h-14 bg-slate-50 border-slate-200 rounded-xl px-6 font-semibold text-slate-900">
+                    <SelectTrigger className="w-full h-10 bg-white border-slate-200 rounded-md px-3 text-sm text-slate-900 focus:ring-1 focus:ring-primary focus:border-primary">
                       <SelectValue placeholder="Select Sector" />
                     </SelectTrigger>
                     <SelectContent>
@@ -534,25 +515,25 @@ export default function CreateCoursePage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Detailed Description</label>
+              <div className="space-y-1.5 flex flex-col">
+                <label className="text-sm font-medium text-slate-700">Detailed Description</label>
                 <textarea
                   rows={5}
                   value={basicInfo.description}
                   onChange={(e) => setBasicInfo({ ...basicInfo, description: e.target.value })}
                   placeholder="Describe what learners will achieve in this course..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all resize-none"
+                  className="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors resize-none"
                 />
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Academic Complexity</label>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-1.5 flex flex-col">
+                  <label className="text-sm font-medium text-slate-700">Difficulty Level</label>
                   <Select
                     value={basicInfo.level}
                     onValueChange={(val) => setBasicInfo({ ...basicInfo, level: val })}
                   >
-                    <SelectTrigger className="w-full h-14 bg-slate-50 border-slate-200 rounded-xl px-6 font-semibold text-slate-900">
+                    <SelectTrigger className="w-full h-10 bg-white border-slate-200 rounded-md px-3 text-sm text-slate-900 focus:ring-1 focus:ring-primary focus:border-primary">
                       <SelectValue placeholder="Select State" />
                     </SelectTrigger>
                     <SelectContent>
@@ -562,13 +543,13 @@ export default function CreateCoursePage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Access Type</label>
-                  <div className="flex items-center gap-3 p-1.5 bg-slate-100 rounded-xl border border-slate-200 h-14">
+                <div className="space-y-1.5 flex flex-col">
+                  <label className="text-sm font-medium text-slate-700">Access Type</label>
+                  <div className="flex items-center gap-3 p-1 bg-slate-100 rounded-md border border-slate-200 h-10">
                     <button
                       type="button"
                       onClick={() => setBasicInfo({ ...basicInfo, isFree: true, price: 0 })}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${basicInfo.isFree ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                      className={`flex-1 flex items-center justify-center gap-2 h-full rounded text-sm font-medium transition-colors ${basicInfo.isFree ? 'bg-white text-primary shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                     >
                       <ShieldCheck className="size-4" />
                       Free
@@ -576,7 +557,7 @@ export default function CreateCoursePage() {
                     <button
                       type="button"
                       onClick={() => setBasicInfo({ ...basicInfo, isFree: false })}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${!basicInfo.isFree ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-slate-900'}`}
+                      className={`flex-1 flex items-center justify-center gap-2 h-full rounded text-sm font-medium transition-colors ${!basicInfo.isFree ? 'bg-primary text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                     >
                       <BadgeCent className="size-4" />
                       Premium
@@ -586,15 +567,15 @@ export default function CreateCoursePage() {
               </div>
 
               {!basicInfo.isFree && (
-                <div className="space-y-2 animate-in zoom-in-95 duration-300">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Tuition Fee (INR)</label>
+                <div className="space-y-1.5 flex flex-col">
+                  <label className="text-sm font-medium text-slate-700">Tuition Fee (INR)</label>
                   <div className="relative">
-                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-bold">₹</div>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium pb-0.5">₹</div>
                     <input
                       type="number"
                       value={basicInfo.price}
                       onChange={(e) => setBasicInfo({ ...basicInfo, price: Number(e.target.value) })}
-                      className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-10 text-lg font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
+                      className="w-full h-10 bg-white border border-slate-200 rounded-md pl-7 pr-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                     />
                   </div>
                 </div>
@@ -607,16 +588,16 @@ export default function CreateCoursePage() {
                 </div>
               )}
 
-              <div className="pt-8 border-t border-slate-100">
+              <div className="pt-6 border-t border-slate-100">
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="w-full bg-primary text-white py-5 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-3 group disabled:opacity-60"
+                  className="w-full bg-primary text-white py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   {createMutation.isPending ? (
-                    <><RefreshCw className="size-5 animate-spin" /> Creating Course...</>
+                    <><RefreshCw className="size-4 animate-spin" /> Creating Course...</>
                   ) : (
-                    <>Next: Build Curriculum <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" /></>
+                    <>Next: Build Curriculum <ArrowRight className="size-4" /></>
                   )}
                 </button>
               </div>
@@ -768,14 +749,14 @@ export default function CreateCoursePage() {
             </div>
 
             <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-between">
-              <button onClick={() => setStep(2)} className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
+              <button onClick={() => setStep(2)} className="group flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors">
                 <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
                 Back to Modules
               </button>
               <button
                 onClick={() => setStep(4)}
                 disabled={totalLessons === 0 || uploadingCount > 0}
-                className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="bg-primary text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 Next: Quizzes <ArrowRight className="size-4" />
               </button>
@@ -785,10 +766,10 @@ export default function CreateCoursePage() {
 
         {/* ── Step 4: Quiz Builder ──────────────────────────────────────── */}
         {step === 4 && (
-          <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-slate-900">Quiz Builder</h2>
-              <p className="text-slate-500 mt-2 font-medium">
+          <div className="p-8">
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-slate-900">Quiz Builder</h2>
+              <p className="text-slate-500 mt-1 text-sm">
                 Add MCQ quizzes to modules. Quizzes are optional — skip to publish if not needed.
               </p>
             </div>
@@ -799,10 +780,10 @@ export default function CreateCoursePage() {
                 <button
                   key={m.id}
                   onClick={() => setActiveQuizModuleId(m.id)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
                     activeQuizModuleId === m.id
-                      ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
-                      : 'bg-white text-slate-700 border-slate-200 hover:border-primary/40'
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <HelpCircle className="size-4" />
@@ -826,21 +807,21 @@ export default function CreateCoursePage() {
                 );
               })()
             ) : (
-              <div className="py-20 text-center flex flex-col items-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-                <HelpCircle className="size-12 text-slate-200 mb-4" />
-                <h4 className="text-xl font-bold text-slate-900">Select a Module</h4>
-                <p className="text-slate-500 mt-2 font-medium max-w-sm mx-auto">Click a module above to open its quiz editor.</p>
+              <div className="py-16 text-center flex flex-col items-center bg-slate-50/50 rounded-lg border border-dashed border-slate-200">
+                <HelpCircle className="size-10 text-slate-300 mb-3" />
+                <h4 className="text-lg font-medium text-slate-900">Select a Module</h4>
+                <p className="text-slate-500 mt-1 text-sm max-w-sm mx-auto">Click a module above to open its quiz editor.</p>
               </div>
             )}
 
-            <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-between">
-              <button onClick={() => setStep(3)} className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
-                <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
+            <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+              <button onClick={() => setStep(3)} className="group flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                <ArrowLeft className="size-4" />
                 Back to Content
               </button>
               <button
                 onClick={() => setStep(5)}
-                className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all flex items-center gap-2"
+                className="bg-primary text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors flex items-center gap-2"
               >
                 Review & Publish <ArrowRight className="size-4" />
               </button>
@@ -850,16 +831,16 @@ export default function CreateCoursePage() {
 
         {/* ── Step 5: Review & Publish ──────────────────────────────────── */}
         {step === 5 && (
-          <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500 text-center">
-            <div className="max-w-xl mx-auto mb-10">
-              <div className="size-20 rounded-2xl bg-primary/5 flex items-center justify-center text-primary mx-auto mb-6 shadow-sm border border-primary/10">
-                <Rocket className="size-10" />
+          <div className="p-8 text-center pt-12">
+            <div className="max-w-xl mx-auto mb-8">
+              <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
+                <Rocket className="size-8" />
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">Ready to Publish</h2>
-              <p className="text-slate-500 font-medium">Your course curriculum is complete and ready for students to enroll.</p>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Ready to Publish</h2>
+              <p className="text-slate-500 text-sm">Your course curriculum is complete and ready for students to enroll.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto bg-slate-50 p-8 rounded-3xl border border-slate-200 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto bg-slate-50/50 p-6 rounded-xl border border-slate-100 mb-8">
               <div className="space-y-6">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Course Title</p>
@@ -900,27 +881,27 @@ export default function CreateCoursePage() {
             </div>
 
             {publishMutation.isError && (
-              <div className="flex items-center justify-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl mb-6 max-w-md mx-auto">
-                <AlertCircle className="size-5 text-red-500 shrink-0" />
-                <p className="text-sm font-semibold text-red-700">
+              <div className="flex items-center justify-center gap-2 p-3 bg-red-50 border border-red-100 rounded-md mb-6 max-w-sm mx-auto">
+                <AlertCircle className="size-4 text-red-500 shrink-0" />
+                <p className="text-sm font-medium text-red-800">
                   {(publishMutation.error as any)?.response?.data?.message || 'Failed to publish. Check that all modules have content.'}
                 </p>
               </div>
             )}
 
-            <div className="flex flex-col gap-4 max-w-md mx-auto">
+            <div className="flex flex-col gap-3 max-w-xs mx-auto">
               <button
                 onClick={() => publishMutation.mutate()}
                 disabled={publishMutation.isPending}
-                className="w-full bg-primary text-white py-5 rounded-xl font-bold text-lg shadow-xl shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-3 group disabled:opacity-60"
+                className="w-full bg-primary text-white py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {publishMutation.isPending ? (
-                  <><RefreshCw className="size-5 animate-spin" /> Publishing Now...</>
+                  <><RefreshCw className="size-4 animate-spin" /> Publishing Now...</>
                 ) : (
-                  <><Rocket className="size-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" /> Release to Learners</>
+                  <><Rocket className="size-4" /> Release to Learners</>
                 )}
               </button>
-              <Link href="/admin/courses" className="text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-primary py-2 transition-colors">
+              <Link href="/admin/courses" className="text-sm font-medium text-slate-500 hover:text-slate-900 py-2 transition-colors">
                 Keep as Private Draft & Exit
               </Link>
             </div>
@@ -929,18 +910,14 @@ export default function CreateCoursePage() {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-center gap-10 text-slate-300">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="size-3" />
-          <p className="text-[10px] font-bold uppercase tracking-wider">Secure Transmission</p>
+      <div className="flex items-center justify-center gap-6 text-slate-400 mt-8">
+        <div className="flex items-center gap-1.5">
+          <ShieldCheck className="size-3.5" />
+          <p className="text-xs font-medium">Secure Transmission</p>
         </div>
-        <div className="hidden md:flex items-center gap-2">
-          <Smartphone className="size-3" />
-          <p className="text-[10px] font-bold uppercase tracking-wider">Responsive Ready</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Plus className="size-3 text-primary" />
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">LMS v2.5 · Media Abstraction</p>
+        <div className="hidden md:flex items-center gap-1.5">
+          <Smartphone className="size-3.5" />
+          <p className="text-xs font-medium">Responsive Ready</p>
         </div>
       </div>
     </div>

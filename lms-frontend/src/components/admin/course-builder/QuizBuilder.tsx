@@ -1,31 +1,30 @@
 import { useState } from 'react';
 import {
-  Plus, Trash2, CheckCircle2, Circle, ChevronDown, ChevronUp,
-  HelpCircle, Percent, Save
+  Plus, Trash2, CheckCircle2, ChevronDown, ChevronUp,
+  HelpCircle, Percent, Save, Loader2
 } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-interface QuizOption {
+export interface QuizOption {
   id?: string;
   optionText: string;
   isCorrect: boolean;
   orderIndex: number;
 }
 
-interface Question {
+export interface Question {
   id?: string;
   questionText: string;
   orderIndex: number;
   options: QuizOption[];
 }
 
-interface Quiz {
+export interface Quiz {
   id?: string;
   title: string;
   passingScore: number;
@@ -129,28 +128,28 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
   const letters = ['A', 'B', 'C', 'D'];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-500">
       {/* Quiz Config Header */}
-      <Card className="bg-slate-50 border-slate-200/60 rounded-[2.5rem] overflow-hidden">
-        <CardContent className="p-8">
-          <div className="flex flex-col md:flex-row md:items-end gap-8">
-            <div className="flex-1 space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">
+      <Card className="bg-white border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row md:items-end gap-6">
+            <div className="flex-1 space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">
                 Quiz Title
               </label>
               <Input
                 value={quiz.title}
                 onChange={(e) => setQuiz((q) => ({ ...q, title: e.target.value }))}
                 placeholder="Enter quiz title..."
-                className="h-14 text-lg font-bold bg-white rounded-2xl border-slate-200/80 focus:ring-primary/10 transition-all"
+                className="h-11 text-base font-medium bg-white rounded-lg border-slate-200 focus:ring-primary/10 transition-colors"
               />
             </div>
-            <div className="md:w-64 space-y-3">
+            <div className="md:w-64 space-y-2">
               <div className="flex items-center justify-between ml-1">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                   <Percent className="size-3" /> Passing Score
                 </label>
-                <Badge variant="secondary" className="bg-primary/10 text-primary font-black px-3 py-1 rounded-full border-none">
+                <Badge variant="secondary" className="bg-primary/5 text-primary font-semibold px-2.5 py-0.5 rounded-md border text-xs">
                   {quiz.passingScore}%
                 </Badge>
               </div>
@@ -161,7 +160,7 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
                 step={5}
                 value={quiz.passingScore}
                 onChange={(e) => setQuiz((q) => ({ ...q, passingScore: Number(e.target.value) }))}
-                className="w-full accent-primary h-2 rounded-full cursor-pointer bg-slate-200 appearance-none"
+                className="w-full accent-primary h-1.5 rounded-full cursor-pointer bg-slate-200 appearance-none"
               />
             </div>
           </div>
@@ -169,87 +168,87 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
       </Card>
 
       {/* Questions */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {quiz.questions.map((q, qi) => (
           <Card 
             key={qi} 
             className={cn(
-              "rounded-[2rem] border-slate-200/60 shadow-sm transition-all duration-500 overflow-hidden",
-              expanded[qi] ? "shadow-2xl shadow-slate-200/50 -translate-y-1" : "hover:shadow-md"
+              "rounded-xl border-slate-200 shadow-sm transition-all duration-300 overflow-hidden",
+              expanded[qi] ? "shadow-md ring-1 ring-slate-100" : "hover:border-slate-300"
             )}
           >
             <div 
               className={cn(
-                "flex items-center gap-4 px-8 py-5 cursor-pointer transition-colors",
-                expanded[qi] ? "bg-slate-50/50" : "hover:bg-slate-50/30"
+                "flex items-center gap-4 px-5 py-4 cursor-pointer transition-colors",
+                expanded[qi] ? "bg-slate-50/50 border-b border-slate-100" : "hover:bg-slate-50/30"
               )} 
               onClick={() => setExpanded((e) => ({ ...e, [qi]: !e[qi] }))}
             >
-              <div className="size-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group">
-                <HelpCircle className="size-5 text-primary group-hover:scale-110 transition-transform" />
+              <div className="size-9 rounded-lg bg-primary/5 flex items-center justify-center shrink-0 group">
+                <HelpCircle className="size-4.5 text-primary" strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Question {qi + 1}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Question {qi + 1}</span>
                   {q.options.some(o => o.isCorrect && o.optionText) && (
-                    <Badge variant="outline" className="text-[8px] font-black uppercase py-0 border-emerald-200 text-emerald-600 bg-emerald-50/50">Valid</Badge>
+                    <Badge variant="outline" className="text-[10px] font-semibold uppercase py-0 border-emerald-200 text-emerald-600 bg-emerald-50/50">Valid</Badge>
                   )}
                 </div>
-                <p className="text-sm font-bold text-slate-900 truncate tracking-tight">
-                  {q.questionText || <span className="text-slate-300 font-medium italic">Type your question...</span>}
+                <p className="text-sm font-semibold text-slate-900 truncate tracking-tight">
+                  {q.questionText || <span className="text-slate-400 font-medium italic">Type your question...</span>}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className="size-8 rounded-xl text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                  className="size-8 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                   onClick={(e) => { e.stopPropagation(); deleteQuestion(qi); }}
                 >
                   <Trash2 size={16} />
                 </Button>
-                {expanded[qi] ? <ChevronUp size={20} className="text-slate-400" /> : <ChevronDown size={20} className="text-slate-400" />}
+                {expanded[qi] ? <ChevronUp size={18} className="text-slate-500" /> : <ChevronDown size={18} className="text-slate-500" />}
               </div>
             </div>
 
             {(expanded[qi] || !q.questionText) && (
-              <CardContent className="p-8 pt-2 space-y-8 animate-in slide-in-from-top-4 duration-500">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">The Question</label>
+              <CardContent className="p-5 pt-4 space-y-6 animate-in slide-in-from-top-2 duration-300">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">The Question</label>
                   <Input
                     value={q.questionText}
                     onChange={(e) => updateQuestion(qi, e.target.value)}
                     placeholder="Enter the question here..."
-                    className="h-12 font-semibold bg-slate-50/50 rounded-xl border-slate-200 focus:bg-white transition-all"
+                    className="h-11 font-medium bg-white rounded-lg border-slate-200 focus:ring-primary/10 transition-colors shadow-sm"
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Options & Correct Answer</label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">Options & Correct Answer</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {q.options.map((opt, oi) => (
                       <div 
                         key={oi} 
                         className={cn(
-                          "flex items-center gap-4 p-3 rounded-2xl border transition-all duration-300",
+                          "flex items-center gap-3 p-2.5 rounded-lg border transition-all duration-200",
                           opt.isCorrect 
-                            ? "bg-emerald-50/50 border-emerald-200/60 ring-1 ring-emerald-100" 
-                            : "bg-slate-50/30 border-slate-100 hover:border-slate-200"
+                            ? "bg-emerald-50/30 border-emerald-200 ring-1 ring-emerald-100" 
+                            : "bg-slate-50/50 border-slate-200 hover:border-slate-300"
                         )}
                       >
                         <button
                           onClick={() => setCorrectOption(qi, oi)}
                           className={cn(
-                            "group size-10 rounded-xl flex items-center justify-center transition-all",
+                            "group size-8 rounded-md flex items-center justify-center transition-colors shrink-0",
                             opt.isCorrect 
-                              ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200" 
-                              : "bg-white border border-slate-200 text-slate-300 hover:text-slate-500 hover:border-slate-300"
+                              ? "bg-emerald-500 text-white" 
+                              : "bg-white border border-slate-300 text-slate-400 hover:text-slate-600"
                           )}
                         >
                           {opt.isCorrect ? (
-                            <CheckCircle2 size={20} className="animate-in zoom-in duration-300" />
+                            <CheckCircle2 size={16} strokeWidth={2.5} className="animate-in zoom-in duration-200" />
                           ) : (
-                            <span className="text-[11px] font-black tracking-widest ml-1">{letters[oi]}</span>
+                            <span className="text-xs font-semibold tracking-wider">{letters[oi]}</span>
                           )}
                         </button>
                         <div className="flex-1 min-w-0">
@@ -259,8 +258,8 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
                             onChange={(e) => updateOption(qi, oi, e.target.value)}
                             placeholder={`Option ${letters[oi]}`}
                             className={cn(
-                              "w-full bg-transparent border-none p-0 text-sm font-bold focus:outline-none transition-colors",
-                              opt.isCorrect ? "text-emerald-900 placeholder:text-emerald-300" : "text-slate-700 placeholder:text-slate-300"
+                              "w-full bg-transparent border-none p-0 text-sm font-medium focus:outline-none transition-colors",
+                              opt.isCorrect ? "text-emerald-900 placeholder:text-emerald-400" : "text-slate-900 placeholder:text-slate-400"
                             )}
                           />
                         </div>
@@ -275,13 +274,13 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+      <div className="flex items-center gap-3 pt-3">
         <Button
           onClick={addQuestion}
           variant="outline"
-          className="h-14 px-8 gap-3 rounded-2xl border-slate-200 font-bold bg-white hover:bg-slate-50 transition-all hover:-translate-y-1"
+          className="h-10 px-5 gap-2 rounded-md border-slate-200 font-medium bg-white hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
         >
-          <Plus size={18} strokeWidth={3} />
+          <Plus size={16} strokeWidth={2} />
           Add Question
         </Button>
 
@@ -289,12 +288,12 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
           <Button
             onClick={saveQuiz}
             disabled={saving}
-            className="h-14 px-10 gap-3 rounded-2xl font-black bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 disabled:opacity-50"
+            className="h-10 px-6 gap-2 rounded-md font-semibold bg-primary hover:bg-primary/90 text-white transition-colors hover:shadow-md disabled:opacity-50"
           >
             {saving ? (
-              <span className="flex items-center gap-2"><div className="size-4 rounded-full border-2 border-white/20 border-t-white animate-spin" /> Saving...</span>
+              <span className="flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Saving...</span>
             ) : (
-              <span className="flex items-center gap-2"><Save size={18} strokeWidth={3} /> Save Quiz</span>
+              <span className="flex items-center gap-2"><Save size={16} strokeWidth={2} /> Save Quiz</span>
             )}
           </Button>
         )}

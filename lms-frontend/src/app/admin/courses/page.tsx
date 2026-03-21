@@ -83,24 +83,24 @@ export default function AdminCoursesPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-700 font-display">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div className="space-y-3">
-            <div className="h-10 w-64 bg-slate-200/60 rounded-xl animate-pulse" />
-            <div className="h-4 w-96 bg-slate-200/60 rounded-md animate-pulse" />
+      <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 font-sans">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="h-8 w-48 bg-slate-100 rounded-md animate-pulse" />
+            <div className="h-4 w-72 bg-slate-100 rounded-md animate-pulse" />
           </div>
-          <div className="h-12 w-48 bg-slate-200/60 rounded-2xl animate-pulse" />
+          <div className="h-10 w-32 bg-slate-100 rounded-md animate-pulse" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 bg-slate-200/60 rounded-[2.5rem] animate-pulse" />
+            <div key={i} className="h-28 bg-slate-100 rounded-md animate-pulse" />
           ))}
         </div>
-        <div className="h-20 w-full bg-slate-200/60 rounded-[32px] animate-pulse shadow-sm" />
-        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden shadow-sm">
-          <div className="h-16 bg-slate-200/60 animate-pulse border-b border-slate-100" />
+        <div className="h-16 w-full bg-slate-100 rounded-md animate-pulse" />
+        <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
+          <div className="h-12 bg-slate-50 border-b border-slate-200 animate-pulse" />
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-24 bg-white animate-pulse border-b border-slate-50" />
+            <div key={i} className="h-20 bg-white animate-pulse border-b border-slate-100" />
           ))}
         </div>
       </div>
@@ -108,19 +108,19 @@ export default function AdminCoursesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-1000 font-display pb-20">
-      {/* Platform Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 font-sans pb-16">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Curriculum Hub</h1>
-          <p className="text-slate-500 mt-2 text-sm font-medium leading-relaxed max-w-xl">
-            Manage your educational portfolio, track engagement metrics, and orchestrate learning pathways from a central command center.
+          <h1 className="text-2xl font-bold text-slate-900">Courses</h1>
+          <p className="text-slate-500 mt-1 text-sm max-w-xl">
+            Manage your educational portfolio and track engagement metrics.
           </p>
         </div>
         <Link href="/admin/courses/create">
-          <Button className="h-14 px-8 rounded-2xl text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all gap-3 bg-primary text-white">
-            <PlusCircle className="size-5" />
-            Initialize Unit
+          <Button className="h-9 px-4 rounded-md text-sm font-medium shadow-sm gap-2">
+            <PlusCircle className="size-4" />
+            Add Course
           </Button>
         </Link>
       </div>
@@ -151,52 +151,52 @@ export default function AdminCoursesPage() {
         />
       </div>
 
-      {/* Orchestration Controls */}
-      <div className="bg-white/80 backdrop-blur-xl p-5 rounded-[2.5rem] border border-slate-200/60 shadow-sm flex flex-col lg:flex-row items-center gap-6">
+      {/* Controls */}
+      <div className="bg-white p-3 rounded-md border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-4">
         <div className="relative flex-1 w-full group">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
           <Input
             type="text"
-            placeholder="Search curriculum entities..."
+            placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-50/50 border-transparent rounded-2xl py-6 pl-14 pr-12 text-sm font-semibold placeholder:text-slate-400 focus:bg-white focus:border-primary/20 transition-all outline-none h-14"
+            className="w-full bg-white border-slate-200 rounded-md py-2 pl-9 pr-4 text-sm font-medium placeholder:text-slate-400 focus:border-primary/50 transition-colors h-9 shadow-none"
           />
         </div>
-        <div className="flex items-center gap-1.5 bg-slate-50/50 p-1.5 rounded-2xl border border-slate-100/50">
+        <div className="flex items-center gap-1 bg-slate-50/50 p-1 rounded-md border border-slate-200">
           {['ALL', 'PUBLISHED', 'DRAFT', 'ARCHIVED'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={cn(
-                "px-6 py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all duration-300",
+                "px-3 py-1.5 rounded text-xs font-medium transition-colors",
                 filter === f 
-                  ? "bg-white text-primary shadow-lg shadow-slate-200/50 border border-slate-100" 
-                  : "text-slate-400 hover:text-slate-900"
+                  ? "bg-white text-primary shadow-sm border border-slate-200" 
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               )}
             >
-              {f}
+              {f === 'ALL' ? 'All' : f.charAt(0) + f.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Curriculum Registry */}
+      {/* Registry */}
       {filteredCourses && filteredCourses.length === 0 ? (
-        <div className="bg-white rounded-[3rem] border border-slate-200/60 p-24 flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-500 shadow-sm">
-          <div className="size-24 rounded-[2rem] bg-slate-50 flex items-center justify-center text-slate-200 mb-8 border border-slate-100 shadow-inner">
-            <BookOpen className="size-12" />
+        <div className="bg-white rounded-md border border-slate-200 p-16 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
+          <div className="size-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-4 border border-slate-100">
+            <BookOpen className="size-6" />
           </div>
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">No units identified</h3>
-          <p className="text-slate-400 text-sm mt-3 max-w-xs font-medium leading-relaxed">
-            Your query "<span className="text-slate-900">{search}</span>" did not intersect with any registered curriculum entities.
+          <h3 className="text-lg font-semibold text-slate-900">No courses found</h3>
+          <p className="text-slate-500 text-sm mt-1 max-w-sm">
+            No courses match the search "{search}". Try adjusting your filters or search terms.
           </p>
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={() => { setSearch(''); setFilter('ALL'); }}
-            className="mt-10 text-[11px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 px-8 h-12 rounded-2xl"
+            className="mt-6 text-sm"
           >
-            Reset Matrix Parameters
+            Clear Filters
           </Button>
         </div>
       ) : (
@@ -204,118 +204,116 @@ export default function AdminCoursesPage() {
           data={filteredCourses || []}
           columns={[
             {
-              header: "Curriculum Identity",
+              header: "Course",
               cell: (course: any) => (
-                <div className="flex items-center gap-6 group">
-                  <div className="size-16 rounded-[1.25rem] bg-slate-50 overflow-hidden border border-slate-100 shrink-0 shadow-sm transition-all duration-500 group-hover:scale-105 group-hover:shadow-md">
+                <div className="flex items-center gap-4 group/item">
+                  <div className="size-12 rounded-md bg-slate-50 overflow-hidden border border-slate-200 shrink-0">
                     {course.thumbnailUrl ? (
                       <img src={course.thumbnailUrl} alt="" className="size-full object-cover" />
                     ) : (
-                      <div className="size-full flex items-center justify-center text-slate-200 bg-slate-50/50">
-                        <Book className="size-8" />
+                      <div className="size-full flex items-center justify-center text-slate-400">
+                        <Book className="size-5" />
                       </div>
                     )}
                   </div>
                   <div className="min-w-0">
-                    <Link 
-                      href={`/admin/courses/${course.id}/edit`} 
-                      className="text-base font-black text-slate-900 hover:text-primary transition-all duration-300 tracking-tight block mb-1.5 truncate max-w-[320px]"
-                    >
-                      {course.title}
-                    </Link>
-                    <div className="flex items-center gap-2">
-                       <Badge variant="outline" className="bg-slate-50/50 border-slate-100 text-[9px] font-black uppercase tracking-widest text-slate-400 px-2 py-0.5 rounded-lg group-hover:text-primary group-hover:border-primary/20 transition-colors">
-                          <Tag className="size-3 mr-1" />
-                          {course.category || 'Professional'}
-                       </Badge>
-                       <span className="size-1 rounded-full bg-slate-200" />
-                       <span className="text-[10px] font-bold text-slate-400 group-hover:text-slate-600 transition-colors">
-                          {course.modules?.length || 0} Modules
-                       </span>
-                    </div>
+                      <Link 
+                        href={`/admin/courses/${course.id}/preview`} 
+                        className="text-sm font-semibold text-slate-900 hover:text-primary transition-colors block mb-0.5 truncate max-w-[320px]"
+                      >
+                        {course.title}
+                      </Link>
+                      <div className="flex items-center gap-2">
+                         <Badge variant="secondary" className="bg-slate-100 border-transparent text-[10px] font-medium text-slate-600 px-1.5 py-0 rounded">
+                            {course.category || 'General'}
+                         </Badge>
+                         <span className="size-1 rounded-full bg-slate-300" />
+                         <span className="text-xs text-slate-500">
+                            {course._count?.modules || 0} Modules
+                         </span>
+                      </div>
                   </div>
                 </div>
               )
             },
             {
-              header: "Engagement",
+              header: "Learners",
               className: "text-center",
               cell: (course: any) => (
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50/50 border border-slate-100/50 rounded-xl">
-                    <Users className="size-3.5 text-primary" />
-                    <span className="text-sm font-black text-slate-900 tabular-nums">{course._count?.enrollments || 0}</span>
+                <div className="flex justify-center">
+                  <div className="flex items-center gap-1.5 px-2 py-0.5">
+                    <Users className="size-3.5 text-slate-400" />
+                    <span className="text-sm font-medium text-slate-700">{course._count?.enrollments || 0}</span>
                   </div>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1.5">Active Learners</p>
                 </div>
               )
             },
             {
-              header: "Audit Status",
+              header: "Status",
               className: "text-center",
               cell: (course: any) => (
                 <div className="flex justify-center">
                   <StatusBadge 
                     variant={course.status === 'PUBLISHED' ? 'success' : course.status === 'ARCHIVED' ? 'secondary' : 'warning'}
-                    className="h-7 px-3 rounded-xl shadow-sm border-transparent"
+                    className="h-6 px-2 rounded font-medium text-[10px]"
                   >
-                    {course.status}
+                    {course.status.charAt(0) + course.status.slice(1).toLowerCase()}
                   </StatusBadge>
                 </div>
               )
             },
             {
-              header: "Fiscal Meta",
+              header: "Price",
               className: "text-right",
               cell: (course: any) => (
-                <div>
-                  <p className="text-[15px] font-black text-slate-900 tracking-tight tabular-nums">
-                    {course.isFree ? 'Complimentary' : `₹${course.price?.toLocaleString('en-IN') || course.price}`}
+                <div className="text-right">
+                  <p className="text-sm font-medium text-slate-900">
+                    {course.isFree ? 'Free' : `₹${course.price?.toLocaleString('en-IN') || course.price}`}
                   </p>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">Currency: INR</p>
                 </div>
               )
             },
             {
-              header: "Governance",
+              header: "Actions",
               className: "text-right",
               cell: (course: any) => (
-                <div className="flex items-center justify-end gap-2.5">
+                <div className="flex items-center justify-end gap-1 transition-opacity">
                   <Link href={`/admin/courses/${course.id}/edit`}>
-                    <Button variant="outline" size="icon" className="size-10 rounded-xl border-slate-200 text-slate-400 hover:text-primary hover:border-primary/30 hover:shadow-lg transition-all group/btn">
-                      <Edit3 className="size-4 group-hover/btn:scale-110 transition-transform" />
+                    <Button variant="ghost" size="icon" className="size-8 rounded-md text-slate-400 hover:text-primary hover:bg-primary/5">
+                      <Edit3 className="size-4" />
                     </Button>
                   </Link>
 
                   <Link href={`/admin/courses/${course.id}/preview`} target="_blank">
-                    <Button variant="outline" size="icon" className="size-10 rounded-xl border-slate-200 text-slate-400 hover:text-emerald-500 hover:border-emerald-100 hover:shadow-lg transition-all group/btn">
-                      <Eye className="size-4 group-hover/btn:scale-110 transition-transform" />
+                    <Button variant="ghost" size="icon" className="size-8 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50">
+                      <Eye className="size-4" />
                     </Button>
                   </Link>
 
                   <Button 
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     onClick={() => {
                       if (course.status === 'PUBLISHED') archiveMutation.mutate(course.id);
                       else publishMutation.mutate(course.id);
                     }}
-                    className="size-10 rounded-xl border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300 hover:shadow-lg transition-all group/btn"
+                    className="size-8 rounded-md text-slate-400 hover:text-slate-900 hover:bg-slate-100"
+                    title={course.status === 'PUBLISHED' ? 'Archive' : 'Publish'}
                   >
                     {course.status === 'PUBLISHED' ? (
-                      <Archive className="size-4 group-hover/btn:scale-110 transition-transform" />
+                      <Archive className="size-4" />
                     ) : (
-                      <Rocket className="size-4 group-hover/btn:scale-110 transition-transform" />
+                      <Rocket className="size-4" />
                     )}
                   </Button>
 
                   <Button 
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     onClick={() => setCourseToDelete(course)}
-                    className="size-10 rounded-xl border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 hover:shadow-lg transition-all group/btn"
+                    className="size-8 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50"
                   >
-                    <Trash2 className="size-4 group-hover/btn:scale-110 transition-transform" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </div>
               )
@@ -324,49 +322,44 @@ export default function AdminCoursesPage() {
         />
       )}
 
-      {/* Registry Footer */}
-      <div className="px-10 py-8 bg-slate-50/50 border-t border-slate-100 rounded-b-[2.5rem] flex items-center justify-between">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-          Registry Analytics: <span className="text-slate-900">{filteredCourses?.length || 0}</span> Units in Context
+      {/* Footer */}
+      <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 rounded-b-md flex items-center justify-between">
+        <p className="text-xs text-slate-500">
+          Showing <span className="font-medium text-slate-900">{filteredCourses?.length || 0}</span> courses
         </p>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" disabled className="size-10 rounded-xl border-slate-100 text-slate-200 cursor-not-allowed">
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" disabled className="size-8 rounded border-slate-200">
             <ChevronLeft className="size-4" />
           </Button>
-          <div className="size-10 flex items-center justify-center rounded-xl bg-primary text-white text-[11px] font-black shadow-lg shadow-primary/20">1</div>
-          <Button variant="outline" size="icon" className="size-10 rounded-xl border-slate-200 text-slate-400 hover:text-primary hover:border-primary/30 transition-all">
+          <div className="size-8 flex items-center justify-center rounded bg-primary text-white text-xs font-medium">1</div>
+          <Button variant="ghost" size="icon" className="size-8 rounded text-slate-600 hover:text-slate-900">
             <ChevronRight className="size-4" />
           </Button>
         </div>
       </div>
 
-      {/* Deletion Governance Modal */}
       <AlertDialog open={!!courseToDelete} onOpenChange={(open: boolean) => !open && setCourseToDelete(null)}>
-        <AlertDialogContent className="rounded-[2.5rem] border-none shadow-[0_32px_128px_rgba(0,0,0,0.18)] p-10 max-w-md font-display overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-red-600" />
+        <AlertDialogContent className="rounded-xl p-6 max-w-sm font-sans">
           <AlertDialogHeader>
-            <div className="size-20 rounded-[1.75rem] bg-red-50 flex items-center justify-center text-red-600 mb-8 mx-auto shadow-sm ring-1 ring-red-100">
-              <AlertTriangle className="size-10" />
-            </div>
-            <AlertDialogTitle className="text-3xl font-black text-slate-900 tracking-tight text-center">
-              Execute Deletion?
+            <AlertDialogTitle className="text-lg font-bold text-slate-900">
+              Delete Course
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium text-center mt-4 leading-relaxed">
-              This protocol will permanently purge <span className="text-slate-900 font-black">"{courseToDelete?.title}"</span> from the database. This action is irreversible.
+            <AlertDialogDescription className="text-slate-500 text-sm mt-2">
+              Are you sure you want to delete <span className="text-slate-900 font-medium">"{courseToDelete?.title}"</span>? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-12 sm:justify-center gap-4">
+          <AlertDialogFooter className="mt-6 flex gap-3">
             <AlertDialogCancel asChild>
-              <Button variant="ghost" className="rounded-2xl h-14 px-10 text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 hover:bg-slate-50">
-                Cancel Op
+              <Button variant="outline" className="h-9 px-4 text-sm bg-white">
+                Cancel
               </Button>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button 
                 onClick={() => deleteMutation.mutate(courseToDelete.id)}
-                className="rounded-2xl h-14 px-10 text-[11px] font-black uppercase tracking-widest bg-red-600 hover:bg-red-700 text-white shadow-2xl shadow-red-200 border-none"
+                className="h-9 px-4 text-sm bg-red-600 hover:bg-red-700 text-white border-0"
               >
-                Confirm Purge
+                Delete
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>

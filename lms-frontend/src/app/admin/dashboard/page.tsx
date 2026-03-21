@@ -88,7 +88,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-700">
+    <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-500">
       {/* Platform Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -138,7 +138,7 @@ export default function AdminDashboardPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-10 gap-8">
         {/* Recent Enrollments */}
-        <div className="xl:col-span-6 bg-bg-surface rounded-2xl border border-border shadow-sm overflow-hidden flex flex-col">
+        <div className="xl:col-span-6 bg-bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-border flex justify-between items-center bg-bg-subtle/30">
             <h2 className="text-lg font-bold tracking-tight text-text-primary">Recent Enrollment Stream</h2>
             <Link href="/admin/students">
@@ -187,7 +187,7 @@ export default function AdminDashboardPage() {
 
         {/* Live System Integration */}
         <div className="xl:col-span-4 space-y-6">
-          <div className="bg-bg-surface rounded-2xl border border-border shadow-sm overflow-hidden flex flex-col">
+          <div className="bg-bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 border-b border-border flex justify-between items-center bg-bg-subtle/30">
               <h2 className="text-lg font-bold tracking-tight text-text-primary">Live Instruction</h2>
               <Button variant="outline" size="sm" className="h-8 text-[10px] uppercase tracking-widest gap-2">
@@ -217,7 +217,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Institutional Actions */}
-          <div className="bg-bg-surface p-6 rounded-2xl shadow-sm border border-border flex flex-col">
+          <div className="bg-bg-surface p-6 rounded-xl shadow-sm border border-border flex flex-col">
             <div className="pb-4 border-b border-border mb-4">
               <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Executive Command</p>
             </div>
@@ -243,7 +243,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Revenue Matrix */}
-      <div className="bg-bg-surface p-8 rounded-2xl border border-border shadow-sm">
+      <div className="bg-bg-surface p-8 rounded-xl border border-border shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-text-primary uppercase">Revenue Matrix</h2>

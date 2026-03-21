@@ -13,9 +13,11 @@ import {
   CheckCircle2,
   Clock,
   Zap,
-  Check
+  Check,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -24,11 +26,11 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const notificationIcons: Record<string, { icon: React.ReactNode; color: string; bgColor: string }> = {
-  account: { icon: <User size={20} />, color: 'text-blue-600', bgColor: 'bg-blue-100' },
-  enrollment: { icon: <BookOpen size={20} />, color: 'text-indigo-600', bgColor: 'bg-indigo-100' },
-  payment: { icon: <CreditCard size={20} />, color: 'text-emerald-600', bgColor: 'bg-emerald-100' },
-  system: { icon: <ShieldCheck size={20} />, color: 'text-slate-600', bgColor: 'bg-slate-100' },
-  SYSTEM: { icon: <Info size={20} />, color: 'text-slate-600', bgColor: 'bg-slate-100' },
+  account: { icon: <User className="size-4" />, color: 'text-blue-600', bgColor: 'bg-blue-50 border border-blue-100' },
+  enrollment: { icon: <BookOpen className="size-4" />, color: 'text-indigo-600', bgColor: 'bg-indigo-50 border border-indigo-100' },
+  payment: { icon: <CreditCard className="size-4" />, color: 'text-emerald-600', bgColor: 'bg-emerald-50 border border-emerald-100' },
+  system: { icon: <ShieldCheck className="size-4" />, color: 'text-slate-600', bgColor: 'bg-slate-50 border border-slate-200' },
+  SYSTEM: { icon: <Info className="size-4" />, color: 'text-slate-600', bgColor: 'bg-slate-50 border border-slate-200' },
 };
 
 export default function AdminNotificationsPage() {
@@ -60,16 +62,17 @@ export default function AdminNotificationsPage() {
 
   if (isLoading) {
     return (
-      <div className="p-8 max-w-5xl mx-auto space-y-10 animate-in fade-in duration-700 font-display">
-        <div className="flex items-center justify-between pb-6 border-b border-slate-100">
-           <div className="space-y-3">
-              <div className="h-9 w-64 bg-slate-100 rounded-xl animate-pulse" />
-              <div className="h-4 w-96 bg-slate-50 rounded-lg animate-pulse" />
-           </div>
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="flex justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-48 bg-slate-200/60 rounded animate-pulse" />
+            <div className="h-4 w-72 bg-slate-200/60 rounded animate-pulse" />
+          </div>
+          <div className="h-10 w-32 bg-slate-200/60 rounded animate-pulse" />
         </div>
         <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-32 bg-white rounded-3xl border border-slate-100 animate-pulse" />
+            <div key={i} className="h-24 bg-white rounded-lg border border-slate-100 animate-pulse" />
           ))}
         </div>
       </div>
@@ -77,49 +80,58 @@ export default function AdminNotificationsPage() {
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-10 animate-in fade-in duration-700 font-display">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+    <div className="max-w-6xl mx-auto space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Notification Center</h1>
-          <p className="text-slate-500 font-bold mt-1 uppercase tracking-widest text-[11px]">System Audit & Administrative Alerts</p>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Notification Center
+          </h1>
+          <p className="text-slate-500 mt-1 text-sm">
+            Review system alerts, user activities, and important administrative updates.
+          </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <Link href="/admin/dashboard" className="hidden sm:flex h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded-md items-center justify-center text-sm font-medium gap-2">
+            <ArrowLeft className="size-4" />
+            Back
+          </Link>
           {unreadCount > 0 && (
             <Button 
               variant="outline" 
-              size="sm"
               onClick={() => markAllReadMutation.mutate()}
               disabled={markAllReadMutation.isPending}
-              className="rounded-xl border-slate-200 text-[10px] font-black uppercase tracking-widest px-4 h-10 hover:bg-slate-50 transition-all"
+              className="h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded-md items-center gap-2 text-sm font-medium"
             >
-              <Check size={14} className="mr-2" />
-              Mark All as Read
+              <Check className="size-4" />
+              Mark All Read
             </Button>
-          )}
-          {unreadCount > 0 && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl shadow-lg shadow-primary/20">
-              <Zap size={16} fill="currentColor" />
-              <span className="text-[10px] font-black uppercase tracking-widest">{unreadCount} New Alerts</span>
-            </div>
           )}
         </div>
       </div>
 
+      {/* Control Bar (Optional: could add search/filter here similarly) */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2 border-b border-slate-100">
+        <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+            <Bell className="size-4 text-slate-400" />
+            {unreadCount > 0 ? (
+                <span>You have <strong className="text-slate-900">{unreadCount} unread</strong> notification{unreadCount !== 1 ? 's' : ''}</span>
+            ) : (
+                <span>All caught up!</span>
+            )}
+        </div>
+      </div>
+
       {notificationList.length === 0 ? (
-        <div className="bg-white rounded-[40px] border-2 border-slate-100 border-dashed p-32 text-center flex flex-col items-center gap-8 shadow-sm">
-          <div className="size-24 bg-slate-50 rounded-[32px] flex items-center justify-center text-slate-300 shadow-inner">
-            <BellOff size={48} strokeWidth={1.5} />
+        <div className="py-20 flex flex-col items-center justify-center text-center bg-slate-50/50 rounded-lg border border-dashed border-slate-200">
+          <div className="size-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
+            <BellOff className="size-6" />
           </div>
-          <div className="max-w-md">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">System Registry Clear</h3>
-            <p className="text-slate-500 font-bold mt-3 leading-relaxed text-sm">
-              All administrative logs and alerts have been addressed. We'll broadcast any critical system changes or student activities here.
-            </p>
-          </div>
+          <h4 className="text-base font-bold text-slate-900">No Notifications</h4>
+          <p className="text-slate-500 mt-1 text-sm max-w-sm mx-auto">There are currently no alerts or messages to display.</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {notificationList.map((notif: any) => {
             const style = notificationIcons[notif.type] || notificationIcons.SYSTEM;
             return (
@@ -127,71 +139,59 @@ export default function AdminNotificationsPage() {
                 key={notif.id}
                 onClick={() => !notif.isRead && markReadMutation.mutate(notif.id)}
                 className={cn(
-                  "group relative overflow-hidden bg-white rounded-[32px] border transition-all duration-300 p-8 flex gap-8",
+                  "group relative overflow-hidden bg-white rounded-lg border transition-colors p-4 flex gap-4",
                   notif.isRead 
-                    ? "border-slate-100 opacity-60 hover:opacity-100" 
-                    : "border-primary/20 shadow-xl shadow-slate-100/50 hover:shadow-2xl hover:shadow-primary/5 cursor-pointer"
+                    ? "border-slate-200" 
+                    : "border-primary/20 bg-primary/2 hover:border-primary/30 cursor-pointer"
                 )}
               >
                 {!notif.isRead && (
-                  <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
+                  <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
                 )}
                 
                 <div className={cn(
-                  "size-16 rounded-2xl shrink-0 flex items-center justify-center shadow-inner",
+                  "size-10 rounded-md shrink-0 flex items-center justify-center",
                   style.bgColor,
                   style.color
                 )}>
                   {style.icon}
                 </div>
                 
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-1">
-                      <h3 className={cn(
-                        "font-black text-xl tracking-tight leading-none transition-colors",
-                        notif.isRead ? "text-slate-900" : "text-slate-900 group-hover:text-primary"
-                      )}>
-                        {notif.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-slate-400">
-                        <Clock size={12} strokeWidth={3} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
-                          {new Date(notif.createdAt).toLocaleDateString(undefined, { 
-                            month: 'short', 
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
+                <div className="flex-1 min-w-0 flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <h3 className={cn(
+                      "font-semibold text-sm",
+                      notif.isRead ? "text-slate-700" : "text-slate-900"
+                    )}>
+                      {notif.title}
+                    </h3>
+                    <p className={cn(
+                      "text-sm leading-relaxed",
+                      notif.isRead ? "text-slate-500" : "text-slate-600"
+                    )}>
+                      {notif.message}
+                    </p>
+                    <div className="flex items-center gap-1.5 pt-1 text-slate-400">
+                        <Clock className="size-3" />
+                        <span className="text-[11px] font-medium text-slate-500">
+                            {new Date(notif.createdAt).toLocaleDateString(undefined, { 
+                                month: 'short', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
                         </span>
-                      </div>
                     </div>
                   </div>
                   
-                  <p className={cn(
-                    "text-sm font-bold leading-relaxed",
-                    notif.isRead ? "text-slate-500" : "text-slate-600"
-                  )}>
-                    {notif.message}
-                  </p>
-                  
                   {!notif.isRead && (
-                    <div className="pt-4 flex items-center gap-3">
-                      <span className="text-[9px] font-black text-primary uppercase tracking-[0.25em]">
-                        Administrative Action Required
-                      </span>
-                      <div className="h-px flex-1 bg-primary/10" />
+                    <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="size-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
+                         <CheckCircle2 className="size-4" />
+                      </div>
                     </div>
                   )}
                 </div>
-
-                {!notif.isRead && (
-                   <div className="absolute top-8 right-8 translate-x-12 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                      <div className="size-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary border border-primary/10">
-                         <CheckCircle2 size={20} />
-                      </div>
-                   </div>
-                )}
               </div>
             );
           })}

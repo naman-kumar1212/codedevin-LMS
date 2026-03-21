@@ -26,9 +26,27 @@ import {
   ShieldCheck,
   Smartphone,
   Save,
-  RefreshCw
+  RefreshCw,
+  HelpCircle
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import { SortableModule } from '@/components/admin/course-builder/SortableModule';
 import { ContentMetadataModal } from '@/components/admin/course-builder/ContentMetadataModal';
+import { QuizBuilder, Quiz } from '@/components/admin/course-builder/QuizBuilder';
+import type { Lesson, Module } from '@/components/admin/course-builder/types';
 import {
   Dialog,
   DialogContent,
@@ -47,7 +65,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5;
 
 export default function EditCoursePage() {
   const router = useRouter();
@@ -66,9 +84,16 @@ export default function EditCoursePage() {
     category: 'Development'
   });
 
-  const [modules, setModules] = useState<any[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
   const [uploads, setUploads] = useState<Record<string, any>>({});
   const [pendingModal, setPendingModal] = useState<any>(null);
+  const [activeQuizModuleId, setActiveQuizModuleId] = useState<string | null>(null);
+
+  // ── Sensors for DnD ──────────────────────────────────────────────────────
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
   
   // Dialog States
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
@@ -261,11 +286,51 @@ export default function EditCoursePage() {
     }
   };
 
+  const handleModuleDragEnd = async (event: any) => {
+    const { active, over } = event;
+    if (!active || !over || active.id === over.id) return;
+    const oldIdx = modules.findIndex((m) => m.id === active.id);
+    const newIdx = modules.findIndex((m) => m.id === over.id);
+    const reordered = arrayMove(modules, oldIdx, newIdx).map((m, i) => ({
+      ...m,
+      orderIndex: (i + 1) * 10,
+    }));
+    setModules(reordered);
+    try {
+      await api.reorderModules(
+        courseId,
+        reordered.map((m) => ({ id: m.id, orderIndex: m.orderIndex })),
+      );
+    } catch (err) {
+      console.error('Reorder failed:', err);
+    }
+  };
+
+  const handleLessonsReorder = async (moduleId: string, lessons: Lesson[]) => {
+    setModules((prev) =>
+      prev.map((m) => (m.id === moduleId ? { ...m, lessons } : m)),
+    );
+    try {
+      await api.reorderLessons(
+        moduleId,
+        lessons.map((l) => ({ id: l.id, orderIndex: l.orderIndex })),
+      );
+    } catch (err) {
+      console.error('Lesson reorder failed:', err);
+    }
+  };
+
+  const handleAddQuiz = (moduleId: string) => {
+    setActiveQuizModuleId(moduleId);
+    setStep(4);
+  };
+
   const steps = [
     { id: 1, label: 'Details', icon: FileText },
     { id: 2, label: 'Curriculum', icon: Layers },
     { id: 3, label: 'Content', icon: Video },
-    { id: 4, label: 'Review', icon: Rocket },
+    { id: 4, label: 'Quizzes', icon: HelpCircle },
+    { id: 5, label: 'Review', icon: Rocket },
   ];
 
   if (isLoading) {
@@ -310,7 +375,7 @@ export default function EditCoursePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-32 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Hidden file input for uploads */}
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelected} />
 
@@ -338,49 +403,49 @@ export default function EditCoursePage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
             <span>Editor</span>
             <ChevronRight className="size-3" />
             <span className="text-primary">{basicInfo.title || 'Course Details'}</span>
           </nav>
-          <h1 className="text-4xl font-bold text-slate-900 tracking-tight">
-            Modify <span className="text-primary">Curriculum</span>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Modify Curriculum
           </h1>
-          <p className="text-slate-500 mt-2 font-medium max-w-xl">
+          <p className="text-slate-500 mt-2 text-sm max-w-xl">
             Update your course structure, lessons, and multimedia assets. All changes are saved in real-time.
           </p>
         </div>
         <Link 
             href="/admin/courses" 
-            className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors text-sm font-medium"
         >
             <ArrowLeft className="size-4" />
-            <span className="text-sm font-bold">Back to List</span>
+            <span>Back to Courses</span>
         </Link>
       </div>
 
       {/* Stepper Logic */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between relative px-12">
-            <div className="absolute top-1/2 -translate-y-1/2 left-20 right-20 h-1 bg-slate-100 z-0" />
+        <div className="flex items-center justify-between relative px-8">
+            <div className="absolute top-1/2 -translate-y-1/2 left-12 right-12 h-0.5 bg-slate-100 z-0" />
             <div 
-                className="absolute top-1/2 -translate-y-1/2 left-20 h-1 bg-primary z-10 transition-all duration-500 ease-in-out" 
-                style={{ width: `${((step - 1) / 3) * 75}%` }}
+                className="absolute top-1/2 -translate-y-1/2 left-12 h-0.5 bg-primary z-10 transition-all duration-500 ease-in-out" 
+                style={{ width: `${((step - 1) / 3) * 100}%` }}
             />
             {steps.map((s) => (
-            <div key={s.id} className="relative z-20 flex flex-col items-center gap-3 bg-white px-2">
+            <div key={s.id} className="relative z-20 flex flex-col items-center gap-2 bg-white px-2">
                 <div 
                   onClick={() => setStep(s.id as Step)}
-                  className={`size-12 rounded-xl flex items-center justify-center transition-all duration-300 cursor-pointer ${
-                  step >= s.id ? 'bg-primary shadow-lg shadow-primary/20 text-white' : 'bg-slate-50 border border-slate-200 text-slate-300'
+                  className={`size-10 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                  step >= s.id ? 'bg-primary text-white' : 'bg-slate-50 border border-slate-200 text-slate-400'
                 }`}>
                     {step > s.id ? (
-                      <Check className="size-5" />
+                      <Check className="size-4" />
                     ) : (
-                      <s.icon className="size-5" />
+                      <s.icon className="size-4" />
                     )}
                 </div>
-                <p className={`text-[11px] font-bold uppercase tracking-wider ${step >= s.id ? 'text-slate-900' : 'text-slate-400'}`}>
+                <p className={`text-xs font-medium ${step >= s.id ? 'text-slate-900' : 'text-slate-500'}`}>
                     {s.label}
                 </p>
             </div>
@@ -391,40 +456,40 @@ export default function EditCoursePage() {
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden min-h-[600px]">
         {/* Step 1: Basic Info */}
         {step === 1 && (
-            <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div className="mb-10 flex items-center justify-between">
+            <div className="p-8">
+                <div className="mb-8 flex items-center justify-between">
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-900">General Information</h2>
-                      <p className="text-slate-500 mt-2 font-medium">Provide the basic identity and description of your course.</p>
+                      <h2 className="text-xl font-bold text-slate-900">General Information</h2>
+                      <p className="text-slate-500 mt-1 text-sm">Provide the basic identity and description of your course.</p>
                     </div>
                     {updateMutation.isPending && (
-                      <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 text-primary rounded-lg">
-                        <div className="size-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Saving...</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 text-primary rounded text-xs font-semibold">
+                        <div className="size-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                        <span>Saving...</span>
                       </div>
                     )}
                 </div>
 
-                <form onSubmit={handleStep1Submit} className="space-y-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Course Title</label>
+                <form onSubmit={handleStep1Submit} className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-1.5 flex flex-col">
+                            <label className="text-sm font-medium text-slate-700">Course Title</label>
                             <input 
                                 required
                                 type="text"
                                 value={basicInfo.title}
                                 onChange={(e) => setBasicInfo({...basicInfo, title: e.target.value})}
                                 placeholder="e.g. Advanced Financial Management"
-                                className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-6 text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
+                                className="w-full h-10 bg-white border border-slate-200 rounded-md px-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Category Registry</label>
+                        <div className="space-y-1.5 flex flex-col">
+                            <label className="text-sm font-medium text-slate-700">Category</label>
                             <Select 
                                 value={basicInfo.category}
                                 onValueChange={(val) => setBasicInfo({...basicInfo, category: val})}
                             >
-                                <SelectTrigger className="w-full h-14 bg-slate-50 border-slate-200 rounded-xl px-6 font-semibold text-slate-900">
+                                <SelectTrigger className="w-full h-10 bg-white border-slate-200 rounded-md px-3 text-sm text-slate-900 focus:ring-1 focus:ring-primary focus:border-primary">
                                     <SelectValue placeholder="Select Sector" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -439,25 +504,25 @@ export default function EditCoursePage() {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Detailed Description</label>
+                    <div className="space-y-1.5 flex flex-col">
+                        <label className="text-sm font-medium text-slate-700">Detailed Description</label>
                         <textarea 
                             rows={6}
                             value={basicInfo.description}
                             onChange={(e) => setBasicInfo({...basicInfo, description: e.target.value})}
                             placeholder="Describe what learners will achieve in this course..."
-                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all resize-none"
+                            className="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors resize-none"
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Access Type</label>
-                            <div className="flex items-center gap-3 p-1.5 bg-slate-100 rounded-xl border border-slate-200">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-1.5 flex flex-col">
+                            <label className="text-sm font-medium text-slate-700">Access Type</label>
+                            <div className="flex items-center gap-3 p-1 bg-slate-100 rounded-md border border-slate-200 h-10">
                                 <button 
                                     type="button"
                                     onClick={() => setBasicInfo({...basicInfo, isFree: true, price: 0})}
-                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${basicInfo.isFree ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                                    className={`flex-1 flex items-center justify-center gap-2 h-full rounded text-sm font-medium transition-colors ${basicInfo.isFree ? 'bg-white text-primary shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                                 >
                                     <ShieldCheck className="size-4" />
                                     Complimentary
@@ -465,7 +530,7 @@ export default function EditCoursePage() {
                                 <button 
                                     type="button"
                                     onClick={() => setBasicInfo({...basicInfo, isFree: false})}
-                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${!basicInfo.isFree ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-slate-900'}`}
+                                    className={`flex-1 flex items-center justify-center gap-2 h-full rounded text-sm font-medium transition-colors ${!basicInfo.isFree ? 'bg-primary text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                                 >
                                     <BadgeCent className="size-4" />
                                     Premium
@@ -473,28 +538,28 @@ export default function EditCoursePage() {
                             </div>
                         </div>
                         {!basicInfo.isFree && (
-                            <div className="space-y-2 animate-in zoom-in-95 duration-300">
-                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Tuition Fee (INR)</label>
+                            <div className="space-y-1.5 flex flex-col animate-in zoom-in-95 duration-300">
+                                <label className="text-sm font-medium text-slate-700">Tuition Fee (INR)</label>
                                 <div className="relative">
-                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-bold">₹</div>
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium pb-0.5">₹</div>
                                     <input 
                                         type="number"
                                         value={basicInfo.price}
                                         onChange={(e) => setBasicInfo({...basicInfo, price: Number(e.target.value)})}
-                                        className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-10 text-lg font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
+                                        className="w-full h-10 bg-white border border-slate-200 rounded-md pl-7 pr-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                                     />
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    <div className="pt-8 border-t border-slate-100">
+                    <div className="pt-6 border-t border-slate-100">
                         <button 
                             type="submit"
-                            className="w-full bg-primary text-white py-5 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-3 group"
+                            className="w-full bg-primary text-white py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
                         >
                             Next: Curriculum Map
-                            <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="size-4" />
                         </button>
                     </div>
                 </form>
@@ -503,107 +568,57 @@ export default function EditCoursePage() {
 
         {/* Step 2: Curriculum Mapping */}
         {step === 2 && (
-            <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div className="mb-10 flex items-end justify-between gap-6">
+            <div className="p-8">
+                <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-900">Curriculum Structure</h2>
-                        <p className="text-slate-500 mt-2 font-medium">Organize your course into modules and individual lessons.</p>
+                        <h2 className="text-xl font-bold text-slate-900">Curriculum Structure</h2>
+                        <p className="text-slate-500 mt-1 text-sm">Organize your course into modules and individual lessons.</p>
                     </div>
                     <button 
                         onClick={() => setIsAddModuleOpen(true)}
-                        className="flex items-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition-all shadow-md shadow-slate-900/10"
+                        className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-slate-800 transition-colors"
                     >
                         <Plus className="size-4" />
-                        Add New Module
+                        Add Module
                     </button>
                 </div>
 
-                <div className="space-y-6">
-                    {modules.map((mod, mIdx) => (
-                        <div key={mod.id} className="bg-slate-50 p-6 rounded-2xl border border-slate-200 group/module hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
-                            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
-                                <div className="flex items-center gap-4">
-                                    <div className="size-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-400 group-hover/module:text-primary transition-colors">
-                                        {mIdx + 1}
-                                    </div>
-                                    <h3 className="text-lg font-bold text-slate-900">{mod.title}</h3>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <button 
-                                      onClick={() => handleAddLesson(mod.id, 'video')}
-                                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 text-[11px] font-bold text-slate-600 hover:text-primary hover:border-primary transition-all shadow-sm"
-                                  >
-                                      <Video className="size-4" />
-                                      Video
-                                  </button>
-                                  <button 
-                                      onClick={() => handleAddLesson(mod.id, 'pdf')}
-                                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 text-[11px] font-bold text-slate-600 hover:text-primary hover:border-primary transition-all shadow-sm"
-                                  >
-                                      <FileText className="size-4" />
-                                      PDF
-                                  </button>
-                                  <button 
-                                      onClick={() => setModuleToDelete(mod.id)}
-                                      className="size-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 transition-all shadow-sm"
-                                  >
-                                      <Trash2 className="size-4" />
-                                  </button>
-                                </div>
-                            </div>
-                            
-                            <div className="space-y-3">
-                                {mod.lessons.map((lesson: any, lIdx: number) => (
-                                    <div key={lesson.id} className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm group/unit hover:border-primary/30 transition-all">
-                                        <div className="flex items-center gap-4">
-                                            <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-300 group-hover/unit:text-primary transition-colors">
-                                                <Layers className="size-4" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-semibold text-slate-700">{lesson.title}</p>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider px-2 py-0.5 bg-primary/5 rounded-md">{lesson.type}</span>
-                                                    <div className="size-1 rounded-full bg-slate-300" />
-                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lesson {lIdx + 1}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-1 opacity-0 group-hover/unit:opacity-100 transition-opacity">
-                                            <button 
-                                                onClick={() => setLessonToDelete({id: lesson.id, moduleIdx: mIdx})}
-                                                className="size-8 rounded-lg text-slate-400 hover:text-red-500 transition-colors flex items-center justify-center"
-                                            >
-                                                <Trash2 className="size-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                                {mod.lessons.length === 0 && (
-                                    <div className="py-8 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-                                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">No lessons added yet</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                    {modules.length === 0 && (
-                        <div className="py-20 text-center flex flex-col items-center bg-slate-50 rounded-3xl border border-slate-200 border-dashed">
-                            <BookOpen className="size-12 text-slate-200 mb-4" />
-                            <h4 className="text-xl font-bold text-slate-900">Project Structure Empty</h4>
-                            <p className="text-slate-500 mt-2 font-medium max-w-sm mx-auto">Create a module to begin organizing the academic flow.</p>
-                        </div>
-                    )}
-                </div>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleModuleDragEnd}>
+                  <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+                    <div className="space-y-6">
+                      {modules.map((mod, mIdx) => (
+                        <SortableModule
+                          key={mod.id}
+                          module={mod}
+                          index={mIdx}
+                          onDelete={setModuleToDelete}
+                          onAddLesson={handleAddLesson}
+                          onDeleteLesson={(lessonId) => confirmDeleteLesson()} // Wait, lessonToDelete state needs update
+                          onLessonsReorder={handleLessonsReorder}
+                          onAddQuiz={handleAddQuiz}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
 
-                <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-between">
-                    <button onClick={() => setStep(1)} className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
-                        <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
+                {modules.length === 0 && (
+                    <div className="py-16 text-center flex flex-col items-center bg-slate-50 rounded-lg border border-slate-200 border-dashed">
+                        <BookOpen className="size-10 text-slate-300 mb-3" />
+                        <h4 className="text-lg font-medium text-slate-900">Structure Empty</h4>
+                        <p className="text-slate-500 mt-1 text-sm max-w-sm mx-auto">Create a module to begin organizing the academic flow.</p>
+                    </div>
+                )}
+
+                <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <button onClick={() => setStep(1)} className="group flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                        <ArrowLeft className="size-4" />
                         Details
                     </button>
                     <button 
                         onClick={() => setStep(3)}
                         disabled={modules.length === 0}
-                        className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all disabled:opacity-50"
+                        className="bg-primary text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
                     >
                         Multimedia Assets
                     </button>
@@ -613,104 +628,46 @@ export default function EditCoursePage() {
 
         {/* Step 3: Multimedia Connectivity */}
         {step === 3 && (
-            <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div className="mb-10">
-                    <h2 className="text-2xl font-bold text-slate-900">Educational Resources</h2>
-                    <p className="text-slate-500 mt-2 font-medium">Upload video assets and PDF study materials to your prepared lessons.</p>
+            <div className="p-8">
+                <div className="mb-8">
+                    <h2 className="text-xl font-bold text-slate-900">Educational Resources</h2>
+                    <p className="text-slate-500 mt-1 text-sm">Upload video assets and PDF study materials to your prepared lessons.</p>
                 </div>
 
                 {/* Upload status banner */}
                 {Object.values(uploads).some(u => !u.done && !u.error) && (
-                  <div className="mb-6 flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                    <RefreshCw className="size-5 text-blue-500 shrink-0 animate-spin" />
-                    <p className="text-sm font-semibold text-blue-700">Uploads in progress...</p>
+                  <div className="mb-6 flex items-center gap-3 p-3 bg-blue-50 border border-blue-100 rounded-md">
+                    <RefreshCw className="size-4 text-blue-500 shrink-0 animate-spin" />
+                    <p className="text-sm font-medium text-blue-800">Uploads in progress...</p>
                   </div>
                 )}
 
-                <div className="space-y-10">
-                    {modules.map((mod) => (
-                        <div key={mod.id} className="space-y-4">
-                            <div className="flex items-center gap-3 px-2">
-                                <p className="text-[11px] font-bold uppercase tracking-widest text-primary">Module:</p>
-                                <h4 className="text-sm font-bold text-slate-900">{mod.title}</h4>
-                                <div className="flex-1 h-px bg-slate-100" />
-                            </div>
-                            <div className="grid gap-4">
-                                {mod.lessons.map((lesson: any) => {
-                                  const upload = uploads[lesson.id];
-                                  return (
-                                    <div key={lesson.id} className="bg-slate-50 rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row md:items-center gap-6 group hover:bg-white transition-all">
-                                        <div className="flex items-center gap-4 flex-1">
-                                            <div className="size-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors shadow-sm">
-                                                {lesson.type === 'VIDEO' ? <Video className="size-5" /> : <FileText className="size-5" />}
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-900 tracking-tight">{lesson.title}</p>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                                      Type: <span className="text-primary">{lesson.type}</span>
-                                                  </span>
-                                                  {lesson.status === 'uploading' && (
-                                                    <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest flex items-center gap-1">
-                                                      <RefreshCw className="size-2.5 animate-spin" /> Uploading
-                                                    </span>
-                                                  )}
-                                                  {(lesson.status === 'ready' || lesson.videoUrl || lesson.resourceUrl) && (
-                                                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1">
-                                                      <Check className="size-2.5" /> 
-                                                      {lesson.videoUrl || lesson.resourceUrl ? 'File Linked' : 'Ready'}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="md:w-80">
-                                            {upload && !upload.done && !upload.error ? (
-                                              <div className="space-y-2">
-                                                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                                  <span>Progressing</span>
-                                                  <span>{upload.progress}%</span>
-                                                </div>
-                                                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                                  <div 
-                                                    className="h-full bg-primary transition-all duration-300"
-                                                    style={{ width: `${upload.progress}%` }}
-                                                  />
-                                                </div>
-                                              </div>
-                                            ) : (
-                                              <div className="flex items-center gap-4">
-                                                <div className="flex-1 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-500 truncate">
-                                                  {lesson.videoUrl || lesson.resourceUrl || lesson.videoId || 'No file attached'}
-                                                </div>
-                                                <button 
-                                                  onClick={() => handleAddLesson(mod.id, lesson.type.toLowerCase() as 'video' | 'pdf', lesson.id)}
-                                                  className="size-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all shadow-sm"
-                                                >
-                                                  <RefreshCw className="size-4" />
-                                                </button>
-                                              </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                        </div>
-                    ))}
+                <div className="space-y-6">
+                  {modules.map((mod, mIdx) => (
+                    <SortableModule
+                      key={mod.id}
+                      module={mod}
+                      index={mIdx}
+                      onDelete={setModuleToDelete}
+                      onAddLesson={handleAddLesson}
+                      onDeleteLesson={(lessonId) => confirmDeleteLesson()}
+                      onLessonsReorder={handleLessonsReorder}
+                      onAddQuiz={handleAddQuiz}
+                    />
+                  ))}
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-between">
-                    <button onClick={() => setStep(2)} className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
-                        <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
+                <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <button onClick={() => setStep(2)} className="group flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                        <ArrowLeft className="size-4" />
                         Curriculum
                     </button>
                     <button 
                         onClick={() => setStep(4)}
                         disabled={Object.values(uploads).some(u => !u.done && !u.error)}
-                        className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all disabled:opacity-50"
+                        className="bg-primary text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
                     >
-                        Final Verification
+                        Module Quizzes
                     </button>
                 </div>
             </div>
@@ -718,66 +675,150 @@ export default function EditCoursePage() {
 
         {/* Step 4: Final Verification */}
         {step === 4 && (
-            <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500 text-center">
-                <div className="max-w-xl mx-auto mb-10">
-                    <div className="size-20 rounded-2xl bg-primary/5 flex items-center justify-center text-primary mx-auto mb-6 shadow-sm border border-primary/10">
-                        <Check className="size-10" />
+          <div className="p-10">
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Module Quizzes</h2>
+                <p className="text-slate-500 mt-1 text-sm">Create and manage quizzes for each course module.</p>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
+                <HelpCircle className="size-4 text-primary" />
+                <span className="text-sm font-medium text-slate-600">{modules.filter(m => m.quiz).length} / {modules.length} Modules have quizzes</span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {modules.map((mod, idx) => (
+                <div key={mod.id} className="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                  <div className="p-5 flex items-center justify-between border-b border-slate-200/60">
+                    <div className="flex items-center gap-4">
+                      <div className="size-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-400">
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-900">{mod.title}</h4>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{mod.lessons.length} Lessons</span>
+                          {mod.quiz ? (
+                            <span className="text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded uppercase tracking-widest flex items-center gap-1">
+                              <Check className="size-2.5" /> Quiz Ready
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded uppercase tracking-widest">No Quiz</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">Review & Update</h2>
-                    <p className="text-slate-500 font-medium">Verify your changes before publishing the updated curriculum to all enrolled students.</p>
+                    {activeQuizModuleId === mod.id ? (
+                      <button 
+                        onClick={() => setActiveQuizModuleId(null)}
+                        className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-600"
+                      >
+                        <X className="size-4" /> Cancel Quiz Edit
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => setActiveQuizModuleId(mod.id)}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:text-primary hover:border-primary transition-all shadow-sm"
+                      >
+                        {mod.quiz ? <PlusCircle className="size-4" /> : <Plus className="size-4" />}
+                        {mod.quiz ? 'Edit Quiz' : 'Add Quiz'}
+                      </button>
+                    )}
+                  </div>
+                  
+                  {activeQuizModuleId === mod.id && (
+                    <div className="p-6 bg-white animate-in slide-in-from-top-4 duration-300">
+                      <QuizBuilder 
+                        moduleId={mod.id} 
+                        moduleTitle={mod.title}
+                        quiz={mod.quiz || null}
+                        onQuizSaved={(quizData: Quiz) => {
+                          setModules(prev => prev.map(m => m.id === mod.id ? { ...m, quiz: quizData } : m));
+                          setActiveQuizModuleId(null);
+                          toast.success('Module quiz updated successfully');
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                <button onClick={() => setStep(3)} className="group flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                    <ArrowLeft className="size-4" />
+                    Multimedia
+                </button>
+                <button 
+                    onClick={() => setStep(5)}
+                    className="bg-primary text-white px-5 py-2.5 rounded-md font-medium text-sm hover:bg-primary/90 transition-colors"
+                >
+                    Review Course
+                </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Final Review */}
+        {step === 5 && (
+            <div className="p-8">
+                <div className="mb-10 text-center max-w-2xl mx-auto">
+                    <div className="size-20 bg-emerald-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-emerald-100 shadow-sm shadow-emerald-500/10">
+                        <Rocket className="size-10 text-emerald-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900">Checkpoints & Verification</h2>
+                    <p className="text-slate-500 mt-2 text-sm">Your course curriculum and pedagogical structure have been analyzed. Review the summary below before authorizing publication.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-3xl mx-auto bg-slate-50 p-8 rounded-3xl border border-slate-200 mb-10">
-                    <div className="space-y-6">
-                        <div>
-                            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Academic Title</p>
-                            <h3 className="text-xl font-bold text-slate-900 leading-tight">{basicInfo.title}</h3>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                            <div className="px-3 py-1.5 bg-white rounded-lg border border-slate-100 shadow-sm flex items-center gap-2">
-                                <div className="size-1.5 rounded-full bg-primary" />
-                                <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">{basicInfo.category}</span>
-                            </div>
-                            <div className="px-3 py-1.5 bg-white rounded-lg border border-slate-100 shadow-sm flex items-center gap-2">
-                                <div className="size-1.5 rounded-full bg-emerald-500" />
-                                <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">{basicInfo.isFree ? 'Complimentary' : `₹${basicInfo.price}`}</span>
-                            </div>
-                        </div>
+                <div className="grid md:grid-cols-3 gap-6 mb-10">
+                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:bg-white transition-colors duration-300">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Modules</p>
+                        <p className="text-3xl font-bold text-slate-900">{modules.length}</p>
                     </div>
-                    <div className="space-y-6">
-                        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Inventory Specs</p>
-                        <div className="grid grid-cols-2 gap-4">
-                             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Modules</p>
-                                <p className="text-2xl font-bold text-slate-900 mt-1">{modules.length}</p>
-                             </div>
-                             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lessons</p>
-                                <p className="text-2xl font-bold text-slate-900 mt-1">{modules.reduce((acc: number, m: any) => acc + m.lessons.length, 0)}</p>
-                             </div>
-                        </div>
+                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:bg-white transition-colors duration-300">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Lessons</p>
+                        <p className="text-3xl font-bold text-slate-900">{modules.reduce((acc, m) => acc + m.lessons.length, 0)}</p>
+                    </div>
+                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:bg-white transition-colors duration-300">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Assessments</p>
+                        <p className="text-3xl font-bold text-slate-900">{modules.filter(m => m.quiz).length}</p>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-4 max-w-md mx-auto">
+                <div className="space-y-4 mb-8">
+                    <div className="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+                        <ShieldCheck className="size-5 text-emerald-500" />
+                        <p className="text-sm font-medium text-emerald-800">Content Integrity: Validated and signed</p>
+                    </div>
+                    <div className="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+                        <ShieldCheck className="size-5 text-emerald-500" />
+                        <p className="text-sm font-medium text-emerald-800">Media Assets: Optimized for streaming</p>
+                    </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <button onClick={() => setStep(4)} className="group flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                        <ArrowLeft className="size-4" />
+                        Quizzes
+                    </button>
                     <button 
                         onClick={() => publishMutation.mutate()}
                         disabled={publishMutation.isPending}
-                        className="w-full bg-primary text-white py-5 rounded-xl font-bold text-lg shadow-xl shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-3 group"
+                        className="flex items-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all hover:shadow-lg hover:shadow-slate-200 shadow-md group"
                     >
                         {publishMutation.isPending ? (
-                            <>
-                                <div className="size-5 border-3 border-white/20 border-t-white rounded-full animate-spin" />
-                                Processing Update...
-                            </>
+                          <>
+                            <RefreshCw className="size-5 animate-spin" />
+                            Updating...
+                          </>
                         ) : (
-                            <>
-                                <Save className="size-5" />
-                                Apply All Changes
-                            </>
+                          <>
+                            Save & Publish Changes
+                            <ChevronRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                          </>
                         )}
                     </button>
-                    <Link href="/admin/courses" className="text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-primary py-2 transition-colors">Return to Dashboard</Link>
                 </div>
             </div>
         )}

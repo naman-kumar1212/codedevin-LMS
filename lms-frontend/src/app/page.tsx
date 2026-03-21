@@ -7,24 +7,45 @@ import Link from "next/link";
 import {
   Terminal,
   Menu,
-  ChevronRight,
   PlayCircle,
   BookOpen,
   Users,
   Search,
   Star,
-  Trophy,
   ArrowRight,
   CheckCircle2,
   Zap,
+  Code2,
+  MonitorPlay,
+  ShieldCheck,
+  Award
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { CourseCard } from "@/components/ui/CourseCard";
 import { Input } from "@/components/ui/Input";
-import { cn } from "@/lib/utils"; // Assuming cn utility is available here
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api-client';
 
 export default function LandingPage() {
-  const featuredCourses = [
+  const { data: courses = [], isLoading } = useQuery({
+    queryKey: ['featured-courses'],
+    queryFn: () => api.getCourses().then(r => r.data.slice(0, 3)),
+  });
+
+  const featuredCourses = courses.length > 0 ? courses.map((c: any) => ({
+    id: c.id,
+    title: c.title,
+    instructor: { name: c.author?.name || 'CodeDevin Expert' },
+    rating: 4.8,
+    enrollments: c._count?.enrollments || 0,
+    lessonsCount: c._count?.lessons || 12,
+    durationHours: 8.5,
+    category: c.category || 'Computer Science',
+    price: c.price || 4999,
+    thumbnailUrl: c.thumbnailUrl || `https://images.unsplash.com/photo-1547658719-da2b51169166?w=500&h=300&fit=crop`,
+    href: `/courses/${c.id}`,
+    isFree: c.isFree
+  })) : [
     {
       id: "cmmxt9wn300085a880tvxuzbs",
       title: "Node.js Fundamentals",
@@ -67,145 +88,188 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-bg-page text-text-primary selection:bg-primary/10 font-sans">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-white text-slate-900 font-sans antialiased">
       {/* Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-bg-surface/80 backdrop-blur-md">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm group-hover:bg-primary-hover transition-all">
-              <Terminal size={18} />
+          <Link href="/" className="flex items-center gap-2 group hover:opacity-90 transition-opacity">
+            <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm">
+              <Terminal size={18} strokeWidth={2.5} />
             </div>
-            <h2 className="text-text-primary text-xl font-bold tracking-tight">
-              Codedevin<span className="text-primary">.</span>
+            <h2 className="text-xl font-bold tracking-tight text-slate-900">
+              CodeDevin<span className="text-primary">.</span>
             </h2>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/courses"
-              className="text-sm font-medium text-text-secondary hover:text-primary transition-colors"
-            >
-              Courses
+            <Link href="/courses" className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">
+              Explore Courses
             </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-text-secondary hover:text-primary transition-colors"
-            >
+            <Link href="/about" className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">
               Our Story
             </Link>
-            <Link
-              href="/login"
-              className="text-sm font-medium text-text-secondary hover:text-primary transition-colors"
-            >
-              Login
+            <div className="h-4 w-px bg-slate-200 mx-2" />
+            <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">
+              Log In
             </Link>
             <Link href="/register">
-              <Button size="sm">Get Started</Button>
+              <Button size="sm" className="font-semibold text-sm rounded-lg shadow-sm">Join for Free</Button>
             </Link>
           </nav>
 
-          <button className="md:hidden size-10 flex items-center justify-center rounded-lg bg-bg-subtle border border-border">
+          <button className="md:hidden size-10 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-200 text-slate-600">
             <Menu size={20} />
           </button>
         </div>
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden pt-20 pb-32">
-          {/* Subtle Background Elements */}
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-10">
-            <div className="absolute -top-24 -left-24 size-[600px] bg-primary/5 rounded-full blur-[120px]" />
-            <div className="absolute top-1/2 -right-24 size-[600px] bg-primary/10 rounded-full blur-[120px]" />
-          </div>
-
+        {/* Split Hero Section */}
+        <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col items-center text-center max-w-4xl mx-auto gap-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-light border border-primary/20 text-primary">
-                <Star size={14} className="fill-current" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
-                  World-Class Online Learning
-                </span>
-              </div>
-              
-              <h1 className="text-5xl md:text-7xl font-extrabold text-text-primary leading-tight tracking-tight">
-                Master <span className="text-primary">DSA, Java & C++</span><br className="hidden md:block" />
-                with Expert-Led Courses
-              </h1>
-              
-              <p className="text-xl text-text-secondary font-medium leading-relaxed max-w-2xl">
-                Join our elite community learning Data Structures, Algorithms, 
-                and Core Programming. Access our library of 170+ specialized videos 
-                designed for Computer Science students.
-              </p>
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 
-              <div className="w-full max-w-xl mt-4">
-                <Input 
-                  placeholder="Search 170+ videos on DSA, Java, C++, and more..."
-                  leftIcon={<Search size={18} />}
-                  className="rounded-full h-14 pl-12 shadow-sm border-border bg-bg-surface focus-visible:ring-4 focus-visible:ring-primary/5"
-                />
-              </div>
-
-              <div className="flex flex-wrap gap-4 justify-center mt-4">
-                <Link href="/courses">
-                  <Button size="lg" className="px-10 rounded-full shadow-lg shadow-primary/20">
-                    Start Coding Now
-                  </Button>
-                </Link>
-                <Button variant="outline" size="lg" className="px-10 rounded-full bg-transparent">
-                  <PlayCircle className="size-5 mr-2 text-primary" />
-                  How it Works
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-4 py-8">
-                <div className="flex -space-x-3">
-                  {[
-                    "1535713875002-d1d0cf377fde",
-                    "1494790108377-be9c29b29330",
-                    "1599566150163-29194dcaad36",
-                    "1527980965255-d3b416303d12"
-                  ].map((id, i) => (
-                    <div key={i} className="size-10 rounded-full border-2 border-bg-page bg-bg-subtle overflow-hidden relative">
-                      <Image
-                        src={`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=80&h=80`}
-                        alt="User"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+              {/* Left Content */}
+              <div className="flex flex-col gap-6 md:gap-8 max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 self-start">
+                  <Star size={14} className="fill-current" />
+                  <span className="text-xs font-bold tracking-wide uppercase">
+                    Trusted Learning Platform
+                  </span>
                 </div>
-                <p className="text-sm font-medium text-text-muted">
-                  <span className="text-text-primary font-bold">4.8/5</span> from over 12,000 students
+
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                  Master <span className="text-primary">DSA, Java & C++</span><br className="hidden md:block" />
+                  with Expert-Led Courses
+                </h1>
+
+                <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-xl">
+                  Join our elite community learning Data Structures, Algorithms,
+                  and Core Programming. Access our library of specialized videos
+                  designed to accelerate your tech career.
                 </p>
+
+                <div className="relative w-full max-w-lg mt-2">
+                  <Input
+                    placeholder="Search for courses, skills, or topics..."
+                    leftIcon={<Search size={20} className="text-slate-400" />}
+                    className="h-14 pl-12 rounded-xl border-slate-200 shadow-sm text-base focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                  <Button className="absolute right-1.5 top-1.5 h-11 px-6 rounded-lg font-semibold shadow-sm text-sm">
+                    Search
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-8 pt-4">
+                  <div className="flex -space-x-3">
+                    {[
+                      "1535713875002-d1d0cf377fde",
+                      "1494790108377-be9c29b29330",
+                      "1599566150163-29194dcaad36",
+                    ].map((id, i) => (
+                      <div key={i} className="size-10 rounded-full border-2 border-white bg-slate-100 overflow-hidden relative shadow-sm">
+                        <Image
+                          src={`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=80&h=80`}
+                          alt="Student Avatar"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                    <div className="size-10 rounded-full border-2 border-white bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shadow-sm z-10">
+                      12k+
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1 text-amber-400 mb-0.5">
+                      <Star size={14} className="fill-current" />
+                      <Star size={14} className="fill-current" />
+                      <Star size={14} className="fill-current" />
+                      <Star size={14} className="fill-current" />
+                      <Star size={14} className="fill-current" />
+                    </div>
+                    <p className="text-xs font-semibold text-slate-500">
+                      4.8/5 Average Rating
+                    </p>
+                  </div>
+                </div>
               </div>
+
+              {/* Right Image */}
+              <div className="relative hidden lg:block">
+                <div className="relative aspect-4/3 rounded-2xl overflow-hidden shadow-2xl border border-slate-100">
+                  <Image
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2070&auto=format&fit=crop"
+                    alt="Students coding together"
+                    fill
+                    className="object-cover"
+                  />
+                  {/* Overlay Gradient for polish */}
+                  <div className="absolute inset-0 bg-linear-to-tr from-slate-900/20 to-transparent" />
+                </div>
+
+                {/* Floating elements */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                  <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <MonitorPlay size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">170+ Video Lessons</p>
+                    <p className="text-xs font-medium text-slate-500">Always up-to-date</p>
+                  </div>
+                </div>
+                <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700 delay-500">
+                  <div className="size-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                    <Award size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">Certified Courses</p>
+                    <p className="text-xs font-medium text-slate-500">Industry recognized</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* Global Partners / Trust Section */}
+        <section className="bg-slate-50 border-y border-slate-200 py-10">
+          <div className="max-w-7xl mx-auto px-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">Trusted by students from top organizations</p>
+            <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale">
+              {['Amazon', 'Google', 'Microsoft', 'Meta', 'Netflix'].map((company, i) => (
+                <div key={i} className="text-xl md:text-2xl font-black text-slate-900 flex items-center gap-2">
+                  {company}
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Categories */}
-        <section className="py-24 border-y border-border bg-bg-surface">
+        <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+              <div>
+                <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Explore Categories</h2>
+                <p className="text-slate-500 font-medium">Find the perfect specialized course to elevate your tech skills.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { name: "DSA & Algorithms", count: "45+ Videos", icon: Zap, variant: "info" },
-                { name: "Core Java & Spring", count: "60+ Videos", icon: BookOpen, variant: "success" },
-                { name: "C++ Programming", count: "30+ Videos", icon: Terminal, variant: "warning" },
-                { name: "System Design", count: "15+ Videos", icon: Users, variant: "error" },
+                { name: "DSA & Algorithms", count: "45+ Videos", icon: Zap, color: "text-amber-600", bg: "bg-amber-50" },
+                { name: "Core Java & Spring", count: "60+ Videos", icon: BookOpen, color: "text-blue-600", bg: "bg-blue-50" },
+                { name: "C++ Programming", count: "30+ Videos", icon: Code2, color: "text-indigo-600", bg: "bg-indigo-50" },
+                { name: "System Design", count: "15+ Videos", icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
               ].map((cat, i) => (
-                <div key={i} className="flex flex-col items-center text-center p-6 rounded-2xl hover:bg-bg-subtle transition-colors cursor-pointer group">
-                  <div className={cn(
-                    "size-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-sm",
-                    cat.variant === 'info' ? "bg-primary-light text-primary" :
-                    cat.variant === 'success' ? "bg-primary-light text-primary" :
-                    cat.variant === 'warning' ? "bg-primary-light text-primary" : "bg-primary-light text-primary"
-                  )}>
-                    <cat.icon size={28} />
+                <div key={i} className="group flex flex-col items-start p-6 rounded-2xl border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer bg-white">
+                  <div className={`size-12 rounded-xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 ${cat.bg} ${cat.color}`}>
+                    <cat.icon size={24} strokeWidth={2} />
                   </div>
-                  <h3 className="text-lg font-bold text-text-primary mb-1">{cat.name}</h3>
-                  <p className="text-xs font-bold text-text-muted uppercase tracking-widest">{cat.count}</p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">{cat.name}</h3>
+                  <p className="text-sm font-medium text-slate-500">{cat.count}</p>
                 </div>
               ))}
             </div>
@@ -213,128 +277,124 @@ export default function LandingPage() {
         </section>
 
         {/* Featured Courses */}
-        <section className="py-24">
+        <section className="py-24 bg-slate-50 border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
-              <div className="max-w-xl">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-text-primary mb-4 tracking-tight">
-                  Start Learning with <span className="text-primary">Confidence</span>
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+              <div className="max-w-2xl">
+                <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">
+                  Featured Courses
                 </h2>
-                <p className="text-lg text-text-secondary font-medium">
-                  Explore our most popular and highly-rated courses taught by industry veterans.
+                <p className="text-slate-600 font-medium text-lg">
+                  Start learning with confidence. Explore our highly-rated curriculum taught by industry veterans.
                 </p>
               </div>
               <Link
                 href="/courses"
-                className="group text-primary font-bold hover:text-primary-hover flex items-center gap-2 transition-all"
+                className="group text-primary font-bold hover:text-primary/80 flex items-center gap-2 transition-all"
               >
-                Explore All Courses
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-all" />
+                View all courses
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredCourses.map((course, i) => (
-                <CourseCard key={i} {...course} />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-[400px] rounded-2xl bg-slate-50 animate-pulse border border-slate-100" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredCourses?.map((course: any, i: number) => (
+                  <CourseCard
+                    key={course.id || i}
+                    {...course}
+                    className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
+                    style={{ animationDelay: `${i * 150}ms` } as any}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Why Codedevin */}
-        <section className="py-24 bg-bg-surface border-y border-border">
+        {/* Value Proposition */}
+        <section className="py-24 bg-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
-              <div className="relative group">
-                <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl border border-border">
-                  <Image 
-                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2070&auto=format&fit=crop" 
-                    alt="Learning experience" 
-                    fill 
-                    className="object-cover" 
-                  />
-                  <div className="absolute inset-0 bg-primary/10 mix-blend-multiply" />
-                </div>
-                {/* Floating Achievement */}
-                <div className="absolute -bottom-8 -right-8 bg-bg-surface p-6 rounded-2xl shadow-xl border border-border flex items-center gap-4 animate-bounce-subtle">
-                  <div className="size-12 rounded-xl bg-success-light flex items-center justify-center text-success">
-                    <Trophy size={24} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Global Ranking</p>
-                    <p className="text-sm font-extrabold text-text-primary">#1 in Developer Education</p>
-                  </div>
-                </div>
-              </div>
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="flex flex-col gap-8 lg:pr-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight tracking-tight">
+                  Everything you need to <br />
+                  <span className="text-primary">master your craft.</span>
+                </h2>
 
-              <div className="flex flex-col gap-10">
-                <div className="space-y-4">
-                  <h2 className="text-4xl md:text-5xl font-extrabold text-text-primary tracking-tight leading-[1.1]">
-                    Everything You Need to <br />
-                    <span className="text-primary">Master Your Craft</span>
-                  </h2>
-                  <p className="text-lg text-text-secondary font-medium">
-                    We've built a structure that ensures you don't just learn, but you retain and apply the knowledge.
-                  </p>
-                </div>
-
-                <div className="grid gap-8">
+                <div className="space-y-8">
                   {[
-                    { title: "Instructor-Led Sessions", desc: "Learn directly from professionals currently working at top tier companies." },
-                    { title: "Comprehensive Curriculum", desc: "Rigorous pedagogical approach designed for deep understanding and skill retention." },
-                    { title: "Verifiable Certificates", desc: "Earn official proof of completion to showcase your commitment to employers." },
+                    { title: "Instructor-Led Sessions", desc: "Learn completely practical implementations directly from professionals currently working at top tier tech companies.", icon: Users },
+                    { title: "Rigorous Curriculum", desc: "Our pedagogical approach is designed for deep understanding, retention, and passing tough technical interviews.", icon: BookOpen },
+                    { title: "Verifiable Certificates", desc: "Earn official proof of completion to showcase your commitment to employers and add to your portfolio.", icon: ShieldCheck },
                   ].map((feat, i) => (
-                    <div key={i} className="flex gap-5">
-                      <div className="shrink-0 size-6 rounded-full bg-primary-light flex items-center justify-center mt-1">
-                        <CheckCircle2 size={14} className="text-primary" />
+                    <div key={i} className="flex gap-4">
+                      <div className="shrink-0 size-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700">
+                        <feat.icon size={24} strokeWidth={2} />
                       </div>
                       <div>
-                        <h4 className="text-lg font-bold text-text-primary mb-1">{feat.title}</h4>
-                        <p className="text-text-secondary font-medium text-sm leading-relaxed">{feat.desc}</p>
+                        <h4 className="text-lg font-bold text-slate-900 mb-1">{feat.title}</h4>
+                        <p className="text-slate-600 font-medium text-sm leading-relaxed">{feat.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+
+              <div className="relative">
+                <div className="relative aspect-square md:aspect-4/3 rounded-2xl overflow-hidden shadow-xl border border-slate-200">
+                  <Image
+                    src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop"
+                    alt="Learning experience"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="max-w-7xl mx-auto px-6 py-24">
-          <div className="bg-primary rounded-[40px] p-12 md:p-24 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/20">
-            <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center gap-8">
-              <h2 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
-                Empower Your Professional Future
-              </h2>
-              <p className="text-primary-light text-lg md:text-xl font-medium opacity-90 leading-relaxed">
-                Join a global community of lifelong learners and take the next step towards your career goals.
-              </p>
-                <Link href="/register">
-                  <Button variant="outline" size="lg" className="h-16 px-12 rounded-2xl text-lg font-bold bg-white/10 hover:bg-white/20 border-white/20 text-white">
-                    Join Codedevin for Free
-                  </Button>
-                </Link>
+        {/* Final CTA */}
+        <section className="py-24 bg-white pb-32">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="bg-primary rounded-3xl p-12 md:p-16 text-center text-white relative overflow-hidden shadow-2xl">
+              {/* Decorative rings */}
+              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 size-64 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 size-64 bg-black/10 rounded-full blur-2xl" />
+
+              <div className="relative z-10 flex flex-col items-center gap-6">
+                <h2 className="text-3xl md:text-5xl font-bold leading-tight tracking-tight">
+                  Ready to empower your future?
+                </h2>
+                <p className="text-primary-foreground/90 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
+                  Join our global community of lifelong learners and take the next confident step towards your career goals today.
+                </p>
+                <div className="flex gap-4 mt-4">
+                  <Link href="/register">
+                    <Button size="lg" className="h-14 px-8 py-0 rounded-xl text-lg font-bold bg-white text-primary hover:bg-slate-50 shadow-sm border-none">
+                      Join for Free
+                    </Button>
+                  </Link>
+                  <Link href="/courses">
+                    <Button variant="outline" size="lg" className="h-14 px-8 py-0 rounded-xl text-lg font-bold bg-transparent text-white border border-white/30 hover:bg-white/10">
+                      Explore Courses
+                    </Button>
+                  </Link>
+                </div>
               </div>
-
-              {/* Background elements */}
-              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 size-[500px] bg-white/10 rounded-full blur-[100px]" />
-              <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 size-[400px] bg-indigo-900/40 rounded-full blur-[80px]" />
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
+      </main>
 
-        <Footer />
-
-      <style jsx global>{`
-        @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        .animate-bounce-subtle {
-          animation: bounce-subtle 3s ease-in-out infinite;
-        }
-      `}</style>
+      <Footer />
     </div>
   );
 }

@@ -50,29 +50,28 @@ export function CourseCard({
   className,
 }: CourseCardProps) {
   const cardContent = (
-    <Card className={cn('group overflow-hidden hover:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] transition-all duration-700 flex flex-col h-full border-slate-100 rounded-[2.5rem] bg-white ring-1 ring-slate-100/50', className)}>
+    <Card className={cn('group overflow-hidden hover:shadow-xl transition-all duration-500 flex flex-col h-full border-slate-200 rounded-2xl bg-white', className)}>
       {/* Thumbnail */}
-      <div className="relative aspect-video bg-muted overflow-hidden">
+      <div className="relative aspect-video bg-slate-100 overflow-hidden">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-1000 ease-in-out"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-50">
-            <BookOpen className="size-14 text-slate-200" strokeWidth={1.5} />
+            <BookOpen className="size-12 text-slate-200" strokeWidth={1.5} />
           </div>
         )}
         
-        {/* Modern Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
+        {/* Subtle Overlay */}
+        <div className="absolute inset-0 bg-slate-900/10 group-hover:opacity-0 transition-opacity duration-500" />
 
         {/* Level badge */}
         {level && (
-          <div className="absolute top-5 left-5">
-            <Badge variant="secondary" className="text-[10px] font-black uppercase tracking-[0.15em] bg-white/90 backdrop-blur-xl border-white/40 py-1.5 px-4 rounded-full shadow-lg text-slate-900">
-              <BarChart size={12} className="mr-1.5 text-primary" />
+          <div className="absolute top-4 left-4">
+            <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-white/95 backdrop-blur-md border shadow-sm py-1 px-3 rounded-md text-slate-700">
               {level}
             </Badge>
           </div>
@@ -80,114 +79,101 @@ export function CourseCard({
 
         {/* Status badge */}
         {status && (
-          <div className="absolute top-5 right-5">
+          <div className="absolute top-4 right-4">
             <Badge
               className={cn(
-                "text-[10px] font-black uppercase tracking-[0.15em] py-1.5 px-4 rounded-full shadow-lg border-0",
+                "text-[10px] font-bold uppercase tracking-wider py-1 px-3 rounded-md shadow-sm border-0",
                 status === 'published' 
-                  ? "bg-emerald-500/90 text-white backdrop-blur-md" 
-                  : "bg-slate-900/90 text-white backdrop-blur-md"
+                  ? "bg-emerald-500 text-white" 
+                  : "bg-slate-700 text-white"
               )}
             >
-              <div className={cn("size-1.5 rounded-full mr-2 animate-pulse", status === 'published' ? "bg-white" : "bg-white/40")} />
               {status}
             </Badge>
           </div>
         )}
 
         {/* Progress overlay */}
-        {progress != null && (
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-slate-950 via-slate-900/80 to-transparent">
-            <div className="flex justify-between items-end mb-3">
-              <div className="flex items-center gap-2">
-                <PlayCircle size={14} className="text-primary fill-primary/20" />
-                <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">Ongoing Performance</span>
-              </div>
-              <span className="text-xs font-black text-white bg-primary px-2 py-0.5 rounded-md">{progress}%</span>
+        {progress != null && (progress > 0) && (
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t">
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Progress</span>
+              <span className="text-[10px] font-bold text-primary">{progress}%</span>
             </div>
-            <Progress value={progress} className="h-2 bg-white/20 border-white/5 shadow-inner" />
+            <Progress value={progress} className="h-1.5 bg-slate-100" />
           </div>
         )}
       </div>
 
-      <CardContent className="flex-1 p-8 space-y-6">
-        <div className="flex items-center gap-3">
+      <CardContent className="flex-1 p-6 space-y-4">
+        <div className="flex items-center gap-2">
           {category && (
-            <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/5 border-primary/10 rounded-lg px-2.5 py-1">
+            <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/5 border-primary/20 rounded py-0.5 px-2">
               {category}
             </Badge>
           )}
-          <Separator orientation="vertical" className="h-3 bg-slate-200" />
           {lessonsCount != null && (
-            <div className="flex items-center gap-1.5">
-              <PlayCircle size={14} className="text-slate-400 group-hover:text-primary transition-colors" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{lessonsCount} Units</span>
+            <div className="flex items-center gap-1.5 ml-auto">
+              <PlayCircle size={14} className="text-slate-400" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{lessonsCount} Lessons</span>
             </div>
           )}
         </div>
 
-        <div className="space-y-3">
-          <h3 className="text-2xl font-black tracking-tight text-slate-900 line-clamp-2 leading-[1.15] group-hover:text-primary group-hover:translate-x-1 transition-all duration-500">
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-300">
             {title}
           </h3>
           {description && (
-            <p className="text-sm font-semibold text-slate-500/80 line-clamp-2 leading-relaxed italic">
-              "{description}"
+            <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+              {description}
             </p>
           )}
         </div>
 
         {instructor && (
-          <div className="flex items-center gap-4 pt-4 border-t border-slate-50">
-            <Avatar className="size-11 rounded-2xl ring-4 ring-slate-100/50 shadow-sm transition-transform group-hover:rotate-6">
+          <div className="flex items-center gap-3 pt-3 border-t border-slate-50">
+            <Avatar className="size-8 rounded-full shadow-sm">
               <AvatarImage src={instructor.avatar} className="object-cover" />
-              <AvatarFallback className="text-sm font-black bg-primary/10 text-primary">
+              <AvatarFallback className="text-xs font-bold bg-slate-100 text-slate-600">
                 {instructor.name?.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Chief Architect</p>
-              <p className="text-base font-black text-slate-900 leading-none truncate tracking-tight">{instructor.name}</p>
+              <p className="text-sm font-semibold text-slate-900 leading-none truncate">{instructor.name}</p>
+              <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider mt-0.5">Instructor</p>
             </div>
           </div>
         )}
       </CardContent>
 
-      <CardFooter className="p-8 pt-0 flex items-center justify-between mt-auto">
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Investment</span>
-            <div className="text-2xl font-black text-slate-900 tracking-tighter">
-              {isFree ? (
-                <span className="text-emerald-500">FREE</span>
-              ) : price != null ? (
-                <span className="bg-linear-to-r from-slate-900 to-primary bg-clip-text text-transparent">
-                  ₹{price.toLocaleString('en-IN')}
-                </span>
-              ) : "TBD"}
-            </div>
+      <CardFooter className="p-6 pt-0 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="text-lg font-bold text-slate-900">
+            {isFree ? (
+              <span className="text-emerald-600">Free</span>
+            ) : price != null ? (
+              <span>₹{price.toLocaleString('en-IN')}</span>
+            ) : "TBD"}
           </div>
           
-          <Separator orientation="vertical" className="h-8 bg-slate-100" />
-
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Retention</span>
-            <div className="flex items-center gap-1 text-slate-900">
-              <Star size={14} className="text-amber-400 fill-amber-400" />
-              <span className="text-sm font-black">{rating || "5.0"}</span>
+          {rating && (
+            <div className="flex items-center gap-1 text-slate-700 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+              <Star size={12} className="text-amber-400 fill-amber-400" />
+              <span className="text-xs font-bold">{rating}</span>
             </div>
-          </div>
+          )}
         </div>
 
-        <button className="size-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center hover:bg-primary hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-500 group/btn">
-          <ChevronRight size={24} className="group-hover/btn:translate-x-1 transition-transform" />
-        </button>
+        <div className="flex items-center text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          View Details <ChevronRight size={14} className="ml-1" />
+        </div>
       </CardFooter>
     </Card>
   );
 
   if (href) {
-    return <Link href={href} className="block h-full outline-none focus-visible:ring-4 focus-visible:ring-primary/20 rounded-[2.5rem] transition-all">{cardContent}</Link>;
+    return <Link href={href} className="block h-full outline-none focus-visible:ring-4 focus-visible:ring-primary/20 rounded-2xl transition-all">{cardContent}</Link>;
   }
   return cardContent;
 }

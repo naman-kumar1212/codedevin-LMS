@@ -71,20 +71,20 @@ export default function AdminTopbar() {
           className="relative flex-1 max-w-md group cursor-pointer"
           onClick={() => setIsSearchOpen(true)}
         >
-          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-primary transition-colors" />
-          <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl h-11 pl-12 pr-4 text-xs font-bold text-slate-400 hover:bg-white hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all flex items-center justify-between">
-            <span className="uppercase tracking-widest">Search Intelligence (⌘K)</span>
-            <Badge variant="secondary" className="text-[10px] font-black px-2 py-0.5 h-6 bg-white border-slate-200 text-slate-400 group-hover:text-primary rounded-lg shadow-sm">⌘K</Badge>
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-primary transition-colors" />
+          <div className="w-full bg-slate-50 border border-slate-200 rounded-md h-10 pl-10 pr-3 text-sm font-medium text-slate-500 hover:bg-white hover:border-primary/30 transition-colors flex items-center justify-between shadow-sm">
+            <span>Search Intelligence...</span>
+            <Badge variant="secondary" className="text-xs font-medium px-1.5 py-0.5 h-5 bg-white border-slate-200 text-slate-500 rounded shadow-sm">⌘K</Badge>
           </div>
         </div>
 
         <div className="flex items-center gap-6">
           {/* Notification Bell */}
           <Link href="/admin/notifications">
-            <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl group transition-all">
-              <Bell size={20} strokeWidth={2.5} />
+            <Button variant="ghost" size="icon" className="relative text-slate-500 hover:text-primary hover:bg-primary/5 rounded-md transition-colors">
+              <Bell size={20} strokeWidth={2} />
               {unreadCount > 0 && (
-                <span className="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-white shadow-sm" />
+                <span className="absolute top-2 right-2 size-2 bg-primary rounded-full border border-white" />
               )}
             </Button>
           </Link>
@@ -95,59 +95,53 @@ export default function AdminTopbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 cursor-pointer group outline-none">
-                <Avatar className="size-10 rounded-xl border border-border shadow-sm group-hover:scale-105 transition-transform">
+                <Avatar className="size-8 rounded-full border border-slate-200">
                   <AvatarImage src={user?.avatar} />
-                  <AvatarFallback className="bg-primary/10 text-primary font-black text-xs">
+                  <AvatarFallback className="bg-slate-50 text-slate-600 font-medium text-xs">
                     {user?.name?.charAt(0).toUpperCase() || 'A'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block text-left">
-                  <p className="text-xs font-bold text-foreground leading-tight">{user?.name || 'Admin'}</p>
-                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-0.5">System Admin</p>
+                  <p className="text-sm font-medium text-slate-900 leading-none">{user?.name || 'Admin'}</p>
+                  <p className="text-xs text-slate-500 mt-1">System Admin</p>
                 </div>
-                <ChevronDown className="size-3.5 text-muted-foreground group-hover:text-primary transition-colors ml-1" />
+                <ChevronDown className="size-4 text-slate-400 group-hover:text-slate-600 transition-colors ml-1" />
               </button>
             </DropdownMenuTrigger>
             
-            <DropdownMenuContent align="end" className="w-72 rounded-[1.5rem] p-3 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-slate-100 animate-in fade-in zoom-in-95 duration-500">
-              <DropdownMenuLabel className="px-4 py-4 border-b border-slate-100 mb-2">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5 leading-none">Institutional Identity</p>
-                <p className="text-sm font-bold text-slate-900 truncate tracking-tight">{user?.email || 'admin@codedevin.com'}</p>
+            <DropdownMenuContent align="end" className="w-64 rounded-xl p-2 shadow-md border-slate-200">
+              <DropdownMenuLabel className="px-3 py-3 border-b border-slate-100 mb-1">
+                <p className="text-xs font-semibold text-slate-900 truncate">{user?.email || 'admin@codedevin.com'}</p>
+                <p className="text-xs text-slate-500 mt-0.5">Institutional Identity</p>
               </DropdownMenuLabel>
               
-              <DropdownMenuItem asChild className="rounded-xl outline-none">
+              <DropdownMenuItem asChild className="rounded-md outline-none cursor-pointer">
                 <Link 
                   href="/admin/profile" 
-                  className="flex items-center gap-3 px-3 py-3 text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-primary transition-all w-full"
+                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 hover:text-primary transition-colors w-full"
                 >
-                  <div className="size-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                    <User size={16} />
-                  </div>
+                  <User size={16} className="text-slate-400 group-hover:text-primary" />
                   Personal Profile
                 </Link>
               </DropdownMenuItem>
 
-              <DropdownMenuItem asChild className="rounded-xl outline-none">
+              <DropdownMenuItem asChild className="rounded-md outline-none cursor-pointer mt-1">
                 <Link 
                   href="/admin/settings" 
-                  className="flex items-center gap-3 px-3 py-3 text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-primary transition-all w-full"
+                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 hover:text-primary transition-colors w-full"
                 >
-                  <div className="size-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                    <Settings size={16} />
-                  </div>
+                  <Settings size={16} className="text-slate-400 group-hover:text-primary" />
                   System Governance
                 </Link>
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator className="bg-slate-100 mx-1 my-2" />
+              <DropdownMenuSeparator className="bg-slate-100 mx-1 my-1" />
 
               <DropdownMenuItem 
                 onClick={handleLogout}
-                className="rounded-xl px-3 py-3 text-[10px] font-black uppercase tracking-[0.15em] text-destructive focus:bg-red-50 focus:text-red-600 cursor-pointer flex items-center gap-3 outline-none"
+                className="rounded-md px-3 py-2 text-sm font-medium text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer flex items-center gap-3 outline-none"
               >
-                <div className="size-9 rounded-lg bg-red-50 flex items-center justify-center text-red-600 transition-colors">
-                  <LogOut size={16} />
-                </div>
+                <LogOut size={16} className="text-red-500" />
                 Sign Out Registry
               </DropdownMenuItem>
             </DropdownMenuContent>

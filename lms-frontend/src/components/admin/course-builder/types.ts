@@ -1,4 +1,5 @@
 // Shared types for the course builder components
+import { Quiz } from './QuizBuilder';
 
 export type LessonType = 'video' | 'pdf';
 export type ContentStatus = 'uploading' | 'processing' | 'ready' | 'failed';
@@ -19,5 +20,5 @@ export interface Module {
   title: string;
   orderIndex: number;
   lessons: Lesson[];
-  quiz?: any;
+  quiz?: Quiz;
 }

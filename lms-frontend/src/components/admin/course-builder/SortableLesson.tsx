@@ -68,41 +68,40 @@ export function SortableLesson({ lesson, onDelete }: Props) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-4 bg-white rounded-2xl border border-slate-200/60 p-4 transition-all duration-300 group/lesson",
-        "hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5"
+        "flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-3.5 transition-[background-color,border-color,box-shadow] duration-200 group/lesson",
+        "hover:border-slate-300 hover:shadow-sm"
       )}
     >
       {/* Drag handle */}
       <button
         {...listeners}
         {...attributes}
-        className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 transition-colors p-2 touch-none shrink-0"
+        className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 transition-colors p-2 touch-none shrink-0"
       >
         <GripVertical size={16} />
       </button>
 
       {/* Type icon */}
       <div className={cn(
-        "size-11 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-500",
+        "size-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300",
         typeInfo.bg,
-        "group-hover/lesson:scale-110 group-hover/lesson:shadow-lg group-hover/lesson:shadow-slate-100"
       )}>
-        <TypeIcon className={cn("size-5", typeInfo.color)} strokeWidth={2.5} />
+        <TypeIcon className={cn("size-5", typeInfo.color)} strokeWidth={2} />
       </div>
 
       {/* Title */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             {lesson.type}
           </span>
-          <div className="size-1 rounded-full bg-slate-200" />
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate">
+          <div className="size-1 rounded-full bg-slate-300" />
+          <p className="text-xs font-medium text-slate-400 uppercase tracking-widest truncate">
             {lesson.id.slice(0, 8)}
           </p>
         </div>
-        <p className="text-sm font-black text-slate-800 truncate tracking-tight group-hover/lesson:text-primary transition-colors duration-300">
-          {lesson.title || <span className="text-slate-300 font-medium italic">Untitled lesson</span>}
+        <p className="text-sm font-semibold text-slate-900 truncate tracking-tight group-hover/lesson:text-primary transition-colors duration-200">
+          {lesson.title || <span className="text-slate-400 font-medium italic">Untitled lesson</span>}
         </p>
       </div>
 
@@ -110,20 +109,20 @@ export function SortableLesson({ lesson, onDelete }: Props) {
       <Badge
         variant="outline"
         className={cn(
-          "flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all",
-          (lesson.videoUrl || lesson.resourceUrl) ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : statusInfo.badge
+          "flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium uppercase tracking-wider transition-all",
+          (lesson.videoUrl || lesson.resourceUrl) ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : statusInfo.badge
         )}
       >
-        <StatusIcon className={cn("size-3", (lesson.videoUrl || lesson.resourceUrl) ? 'text-emerald-500' : statusInfo.className)} strokeWidth={3} />
+        <StatusIcon className={cn("size-3.5", (lesson.videoUrl || lesson.resourceUrl) ? 'text-emerald-500' : statusInfo.className)} strokeWidth={2.5} />
         {(lesson.videoUrl || lesson.resourceUrl) ? 'Linked' : statusInfo.label}
       </Badge>
 
       {/* Delete / Actions */}
       <button
         onClick={onDelete}
-        className="text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl p-2.5 transition-all opacity-0 group-hover/lesson:opacity-100 shrink-0"
+        className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg p-2 transition-all opacity-0 group-hover/lesson:opacity-100 shrink-0"
       >
-        <Trash2 size={16} strokeWidth={2.5} />
+        <Trash2 size={16} strokeWidth={2} />
       </button>
     </div>
   );

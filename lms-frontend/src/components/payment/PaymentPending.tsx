@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 interface PaymentPendingProps {
   courseId: string;
@@ -38,33 +39,31 @@ export default function PaymentPending({ courseId, paymentId }: PaymentPendingPr
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-white z-110 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500">
-      <div className="relative mb-12">
-        <div className="size-32 border-4 border-slate-100 rounded-full" />
-        <div className="size-32 border-4 border-primary border-t-transparent rounded-full animate-spin absolute inset-0" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="material-symbols-outlined text-4xl text-primary animate-pulse">sync_saved_locally</span>
+    <div className="fixed inset-0 bg-white z-110 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-300">
+      <div className="relative mb-8">
+        <div className="size-24 bg-primary/5 rounded-full flex items-center justify-center animate-pulse">
+          <Loader2 size={40} className="text-primary animate-spin" strokeWidth={2} />
         </div>
       </div>
 
       <div className="max-w-sm">
-        <h3 className="text-3xl font-black text-foreground tracking-tight">Confirming Enrollment{dots}</h3>
-        <p className="text-foreground-secondary mt-4 font-medium leading-relaxed">
+        <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Confirming Enrollment{dots}</h3>
+        <p className="text-slate-500 mt-3 font-medium text-sm leading-relaxed">
           We've received your payment. We are currently finalizing your access to the course content. This usually takes a few seconds.
         </p>
       </div>
 
-      <div className="mt-12 flex flex-col items-center gap-4">
-        <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted">
-          <span className="material-symbols-outlined text-[16px]">verified_user</span>
+      <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <span className="material-symbols-outlined text-[14px]">verified_user</span>
           Transaction ID: {paymentId}
         </div>
-        <p className="text-xs text-muted font-bold">Please do not refresh the page</p>
+        <p className="text-xs text-slate-400 font-medium">Please do not refresh the page</p>
       </div>
 
       {/* Success Hint (Hidden but ready) */}
       {access?.hasAccess && (
-        <div className="mt-8 transform animate-bounce bg-emerald-500 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest">
+        <div className="mt-8 animate-in slide-in-from-bottom-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg text-sm font-semibold">
           Redirecting to Course...
         </div>
       )}

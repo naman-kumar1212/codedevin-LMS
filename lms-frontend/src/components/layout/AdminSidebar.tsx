@@ -64,7 +64,7 @@ export function AdminSidebar() {
                 variant={active ? 'secondary' : 'ghost'}
                 size="sm"
                 className={cn(
-                  'w-full justify-start gap-3 h-10 px-3 font-medium transition-all',
+                  'w-full justify-start gap-3 h-10 px-3 font-medium transition-colors rounded-lg',
                   active 
                     ? 'bg-primary/10 text-primary hover:bg-primary/15' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -88,7 +88,7 @@ export function AdminSidebar() {
               variant={pathname.startsWith('/admin/settings') ? 'secondary' : 'ghost'}
               size="sm"
               className={cn(
-                'w-full justify-start gap-3 h-10 px-3 font-medium transition-all',
+                'w-full justify-start gap-3 h-10 px-3 font-medium transition-colors rounded-lg',
                 pathname.startsWith('/admin/settings')
                   ? 'bg-primary/10 text-primary hover:bg-primary/15'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -100,22 +100,22 @@ export function AdminSidebar() {
           </Link>
 
           {/* User Card */}
-          <div className="mt-4 p-2 rounded-2xl bg-muted/30 border border-border/50 flex items-center gap-3">
-            <Avatar className="size-9 rounded-xl border border-border shadow-sm">
+          <div className="mt-4 p-3 rounded-lg border border-transparent hover:border-border hover:bg-muted/30 transition-colors flex items-center gap-3">
+            <Avatar className="size-8 rounded-full border border-border">
               <AvatarImage src={user?.avatar} />
-              <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black uppercase">
+              <AvatarFallback className="bg-slate-50 text-slate-600 text-xs font-medium">
                 {user?.name?.charAt(0) || 'A'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-foreground truncate leading-tight">{user?.name || 'Admin'}</p>
-              <p className="text-[10px] font-medium text-muted-foreground truncate uppercase tracking-tighter">System Administrator</p>
+              <p className="text-sm font-medium text-foreground truncate">{user?.name || 'Admin'}</p>
+              <p className="text-xs text-muted-foreground truncate">System Administrator</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+              className="size-8 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
               title="Logout"
             >
               <LogOut className="size-3.5" />

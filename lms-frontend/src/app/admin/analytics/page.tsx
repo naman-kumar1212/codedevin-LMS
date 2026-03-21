@@ -130,18 +130,18 @@ export default function AdminAnalyticsPage() {
   if (!stats) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[600px] space-y-6 text-center animate-in zoom-in-95 duration-500">
-        <div className="size-24 rounded-[32px] bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-200 shadow-inner">
-          <Activity size={48} />
+        <div className="size-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 shadow-sm">
+          <Activity size={32} />
         </div>
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Intelligence Offline</h2>
-          <p className="text-slate-400 text-sm mt-3 max-w-sm font-medium leading-relaxed uppercase tracking-tight italic">
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Intelligence Offline</h2>
+          <p className="text-slate-500 text-sm mt-2 max-w-sm">
             Unable to synchronize with the institutional data stream. Please verify your governance credentials and active session.
           </p>
         </div>
         <Button 
           onClick={() => window.location.reload()}
-          className="bg-primary text-white h-12 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+          className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
         >
           Re-Synchronize
         </Button>
@@ -152,24 +152,24 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted mb-2">
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1">
             <span>Governance</span>
-            <ChevronRight size={10} className="text-border" />
-            <span className="text-primary font-black">Intelligence Index</span>
+            <ChevronRight size={14} className="text-slate-300" />
+            <span className="text-primary font-medium">Intelligence Index</span>
           </nav>
-          <h1 className="text-3xl font-bold text-text-primary tracking-tight">
-            Institutional <span className="text-primary italic font-serif">Intelligence</span>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Institutional Intelligence
           </h1>
-          <p className="text-text-secondary mt-1 text-sm font-medium">Real-time performance metrics and growth indicators for the platform.</p>
+          <p className="text-slate-500 mt-2 text-sm max-w-xl">Real-time performance metrics and growth indicators for the platform.</p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="hidden sm:flex text-[10px] font-black tracking-widest uppercase">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" className="hidden sm:flex text-sm font-medium h-10 px-4 rounded-md">
             Last 30 Days
           </Button>
-          <Button size="sm" className="shadow-lg shadow-primary/20 text-[10px] font-black tracking-widest uppercase">
+          <Button className="h-10 px-4 rounded-md text-sm font-medium shadow-sm bg-primary text-white border-none hover:bg-primary/90 transition-colors">
             Export Dataset
           </Button>
         </div>
@@ -208,48 +208,48 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* Visual Analytics Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Trend - Minimalist Component */}
-        <div className="lg:col-span-2 bg-bg-surface rounded-3xl border border-border shadow-sm overflow-hidden flex flex-col">
-            <div className="p-8 border-b border-border/50 flex items-center justify-between">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                 <div>
-                   <h3 className="text-[16px] font-bold text-text-primary flex items-center gap-2">
-                        <TrendingUp className="size-5 text-success" />
+                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <TrendingUp className="size-5 text-primary" />
                         Fiscal Progression
                    </h3>
-                   <p className="text-[11px] font-medium text-text-muted mt-1">Net revenue accumulation over the fiscal period.</p>
+                   <p className="text-sm font-medium text-slate-500 mt-1">Net revenue accumulation over the fiscal period.</p>
                 </div>
-                <div className="flex items-center gap-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">
-                    <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
+                    <div className="flex items-center gap-2">
                         <div className="size-2 rounded-full bg-primary" />
                         Current
                     </div>
                 </div>
             </div>
-            <div className="flex-1 p-8 flex items-end gap-3 h-[280px]">
+            <div className="flex-1 p-6 flex items-end gap-2 h-[280px]">
                 {/* Simulated Chart Bars */}
                 {[45, 60, 55, 85, 70, 95, 120, 110, 130, 150, 140, 160].map((h, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-4 group/bar">
+                    <div key={i} className="flex-1 flex flex-col items-center gap-3 group/bar">
                         <div className="w-full relative h-[180px]">
                             <div 
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[10px] bg-bg-subtle rounded-full" 
+                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-slate-50 rounded-sm hover:cursor-pointer" 
                                 style={{ height: '100%' }}
                             />
                             <div 
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[10px] bg-primary rounded-full shadow-lg shadow-primary/20 transition-all duration-1000 group-hover/bar:brightness-110" 
+                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-primary rounded-sm transition-all duration-300 group-hover/bar:bg-primary/80" 
                                 style={{ height: `${h}px` }}
                             />
                         </div>
-                        <p className="text-[9px] font-bold text-text-muted uppercase tabular-nums">M{i+1}</p>
+                        <p className="text-xs font-medium text-slate-400 group-hover/bar:text-slate-600 transition-colors">M{i+1}</p>
                     </div>
                 ))}
             </div>
         </div>
 
         {/* Top Performing Courses */}
-        <div className="bg-bg-surface rounded-3xl border border-border shadow-sm p-8 flex flex-col">
-            <h3 className="text-[16px] font-bold text-text-primary flex items-center gap-2 mb-8">
-                 <Award className="size-5 text-success" />
+        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col">
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 mb-6">
+                 <Award className="size-5 text-primary" />
                  Top Academic Targets
             </h3>
             <div className="space-y-6 flex-1">
@@ -262,22 +262,15 @@ export default function AdminAnalyticsPage() {
                     const maxEnr = popularCourses.length > 0 ? Math.max(...popularCourses.map((c: any) => c._count.enrollments)) : 120;
                     const percent = Math.round((course._count.enrollments / maxEnr) * 100);
                     return (
-                        <div key={i} className="space-y-3">
+                        <div key={i} className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <p className="text-[11px] font-bold text-text-secondary uppercase truncate pr-4">{course.title}</p>
-                                <p className="text-[11px] font-black text-text-primary tabular-nums">{course._count.enrollments}</p>
+                                <p className="text-sm font-medium text-slate-700 truncate pr-4">{course.title}</p>
+                                <p className="text-sm font-bold text-slate-900 tabular-nums">{course._count.enrollments}</p>
                             </div>
-                            <AnimatedProgress value={percent} color="#10B981" />
+                            <Progress value={percent} className="h-1.5 bg-slate-100" />
                         </div>
                     );
                 })}
-            </div>
-            
-            <div className="mt-8 p-6 bg-green-50/50 rounded-2xl border border-green-100 text-center">
-                <TrendingUp className="size-8 text-green-500/40 mx-auto mb-3" />
-                <p className="text-[10px] font-bold text-green-700 uppercase tracking-widest leading-relaxed">
-                    Peak enrollment velocity reached <span className="text-green-800 font-black">2.4x</span> standard baseline.
-                </p>
             </div>
         </div>
       </div>
@@ -286,10 +279,10 @@ export default function AdminAnalyticsPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
             <div>
-              <h3 className="text-[18px] font-bold text-text-primary">Ecosystem Pulse</h3>
-              <p className="text-[12px] font-medium text-text-muted mt-1">Live stream of student enrollments and platform interactions.</p>
+              <h3 className="text-lg font-bold text-slate-900">Ecosystem Pulse</h3>
+              <p className="text-sm font-medium text-slate-500 mt-1">Live stream of student enrollments and platform interactions.</p>
             </div>
-            <Activity className="size-6 text-primary animate-pulse" />
+            <Activity className="size-5 text-primary" />
         </div>
 
         <DataTable
@@ -299,12 +292,12 @@ export default function AdminAnalyticsPage() {
               header: "STAKEHOLDER",
               cell: (enr: any) => (
                 <div className="flex items-center gap-3">
-                  <div className="size-9 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-primary text-[10px] font-bold">
+                  <div className="size-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-medium">
                     {enr.student.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-[14px] font-bold text-text-primary">{enr.student.name}</p>
-                    <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider">{enr.student.email}</p>
+                    <p className="text-sm font-medium text-slate-900">{enr.student.name}</p>
+                    <p className="text-xs text-slate-500">{enr.student.email}</p>
                   </div>
                 </div>
               )
@@ -312,15 +305,15 @@ export default function AdminAnalyticsPage() {
             {
               header: "ACADEMIC TARGET",
               cell: (enr: any) => (
-                <p className="text-[13px] font-bold text-text-secondary">{enr.course.title}</p>
+                <p className="text-sm font-medium text-slate-700">{enr.course.title}</p>
               )
             },
             {
               header: "TIMESTAMP",
               cell: (enr: any) => (
-                <div className="flex items-center gap-2 text-text-muted">
-                  <History size={14} className="text-primary/30" />
-                  <span className="text-[12px] font-medium tabular-nums">
+                <div className="flex items-center gap-2 text-slate-500">
+                  <History size={14} className="text-slate-400" />
+                  <span className="text-sm font-medium tabular-nums">
                     {new Date(enr.enrolledAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </span>
                 </div>
