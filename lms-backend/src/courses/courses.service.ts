@@ -123,6 +123,8 @@ export class CoursesService {
         thumbnailUrl: true,
         status: true,
         createdAt: true,
+        category: true,
+        level: true,
         author: { select: { id: true, name: true } },
         _count: { select: { enrollments: true, modules: true } },
       },
