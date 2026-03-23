@@ -141,7 +141,8 @@ export default function MyCoursesPage() {
               title={enr.course?.title}
               thumbnailUrl={enr.course?.thumbnailUrl || enr.course?.thumbnail}
               instructor={{ name: enr.course?.instructor?.name || enr.course?.author?.name || 'Academic Lead' }}
-              lessonsCount={enr.course?.lessonsCount || 24}
+              lessonsCount={enr.course?._count?.lessons || enr.course?.lessonsCount}
+              modulesCount={enr.course?._count?.modules || enr.course?.modulesCount}
               durationHours={12}
               progress={enr.progress || 0}
               category={enr.course?.category}

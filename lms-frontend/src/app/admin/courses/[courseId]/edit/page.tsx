@@ -27,7 +27,9 @@ import {
   Smartphone,
   Save,
   RefreshCw,
-  HelpCircle
+  HelpCircle,
+  ImageIcon,
+  Upload
 } from 'lucide-react';
 import {
   DndContext,
@@ -88,6 +90,7 @@ export default function EditCoursePage() {
   const [uploads, setUploads] = useState<Record<string, any>>({});
   const [pendingModal, setPendingModal] = useState<any>(null);
   const [activeQuizModuleId, setActiveQuizModuleId] = useState<string | null>(null);
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
   // ── Sensors for DnD ──────────────────────────────────────────────────────
   const sensors = useSensors(
@@ -145,6 +148,22 @@ export default function EditCoursePage() {
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
     updateMutation.mutate(basicInfo);
+  };
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !courseId) return;
+    e.target.value = '';
+    setThumbnailUploading(true);
+    try {
+      const res = await api.uploadCourseThumbnail(courseId, file);
+      setBasicInfo((prev) => ({ ...prev, thumbnailUrl: res.data.thumbnailUrl }));
+      toast.success('Preview image updated');
+    } catch {
+      toast.error('Failed to upload image');
+    } finally {
+      setThumbnailUploading(false);
+    }
   };
 
   const confirmAddModule = async () => {
@@ -249,7 +268,7 @@ export default function EditCoursePage() {
             : m,
         ),
       );
-    } catch (err: any) {
+      } catch (err: any) {
       const errMsg = err?.response?.data?.message || 'Upload failed';
       setUploads((prev) => ({ ...prev, [lessonId as string]: { ...prev[lessonId as string], error: errMsg } }));
       setModules((prev) =>
@@ -262,6 +281,22 @@ export default function EditCoursePage() {
     }
   };
   
+  const handleEditLesson = (lessonId: string, moduleId: string) => {
+    const module = modules.find(m => m.id === moduleId);
+    const lesson = module?.lessons.find((l: any) => l.id === lessonId);
+    if (!lesson) return;
+    
+    setPendingModal({
+      moduleId,
+      lessonId,
+      lessonType: lesson.type,
+      initialTitle: lesson.title,
+      initialDescription: lesson.description || '',
+      initialLearningOutcome: lesson.learningOutcome || '',
+      initialThumbnailUrl: lesson.thumbnailUrl || ''
+    });
+  };
+
   const confirmDeleteModule = async () => {
     if (!moduleToDelete) return;
     try {
@@ -385,12 +420,21 @@ export default function EditCoursePage() {
           lessonId={pendingModal.lessonId}
           lessonType={pendingModal.lessonType}
           initialTitle={pendingModal.initialTitle}
+          initialDescription={pendingModal.initialDescription}
+          initialLearningOutcome={pendingModal.initialLearningOutcome}
+          initialThumbnailUrl={pendingModal.initialThumbnailUrl}
           onSave={(updated: any) => {
             const { moduleId, lessonId } = pendingModal;
             setModules((prev) =>
               prev.map((m) =>
                 m.id === moduleId
-                  ? { ...m, lessons: m.lessons.map((l: any) => (l.id === lessonId ? { ...l, title: updated.title ?? l.title } : l)) }
+                  ? { ...m, lessons: m.lessons.map((l: any) => (l.id === lessonId ? { 
+                      ...l, 
+                      title: updated.title ?? l.title,
+                      description: updated.description ?? l.description,
+                      learningOutcome: updated.learningOutcome ?? l.learningOutcome,
+                      thumbnailUrl: updated.thumbnailUrl ?? l.thumbnailUrl
+                   } : l)) }
                   : m,
               ),
             );
@@ -553,6 +597,51 @@ export default function EditCoursePage() {
                         )}
                     </div>
 
+                    {/* Course Preview Image */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Course Preview Image</label>
+                      <div className="flex items-start gap-4">
+                        {/* Preview */}
+                        <div className="size-24 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden">
+                          {basicInfo.thumbnailUrl ? (
+                            <img
+                              src={basicInfo.thumbnailUrl.startsWith('/public')
+                                ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'}${basicInfo.thumbnailUrl}`
+                                : basicInfo.thumbnailUrl}
+                              alt="Course preview"
+                              className="size-full object-cover"
+                            />
+                          ) : (
+                            <ImageIcon className="size-8 text-slate-300" />
+                          )}
+                        </div>
+                        {/* Upload zone */}
+                        <label className="flex-1 cursor-pointer">
+                          <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 hover:border-primary/50 hover:bg-primary/5 transition-colors">
+                            {thumbnailUploading ? (
+                              <div className="flex items-center gap-2 text-primary text-sm font-medium">
+                                <div className="size-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                Uploading...
+                              </div>
+                            ) : (
+                              <>
+                                <Upload className="size-5 text-slate-400" />
+                                <span className="text-xs font-medium text-slate-600">Click to upload preview image</span>
+                                <span className="text-xs text-slate-400">PNG, JPG, WEBP up to 5 MB</span>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleThumbnailUpload}
+                            disabled={thumbnailUploading}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
                     <div className="pt-6 border-t border-slate-100">
                         <button 
                             type="submit"
@@ -593,6 +682,7 @@ export default function EditCoursePage() {
                           index={mIdx}
                           onDelete={setModuleToDelete}
                           onAddLesson={handleAddLesson}
+                          onEditLesson={handleEditLesson}
                           onDeleteLesson={(lessonId) => confirmDeleteLesson()} // Wait, lessonToDelete state needs update
                           onLessonsReorder={handleLessonsReorder}
                           onAddQuiz={handleAddQuiz}
@@ -650,6 +740,7 @@ export default function EditCoursePage() {
                       index={mIdx}
                       onDelete={setModuleToDelete}
                       onAddLesson={handleAddLesson}
+                      onEditLesson={handleEditLesson}
                       onDeleteLesson={(lessonId) => confirmDeleteLesson()}
                       onLessonsReorder={handleLessonsReorder}
                       onAddQuiz={handleAddQuiz}

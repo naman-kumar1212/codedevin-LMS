@@ -102,21 +102,42 @@ export function QuizBuilder({ moduleId, moduleTitle, quiz: initialQuiz, onQuizSa
   };
 
   const saveQuiz = async () => {
+    if (quiz.questions.length === 0) return;
     setSaving(true);
     try {
-      let savedQuiz = quiz;
-      if (!quiz.id) {
-        const res = await api.createModuleQuiz(moduleId, {
-          title: quiz.title,
-          passingScore: quiz.passingScore,
-        });
-        savedQuiz = { ...quiz, id: res.data.id };
-      } else {
-        await api.updateModuleQuiz(quiz.id, {
-          title: quiz.title,
-          passingScore: quiz.passingScore,
-        });
-      }
+      // Build payload with all questions and options
+      const payload = {
+        title: quiz.title,
+        passingScore: quiz.passingScore,
+        questions: quiz.questions.map((q, qi) => ({
+          questionText: q.questionText,
+          orderIndex: (qi + 1) * 10,
+          options: q.options.map((o) => ({
+            text: o.optionText,
+            isCorrect: o.isCorrect,
+          })),
+        })),
+      };
+
+      // Always use upsert endpoint (creates or replaces)
+      const res = await api.createModuleQuiz(moduleId, payload);
+      const savedQuiz: Quiz = {
+        id: res.data.id,
+        title: res.data.title,
+        passingScore: res.data.passingScore,
+        questions: (res.data.questions ?? []).map((q: any) => ({
+          id: q.id,
+          questionText: q.questionText,
+          orderIndex: q.orderIndex,
+          options: (q.options ?? []).map((o: any) => ({
+            id: o.id,
+            optionText: o.optionText,
+            isCorrect: o.isCorrect,
+            orderIndex: o.orderIndex,
+          })),
+        })),
+      };
+      setQuiz(savedQuiz);
       onQuizSaved(savedQuiz);
     } catch (err) {
       console.error('Failed to save quiz:', err);

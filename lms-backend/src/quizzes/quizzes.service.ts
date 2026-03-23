@@ -44,7 +44,7 @@ export class AddQuestionDto {
 
 @Injectable()
 export class QuizzesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   // ── Admin: Create quiz for a lesson ─────────────────────────────────────
   async createQuiz(lessonId: string, dto: CreateQuizDto) {
@@ -76,12 +76,12 @@ export class QuizzesService {
         orderIndex: dto.orderIndex,
         options: dto.options
           ? {
-              create: dto.options.map((o, i) => ({
-                optionText: o.text,
-                isCorrect: o.isCorrect,
-                orderIndex: i + 1,
-              })),
-            }
+            create: dto.options.map((o, i) => ({
+              optionText: o.text,
+              isCorrect: o.isCorrect,
+              orderIndex: i + 1,
+            })),
+          }
           : undefined,
       },
       include: { options: true },
@@ -107,11 +107,14 @@ export class QuizzesService {
     });
     if (!quiz) throw new NotFoundException('No quiz for this lesson');
 
+    const courseId = quiz.lesson?.module.courseId;
+    if (!courseId) throw new NotFoundException('Course ID not found for this quiz');
+
     const enrolled = await this.prisma.enrollment.findUnique({
       where: {
         studentId_courseId: {
           studentId,
-          courseId: quiz.lesson.module.courseId,
+          courseId,
         },
       },
     });
@@ -148,15 +151,19 @@ export class QuizzesService {
       include: {
         questions: { include: { options: true } },
         lesson: { include: { module: { select: { courseId: true } } } },
+        module: { select: { courseId: true } },
       },
     });
     if (!quiz) throw new NotFoundException('Quiz not found');
+
+    const courseId = quiz.lesson?.module.courseId || quiz.module?.courseId;
+    if (!courseId) throw new NotFoundException('Course ID not found for this quiz');
 
     const enrolled = await this.prisma.enrollment.findUnique({
       where: {
         studentId_courseId: {
           studentId,
-          courseId: quiz.lesson.module.courseId,
+          courseId,
         },
       },
     });
@@ -186,7 +193,7 @@ export class QuizzesService {
 
     // If passed, mark quiz lesson as completed
     let lessonCompleted = false;
-    if (isPassed) {
+    if (isPassed && quiz.lessonId) {
       await this.prisma.lessonProgress.upsert({
         where: {
           studentId_lessonId: {
@@ -224,5 +231,81 @@ export class QuizzesService {
         lesson: { select: { title: true } },
       },
     });
+  }
+
+  // ── Admin: Upsert a module-level quiz (creates or updates with all questions) ──
+  async upsertModuleQuiz(
+    moduleId: string,
+    dto: {
+      title: string;
+      passingScore: number;
+      questions: Array<{
+        questionText: string;
+        orderIndex: number;
+        options: Array<{ text: string; isCorrect: boolean }>;
+      }>;
+    },
+  ) {
+    const module = await this.prisma.module.findUnique({ where: { id: moduleId } });
+    if (!module) throw new NotFoundException('Module not found');
+
+    // Find existing quiz for this module
+    const existing = await this.prisma.quiz.findUnique({ where: { moduleId } });
+
+    if (existing) {
+      // Delete all existing questions (cascade deletes options)
+      await this.prisma.quizQuestion.deleteMany({ where: { quizId: existing.id } });
+      // Update quiz header + recreate questions
+      return this.prisma.quiz.update({
+        where: { id: existing.id },
+        data: {
+          title: dto.title,
+          passingScore: dto.passingScore,
+          questions: {
+            create: dto.questions.map((q) => ({
+              questionText: q.questionText,
+              questionType: 'mcq',
+              orderIndex: q.orderIndex,
+              options: {
+                create: q.options.map((o, i) => ({
+                  optionText: o.text,
+                  isCorrect: o.isCorrect,
+                  orderIndex: i + 1,
+                })),
+              },
+            })),
+          },
+        },
+        include: {
+          questions: { include: { options: true } },
+        },
+      });
+    } else {
+      // Create new quiz linked to module
+      return this.prisma.quiz.create({
+        data: {
+          moduleId,
+          title: dto.title,
+          passingScore: dto.passingScore,
+          questions: {
+            create: dto.questions.map((q) => ({
+              questionText: q.questionText,
+              questionType: 'mcq',
+              orderIndex: q.orderIndex,
+              options: {
+                create: q.options.map((o, i) => ({
+                  optionText: o.text,
+                  isCorrect: o.isCorrect,
+                  orderIndex: i + 1,
+                })),
+              },
+            })),
+          },
+        },
+        include: {
+          questions: { include: { options: true } },
+        },
+      });
+    }
   }
 }

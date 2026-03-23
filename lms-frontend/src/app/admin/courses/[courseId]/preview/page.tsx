@@ -171,7 +171,7 @@ export default function AdminCourseLandingPreview() {
   const handleStartPreview = () => {
     const firstLessonId = course.modules?.[0]?.lessons?.[0]?.id;
     if (firstLessonId) {
-      router.push(`/admin/courses/${courseId}/preview/${firstLessonId}`);
+      router.push(`/admin/courses/${courseId}/preview/lesson/${firstLessonId}`);
     } else {
       router.push(`/admin/courses/${courseId}/edit`);
     }
@@ -287,7 +287,7 @@ export default function AdminCourseLandingPreview() {
                         {mod.lessons?.map((lesson: any) => (
                           <Link
                             key={lesson.id}
-                            href={`/admin/courses/${courseId}/preview/${lesson.id}`}
+                            href={`/admin/courses/${courseId}/preview/lesson/${lesson.id}`}
                             className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-primary/30 transition-all group"
                           >
                             <div className="flex items-center gap-3">

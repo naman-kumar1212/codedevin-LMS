@@ -3,12 +3,12 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
-import { 
-  TrendingUp, 
-  Users, 
-  BookOpen, 
-  Award, 
-  DollarSign, 
+import {
+  TrendingUp,
+  Users,
+  BookOpen,
+  Award,
+  DollarSign,
   ChevronRight,
   ArrowUpRight,
   ArrowDownRight,
@@ -33,7 +33,7 @@ import { cn } from '@/lib/utils';
 
 function AnimatedProgress({ value, color, label }: { value: number; color?: string; label?: string }) {
   const [displayValue, setDisplayValue] = React.useState(0);
-  
+
   React.useEffect(() => {
     const timer = setTimeout(() => setDisplayValue(value), 100);
     return () => clearTimeout(timer);
@@ -46,10 +46,10 @@ function AnimatedProgress({ value, color, label }: { value: number; color?: stri
         <span className="text-xs font-bold tabular-nums">{Math.round(displayValue)}%</span>
       </div>
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary/50">
-        <div 
+        <div
           className="h-full transition-all duration-1000 ease-out flex items-center justify-end pr-1"
-          style={{ 
-            width: `${displayValue}%`, 
+          style={{
+            width: `${displayValue}%`,
             backgroundColor: color || 'var(--primary)',
             boxShadow: `0 0 12px ${color || 'var(--primary)'}40`
           }}
@@ -134,16 +134,16 @@ export default function AdminAnalyticsPage() {
           <Activity size={32} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Intelligence Offline</h2>
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Analytics Offline</h2>
           <p className="text-slate-500 text-sm mt-2 max-w-sm">
-            Unable to synchronize with the institutional data stream. Please verify your governance credentials and active session.
+            Unable to load analytics data. Please verify your connection and try again.
           </p>
         </div>
-        <Button 
+        <Button
           onClick={() => window.location.reload()}
           className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
         >
-          Re-Synchronize
+          Retry
         </Button>
       </div>
     );
@@ -155,16 +155,16 @@ export default function AdminAnalyticsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1">
-            <span>Governance</span>
+            <span>Admin</span>
             <ChevronRight size={14} className="text-slate-300" />
-            <span className="text-primary font-medium">Intelligence Index</span>
+            <span className="text-primary font-medium">Analytics</span>
           </nav>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-            Institutional Intelligence
+            Platform Analytics
           </h1>
-          <p className="text-slate-500 mt-2 text-sm max-w-xl">Real-time performance metrics and growth indicators for the platform.</p>
+          <p className="text-slate-500 mt-2 text-sm max-w-xl">Monitor your platform's performance and student engagement.</p>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button variant="outline" className="hidden sm:flex text-sm font-medium h-10 px-4 rounded-md">
             Last 30 Days
@@ -177,29 +177,29 @@ export default function AdminAnalyticsPage() {
 
       {/* Primary Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          title="Revenue Platform"
+        <StatCard
+          title="Total Revenue"
           value={`₹${(stats?.totalRevenue || 0).toLocaleString('en-IN')}`}
           icon={Wallet}
           change="+12.5%"
           trend="up"
         />
-        <StatCard 
+        <StatCard
           title="Active Learners"
           value={(stats?.totalStudents || 0).toString()}
           icon={Users}
           change="+8.2%"
           trend="up"
         />
-        <StatCard 
+        <StatCard
           title="Course Enrollments"
           value={(stats?.totalEnrollments || 0).toString()}
           icon={BookOpen}
           change="+24.1%"
           trend="up"
         />
-        <StatCard 
-          title="Verified Credentials"
+        <StatCard
+          title="Certificates Issued"
           value={(stats?.totalCertificates || 0).toString()}
           icon={Award}
           change="+4.3%"
@@ -211,85 +211,85 @@ export default function AdminAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Trend - Minimalist Component */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <div>
-                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <TrendingUp className="size-5 text-primary" />
-                        Fiscal Progression
-                   </h3>
-                   <p className="text-sm font-medium text-slate-500 mt-1">Net revenue accumulation over the fiscal period.</p>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
-                    <div className="flex items-center gap-2">
-                        <div className="size-2 rounded-full bg-primary" />
-                        Current
-                    </div>
-                </div>
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <TrendingUp className="size-5 text-primary" />
+                Revenue Trend
+              </h3>
+              <p className="text-sm font-medium text-slate-500 mt-1">Monthly revenue overview.</p>
             </div>
-            <div className="flex-1 p-6 flex items-end gap-2 h-[280px]">
-                {/* Simulated Chart Bars */}
-                {[45, 60, 55, 85, 70, 95, 120, 110, 130, 150, 140, 160].map((h, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-3 group/bar">
-                        <div className="w-full relative h-[180px]">
-                            <div 
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-slate-50 rounded-sm hover:cursor-pointer" 
-                                style={{ height: '100%' }}
-                            />
-                            <div 
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-primary rounded-sm transition-all duration-300 group-hover/bar:bg-primary/80" 
-                                style={{ height: `${h}px` }}
-                            />
-                        </div>
-                        <p className="text-xs font-medium text-slate-400 group-hover/bar:text-slate-600 transition-colors">M{i+1}</p>
-                    </div>
-                ))}
+            <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
+              <div className="flex items-center gap-2">
+                <div className="size-2 rounded-full bg-primary" />
+                Current
+              </div>
             </div>
+          </div>
+          <div className="flex-1 p-6 flex items-end gap-2 h-[280px]">
+            {/* Simulated Chart Bars */}
+            {[45, 60, 55, 85, 70, 95, 120, 110, 130, 150, 140, 160].map((h, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-3 group/bar">
+                <div className="w-full relative h-[180px]">
+                  <div
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-slate-50 rounded-sm hover:cursor-pointer"
+                    style={{ height: '100%' }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-primary rounded-sm transition-all duration-300 group-hover/bar:bg-primary/80"
+                    style={{ height: `${h}px` }}
+                  />
+                </div>
+                <p className="text-xs font-medium text-slate-400 group-hover/bar:text-slate-600 transition-colors">M{i + 1}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Top Performing Courses */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col">
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 mb-6">
-                 <Award className="size-5 text-primary" />
-                 Top Academic Targets
-            </h3>
-            <div className="space-y-6 flex-1">
-                {((stats?.popularCourses && stats.popularCourses.length > 0) ? stats.popularCourses : [
-                    { title: 'Mastering Data Structures', _count: { enrollments: 120 } },
-                    { title: 'Java Advanced Patterns', _count: { enrollments: 85 } },
-                    { title: 'C++ Systems Programming', _count: { enrollments: 64 } },
-                ]).map((course: any, i: number) => {
-                    const popularCourses = stats?.popularCourses || [];
-                    const maxEnr = popularCourses.length > 0 ? Math.max(...popularCourses.map((c: any) => c._count.enrollments)) : 120;
-                    const percent = Math.round((course._count.enrollments / maxEnr) * 100);
-                    return (
-                        <div key={i} className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <p className="text-sm font-medium text-slate-700 truncate pr-4">{course.title}</p>
-                                <p className="text-sm font-bold text-slate-900 tabular-nums">{course._count.enrollments}</p>
-                            </div>
-                            <Progress value={percent} className="h-1.5 bg-slate-100" />
-                        </div>
-                    );
-                })}
-            </div>
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 mb-6">
+            <Award className="size-5 text-primary" />
+            Popular Courses
+          </h3>
+          <div className="space-y-6 flex-1">
+            {((stats?.popularCourses && stats.popularCourses.length > 0) ? stats.popularCourses : [
+              { title: 'Mastering Data Structures', _count: { enrollments: 120 } },
+              { title: 'Java Advanced Patterns', _count: { enrollments: 85 } },
+              { title: 'C++ Systems Programming', _count: { enrollments: 64 } },
+            ]).map((course: any, i: number) => {
+              const popularCourses = stats?.popularCourses || [];
+              const maxEnr = popularCourses.length > 0 ? Math.max(...popularCourses.map((c: any) => c._count.enrollments)) : 120;
+              const percent = Math.round((course._count.enrollments / maxEnr) * 100);
+              return (
+                <div key={i} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-slate-700 truncate pr-4">{course.title}</p>
+                    <p className="text-sm font-bold text-slate-900 tabular-nums">{course._count.enrollments}</p>
+                  </div>
+                  <Progress value={percent} className="h-1.5 bg-slate-100" />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* Deep Intelligence Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Ecosystem Pulse</h3>
-              <p className="text-sm font-medium text-slate-500 mt-1">Live stream of student enrollments and platform interactions.</p>
-            </div>
-            <Activity className="size-5 text-primary" />
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Recent Enrollments</h3>
+            <p className="text-sm font-medium text-slate-500 mt-1">Latest student enrollments.</p>
+          </div>
+          <Activity className="size-5 text-primary" />
         </div>
 
         <DataTable
           data={stats?.recentEnrollments || []}
           columns={[
             {
-              header: "STAKEHOLDER",
+              header: "STUDENT",
               cell: (enr: any) => (
                 <div className="flex items-center gap-3">
                   <div className="size-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-medium">
@@ -303,7 +303,7 @@ export default function AdminAnalyticsPage() {
               )
             },
             {
-              header: "ACADEMIC TARGET",
+              header: "COURSE",
               cell: (enr: any) => (
                 <p className="text-sm font-medium text-slate-700">{enr.course.title}</p>
               )

@@ -45,6 +45,25 @@ class SubmitAttemptDto {
   answers: Record<string, string>;
 }
 
+class UpsertModuleQuizOptionDto {
+  @IsString() text: string;
+  @IsBoolean() isCorrect: boolean;
+}
+
+class UpsertModuleQuizQuestionDto {
+  @IsString() questionText: string;
+  @IsInt() @Min(0) orderIndex: number;
+  @IsArray() @ValidateNested({ each: true }) @Type(() => UpsertModuleQuizOptionDto)
+  options: UpsertModuleQuizOptionDto[];
+}
+
+class UpsertModuleQuizDto {
+  @IsString() title: string;
+  @IsInt() @Min(0) @Max(100) passingScore: number;
+  @IsArray() @ValidateNested({ each: true }) @Type(() => UpsertModuleQuizQuestionDto)
+  questions: UpsertModuleQuizQuestionDto[];
+}
+
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class QuizzesController {
@@ -71,7 +90,7 @@ export class QuizzesController {
     );
   }
 
-  /** Student: submit quiz attempt */
+  /** Admin: submit quiz attempt */
   @Post('quizzes/:quizId/attempt')
   submitAttempt(
     @Param('quizId') quizId: string,
@@ -83,5 +102,14 @@ export class QuizzesController {
       (req.user as any).id,
       dto.answers,
     );
+  }
+
+  /** Admin: upsert a module-level quiz with all questions and options */
+  @Post('quizzes/module/:moduleId')
+  upsertModuleQuiz(
+    @Param('moduleId') moduleId: string,
+    @Body() dto: UpsertModuleQuizDto,
+  ) {
+    return this.quizzesService.upsertModuleQuiz(moduleId, dto);
   }
 }

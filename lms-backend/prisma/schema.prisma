@@ -58,6 +58,7 @@ model Module {
   description String?
   orderIndex  Int      @default(0)
   lessons     Lesson[]
+  quiz        Quiz?
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
@@ -125,10 +126,12 @@ model LessonProgress {
 
 model Quiz {
   id           String         @id @default(cuid())
-  lessonId     String         @unique
+  lessonId     String?        @unique
+  moduleId     String?        @unique
   title        String
   passingScore Int            @default(80)
-  lesson       Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lesson       Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  module       Module?        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   attempts     QuizAttempt[]
   questions    QuizQuestion[]
 }

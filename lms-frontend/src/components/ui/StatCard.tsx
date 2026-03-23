@@ -39,31 +39,31 @@ export function StatCard({ title, value, icon: Icon, change, trend = 'neutral', 
     <Card className={cn(
       'relative overflow-hidden transition-all duration-500 group',
       'bg-white/70 backdrop-blur-xl border-white/40 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1',
-      'rounded-[2.5rem]',
+      'rounded-xl',
       className
     )}>
       {/* Decorative gradient blur */}
       <div className="absolute -right-4 -top-4 size-24 bg-primary/5 blur-3xl rounded-full transition-all duration-700 group-hover:bg-primary/10 group-hover:scale-150" />
-      
-      <CardContent className="p-8 relative">
+
+      <CardContent className="p-6 relative">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+            <p className="text-sm font-medium text-slate-500">
               {title}
             </p>
             <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-black tracking-tighter text-slate-900 group-hover:text-primary transition-colors duration-500">
+              <h3 className="text-2xl font-bold tracking-tight text-slate-900 group-hover:text-primary transition-colors duration-500">
                 {value}
               </h3>
               {change && (
                 <Badge
                   variant="outline"
                   className={cn(
-                    'text-[10px] font-black px-2 py-0.5 rounded-full border border-transparent transition-all duration-500',
+                    'text-[10px] font-bold px-2 py-0.5 rounded-full border border-transparent transition-all duration-500',
                     trendConfig.color
                   )}
                 >
-                  <TrendIcon size={10} className="mr-1 inline-block" strokeWidth={3} />
+                  <TrendIcon size={12} className="mr-1 inline-block" strokeWidth={2.5} />
                   {change}
                 </Badge>
               )}
@@ -71,15 +71,15 @@ export function StatCard({ title, value, icon: Icon, change, trend = 'neutral', 
           </div>
 
           <div className={cn(
-            'size-14 rounded-[1.5rem] flex items-center justify-center transition-all duration-500',
+            'size-10 rounded-lg flex items-center justify-center transition-all duration-500',
             'bg-slate-50 border border-slate-100 group-hover:bg-primary group-hover:border-primary group-hover:shadow-xl group-hover:shadow-primary/20'
           )}>
-            <Icon className="size-6 text-slate-400 group-hover:text-white transition-colors duration-500" strokeWidth={2.5} />
+            <Icon className="size-5 text-slate-400 group-hover:text-white transition-colors duration-500" strokeWidth={2} />
           </div>
         </div>
 
         {description && (
-          <p className="mt-4 text-xs font-bold text-slate-400 tracking-tight leading-relaxed">
+          <p className="mt-4 text-xs font-medium text-slate-500 tracking-tight leading-relaxed">
             {description}
           </p>
         )}

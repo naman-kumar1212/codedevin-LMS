@@ -108,7 +108,7 @@ export default function AdminCoursesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 font-sans pb-16">
+    <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500 font-sans pb-16 p-6 lg:p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -127,26 +127,26 @@ export default function AdminCoursesPage() {
 
       {/* Analytics Matrix */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard 
-          title="Total Units" 
-          value={stats.total} 
-          icon={Layers} 
-          description="Consolidated curriculum assets in the registry."
+        <StatCard
+          title="Total Courses"
+          value={stats.total}
+          icon={Layers}
+          description="Total number of courses in the platform."
           trend="neutral"
         />
-        <StatCard 
-          title="Published" 
-          value={stats.published} 
-          icon={CheckCircle2} 
-          change={`${Math.round((stats.published / stats.total) * 100)}%`}
+        <StatCard
+          title="Published"
+          value={stats.published}
+          icon={CheckCircle2}
+          change={`${stats.total > 0 ? Math.round((stats.published / stats.total) * 100) : 0}%`}
           trend="up"
-          description="Currently visible to active stakeholders."
+          description="Courses currently visible to students."
         />
-        <StatCard 
-          title="Total Learners" 
-          value={stats.enrollments} 
-          icon={Users} 
-          description="Cumulative enrollment across all units."
+        <StatCard
+          title="Total Enrollments"
+          value={stats.enrollments}
+          icon={Users}
+          description="Cumulative student enrollments."
           trend="up"
         />
       </div>
@@ -170,8 +170,8 @@ export default function AdminCoursesPage() {
               onClick={() => setFilter(f)}
               className={cn(
                 "px-3 py-1.5 rounded text-xs font-medium transition-colors",
-                filter === f 
-                  ? "bg-white text-primary shadow-sm border border-slate-200" 
+                filter === f
+                  ? "bg-white text-primary shadow-sm border border-slate-200"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               )}
             >
@@ -217,21 +217,21 @@ export default function AdminCoursesPage() {
                     )}
                   </div>
                   <div className="min-w-0">
-                      <Link 
-                        href={`/admin/courses/${course.id}/preview`} 
-                        className="text-sm font-semibold text-slate-900 hover:text-primary transition-colors block mb-0.5 truncate max-w-[320px]"
-                      >
-                        {course.title}
-                      </Link>
-                      <div className="flex items-center gap-2">
-                         <Badge variant="secondary" className="bg-slate-100 border-transparent text-[10px] font-medium text-slate-600 px-1.5 py-0 rounded">
-                            {course.category || 'General'}
-                         </Badge>
-                         <span className="size-1 rounded-full bg-slate-300" />
-                         <span className="text-xs text-slate-500">
-                            {course._count?.modules || 0} Modules
-                         </span>
-                      </div>
+                    <Link
+                      href={`/admin/courses/${course.id}/preview`}
+                      className="text-sm font-semibold text-slate-900 hover:text-primary transition-colors block mb-0.5 truncate max-w-[320px]"
+                    >
+                      {course.title}
+                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="bg-slate-100 border-transparent text-[10px] font-medium text-slate-600 px-1.5 py-0 rounded">
+                        {course.category || 'General'}
+                      </Badge>
+                      <span className="size-1 rounded-full bg-slate-300" />
+                      <span className="text-xs text-slate-500">
+                        {course._count?.modules || 0} Modules
+                      </span>
+                    </div>
                   </div>
                 </div>
               )
@@ -253,7 +253,7 @@ export default function AdminCoursesPage() {
               className: "text-center",
               cell: (course: any) => (
                 <div className="flex justify-center">
-                  <StatusBadge 
+                  <StatusBadge
                     variant={course.status === 'PUBLISHED' ? 'success' : course.status === 'ARCHIVED' ? 'secondary' : 'warning'}
                     className="h-6 px-2 rounded font-medium text-[10px]"
                   >
@@ -290,7 +290,7 @@ export default function AdminCoursesPage() {
                     </Button>
                   </Link>
 
-                  <Button 
+                  <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => {
@@ -307,7 +307,7 @@ export default function AdminCoursesPage() {
                     )}
                   </Button>
 
-                  <Button 
+                  <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setCourseToDelete(course)}
@@ -355,7 +355,7 @@ export default function AdminCoursesPage() {
               </Button>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
-              <Button 
+              <Button
                 onClick={() => deleteMutation.mutate(courseToDelete.id)}
                 className="h-9 px-4 text-sm bg-red-600 hover:bg-red-700 text-white border-0"
               >

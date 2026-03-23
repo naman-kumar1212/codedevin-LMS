@@ -71,6 +71,9 @@ export const api = {
     apiClient.get(`/admin/students/${id}`),
   adminPayments: () => apiClient.get('/payments'),
   adminCertificates: () => apiClient.get('/admin/certificates'),
+  deleteStudent: (id: string) => apiClient.delete(`/admin/students/${id}`),
+  deleteCertificate: (id: string) => apiClient.delete(`/admin/certificates/${id}`),
+
 
   // Admin Courses
   adminCourses: () => apiClient.get('/courses/admin/all'),
@@ -80,23 +83,23 @@ export const api = {
   archiveCourse: (id: string) => apiClient.patch(`/courses/${id}/archive`),
   deleteCourse: (id: string) => apiClient.delete(`/courses/${id}`),
 
-  createModule: (courseId: string, data: any) => 
+  createModule: (courseId: string, data: any) =>
     apiClient.post(`/courses/${courseId}/modules`, data),
-  updateModule: (moduleId: string, data: any) => 
+  updateModule: (moduleId: string, data: any) =>
     apiClient.patch(`/courses/modules/${moduleId}`, data),
-  deleteModule: (moduleId: string) => 
+  deleteModule: (moduleId: string) =>
     apiClient.delete(`/courses/modules/${moduleId}`),
-  reorderModules: (courseId: string, items: Array<{id: string; orderIndex: number}>) =>
+  reorderModules: (courseId: string, items: Array<{ id: string; orderIndex: number }>) =>
     apiClient.patch(`/courses/${courseId}/modules/reorder`, { items }),
 
   // Lessons
-  createLesson: (moduleId: string, data: any) => 
+  createLesson: (moduleId: string, data: any) =>
     apiClient.post(`/courses/modules/${moduleId}/lessons`, data),
-  updateLesson: (lessonId: string, data: any) => 
+  updateLesson: (lessonId: string, data: any) =>
     apiClient.patch(`/courses/lessons/${lessonId}`, data),
-  deleteLesson: (lessonId: string) => 
+  deleteLesson: (lessonId: string) =>
     apiClient.delete(`/courses/lessons/${lessonId}`),
-  reorderLessons: (moduleId: string, items: Array<{id: string; orderIndex: number}>) =>
+  reorderLessons: (moduleId: string, items: Array<{ id: string; orderIndex: number }>) =>
     apiClient.patch(`/courses/modules/${moduleId}/lessons/reorder`, { items }),
 
   // Student specific
@@ -169,6 +172,21 @@ export const api = {
     });
   },
 
+  uploadCourseThumbnail: (
+    courseId: string,
+    file: File,
+    onProgress?: (pct: number) => void,
+  ) => {
+    const form = new FormData();
+    form.append('file', file);
+    return apiClient.post(`/media/upload/thumbnail/${courseId}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: onProgress
+        ? (e) => onProgress(Math.round((e.loaded * 100) / (e.total ?? 1)))
+        : undefined,
+    });
+  },
+
   // Lesson metadata (after upload)
   updateLessonMeta: (
     lessonId: string,
@@ -182,9 +200,30 @@ export const api = {
   clearDraft: (courseId: string) => apiClient.delete(`/drafts/course/${courseId}`),
 
   // Module-level quizzes
-  createModuleQuiz: (moduleId: string, data: { title: string; passingScore: number }) =>
-    apiClient.post(`/quizzes/module/${moduleId}`, data),
-  updateModuleQuiz: (quizId: string, data: { title?: string; passingScore?: number }) =>
-    apiClient.patch(`/quizzes/${quizId}`, data),
+  createModuleQuiz: (
+    moduleId: string,
+    data: {
+      title: string;
+      passingScore: number;
+      questions: Array<{
+        questionText: string;
+        orderIndex: number;
+        options: Array<{ text: string; isCorrect: boolean }>;
+      }>;
+    },
+  ) => apiClient.post(`/quizzes/module/${moduleId}`, data),
+
+  updateModuleQuiz: (
+    moduleId: string,
+    data: {
+      title: string;
+      passingScore: number;
+      questions: Array<{
+        questionText: string;
+        orderIndex: number;
+        options: Array<{ text: string; isCorrect: boolean }>;
+      }>;
+    },
+  ) => apiClient.post(`/quizzes/module/${moduleId}`, data),
 };
 

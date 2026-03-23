@@ -107,7 +107,7 @@ export default function AdminLessonPreviewPage() {
   }, [loadData]);
 
   const handleLessonClick = useCallback((id: string) => {
-    router.push(`/admin/courses/${courseId}/preview/${id}`);
+    router.push(`/admin/courses/${courseId}/preview/lesson/${id}`);
   }, [courseId, router]);
 
   const handleDurationChange = (newDuration: number) => {
@@ -149,7 +149,7 @@ export default function AdminLessonPreviewPage() {
     for (const mod of progress.modules) {
       for (const l of mod.lessons) {
         if (currentFound) {
-          router.push(`/admin/courses/${courseId}/preview/${l.lessonId}`);
+          router.push(`/admin/courses/${courseId}/preview/lesson/${l.lessonId}`);
           return;
         }
         if (l.lessonId === lessonId) {

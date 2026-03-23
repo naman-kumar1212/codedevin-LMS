@@ -36,6 +36,7 @@ interface Props {
   index: number;
   onDelete: (moduleId: string) => void;
   onAddLesson: (moduleId: string, type: 'video' | 'pdf') => void;
+  onEditLesson?: (lessonId: string, moduleId: string) => void;
   onDeleteLesson: (lessonId: string, moduleId: string) => void;
   onLessonsReorder: (moduleId: string, lessons: Lesson[]) => void;
   onAddQuiz: (moduleId: string) => void;
@@ -46,6 +47,7 @@ export function SortableModule({
   index,
   onDelete,
   onAddLesson,
+  onEditLesson,
   onDeleteLesson,
   onLessonsReorder,
   onAddQuiz,
@@ -194,6 +196,7 @@ export function SortableModule({
                     <SortableLesson
                       key={lesson.id}
                       lesson={lesson}
+                      onEdit={onEditLesson ? () => onEditLesson(lesson.id, module.id) : undefined}
                       onDelete={() => onDeleteLesson(lesson.id, module.id)}
                     />
                   ))}
@@ -201,13 +204,48 @@ export function SortableModule({
               </SortableContext>
             </DndContext>
 
-            {module.lessons.length === 0 && (
+            {module.lessons.length === 0 && !module.quiz && (
               <div className="py-10 text-center border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl">
                 <div className="size-12 bg-white rounded-xl mx-auto mb-3 flex items-center justify-center text-slate-400 border border-slate-200 shadow-sm">
                   <Plus size={24} />
                 </div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">No Content</p>
                 <p className="text-sm text-slate-500 mt-1">Start by adding your first lesson</p>
+              </div>
+            )}
+
+            {module.quiz && (
+              <div className="flex items-center gap-4 bg-slate-50/50 rounded-xl border border-slate-200 p-3.5 group/quiz relative overflow-hidden transition-all hover:border-slate-300 hover:shadow-sm">
+                <div className="w-9 flex justify-center shrink-0">
+                   <div className="size-1.5 rounded-full bg-slate-300" />
+                </div>
+                <div className="size-10 rounded-lg flex items-center justify-center shrink-0 bg-indigo-50 transition-all duration-300">
+                  <HelpCircle className="size-5 text-indigo-500" strokeWidth={2} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+                      Module Quiz
+                    </span>
+                    <div className="size-1 rounded-full bg-slate-300" />
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-widest truncate">
+                      {module.quiz.id?.slice(0, 8) || 'Draft'}
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-900 truncate tracking-tight group-hover/quiz:text-indigo-600 transition-colors duration-200">
+                    {module.quiz.title}
+                  </p>
+                </div>
+                <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[11px] font-medium uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                  {module.quiz.questions?.length || 0} Questions
+                </Badge>
+                {/* Clicking on the quiz directly edits it */}
+                <button
+                  onClick={() => onAddQuiz(module.id)}
+                  className="text-indigo-600 hover:bg-indigo-50 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all opacity-0 group-hover/quiz:opacity-100 shrink-0"
+                >
+                  Edit Quiz
+                </button>
               </div>
             )}
 

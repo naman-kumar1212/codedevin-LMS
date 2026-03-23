@@ -129,7 +129,8 @@ export default function CoursesPage() {
                 title={course.title}
                 thumbnailUrl={course.thumbnailUrl}
                 instructor={{ name: course.author?.name || 'CodeDevin Expert' }}
-                lessonsCount={course._count?.lessons || 12}
+                lessonsCount={course._count?.lessons}
+                modulesCount={course._count?.modules}
                 durationHours={8.5}
                 price={course.price || 4999}
                 isFree={course.isFree}

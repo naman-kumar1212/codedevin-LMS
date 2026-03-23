@@ -2,7 +2,7 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Trash2, Video, FileText, Loader2, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { GripVertical, Trash2, Video, FileText, Loader2, CheckCircle2, AlertCircle, Clock, Edit2 } from 'lucide-react';
 import type { Lesson } from './types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 interface Props {
   lesson: Lesson;
   onDelete: () => void;
+  onEdit?: () => void;
 }
 
 const statusConfig = {
@@ -46,7 +47,7 @@ const typeConfig = {
   resource: { icon: FileText, color: 'text-slate-500', bg: 'bg-slate-100' },
 };
 
-export function SortableLesson({ lesson, onDelete }: Props) {
+export function SortableLesson({ lesson, onDelete, onEdit }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: lesson.id,
   });
@@ -118,12 +119,22 @@ export function SortableLesson({ lesson, onDelete }: Props) {
       </Badge>
 
       {/* Delete / Actions */}
-      <button
-        onClick={onDelete}
-        className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg p-2 transition-all opacity-0 group-hover/lesson:opacity-100 shrink-0"
-      >
-        <Trash2 size={16} strokeWidth={2} />
-      </button>
+      <div className="flex items-center gap-1 opacity-0 group-hover/lesson:opacity-100 transition-opacity shrink-0">
+        {onEdit && (
+          <button
+            onClick={onEdit}
+            className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg p-2 transition-all"
+          >
+            <Edit2 size={16} strokeWidth={2} />
+          </button>
+        )}
+        <button
+          onClick={onDelete}
+          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg p-2 transition-all"
+        >
+          <Trash2 size={16} strokeWidth={2} />
+        </button>
+      </div>
     </div>
   );
 }

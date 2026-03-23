@@ -121,40 +121,51 @@
 }
 
 @layer components {
+  /* Buttons: Added active scale for tactile feedback, standard focus rings, and unified snappy 200ms transition physics */
   .btn-primary {
-    @apply bg-primary text-white font-bold px-5 py-2.5 rounded-lg hover:bg-primary/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+    @apply inline-flex items-center justify-center whitespace-nowrap bg-primary text-white font-medium px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 ease-out disabled:opacity-50 disabled:pointer-events-none shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply bg-white text-foreground font-bold px-5 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200;
+    @apply inline-flex items-center justify-center whitespace-nowrap bg-white text-foreground font-medium px-5 py-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 ease-out ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .btn-outline {
-    @apply border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-foreground font-bold px-5 py-2.5 rounded-lg transition-all duration-200;
+    @apply inline-flex items-center justify-center whitespace-nowrap border-2 border-slate-200 dark:border-slate-700 hover:border-primary/30 hover:bg-slate-50 dark:hover:bg-slate-800 text-foreground font-medium px-5 py-2.5 rounded-lg active:scale-[0.98] transition-all duration-200 ease-out ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .btn-ghost {
-    @apply text-sm font-medium hover:text-primary transition-colors duration-200;
+    @apply inline-flex items-center justify-center whitespace-nowrap text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary active:scale-[0.98] transition-colors duration-200 ease-out rounded-lg px-4 py-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
+  /* Cards: Softened shadows, faster transitions, crisp borders */
   .card {
-    @apply bg-white rounded-xl border border-gray-200 shadow-card;
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm transition-shadow duration-200 hover:shadow-md;
   }
 
   .card-premium {
-    @apply bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-all duration-300 overflow-hidden;
+    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-primary/20 hover:shadow-lg transition-all duration-200 ease-out overflow-hidden relative;
+  }
+
+  /* Innovation tweak: A subtle light reflection for a modern "glass" edge effect without being noisy */
+  .card-premium::after {
+    content: '';
+    @apply absolute inset-0 rounded-2xl pointer-events-none border border-white/60 dark:border-white/10 opacity-0 transition-opacity duration-200 ease-out mix-blend-overlay;
+  }
+  .card-premium:hover::after {
+    @apply opacity-100;
   }
 
   .badge-free {
-    @apply text-2xl font-black text-green-600;
+    @apply tracking-tight text-2xl font-bold text-emerald-600;
   }
 
   .badge-paid {
-    @apply text-2xl font-black text-gray-900 dark:text-white;
+    @apply tracking-tight text-2xl font-bold text-slate-900 dark:text-white;
   }
 
   .stat-card {
-    @apply flex flex-col items-center p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800;
+    @apply flex flex-col items-center p-6 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800 transition-all duration-200 ease-out hover:bg-white hover:shadow-sm hover:-translate-y-0.5;
   }
 }
 

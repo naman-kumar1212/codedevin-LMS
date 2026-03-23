@@ -117,7 +117,7 @@ export default function LiveClassesPage() {
                   ) : cls.recordingUrl ? (
                     <StatusBadge variant="success" className="uppercase tracking-widest text-[9px]">Recording Available</StatusBadge>
                   ) : (
-                    <StatusBadge variant="outline" className="uppercase tracking-widest text-[9px] opacity-50">Session Ended</StatusBadge>
+                    <StatusBadge variant="secondary" className="uppercase tracking-widest text-[9px] opacity-50">Session Ended</StatusBadge>
                   )}
                 </div>
 

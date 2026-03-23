@@ -38,7 +38,8 @@ export default function LandingPage() {
     instructor: { name: c.author?.name || 'CodeDevin Expert' },
     rating: 4.8,
     enrollments: c._count?.enrollments || 0,
-    lessonsCount: c._count?.lessons || 12,
+    lessonsCount: c._count?.lessons,
+    modulesCount: c._count?.modules,
     durationHours: 8.5,
     category: c.category || 'Computer Science',
     price: c.price || 4999,
@@ -53,6 +54,7 @@ export default function LandingPage() {
       rating: 4.9,
       enrollments: 120,
       lessonsCount: 12,
+      modulesCount: 3,
       durationHours: 12,
       category: "Backend Development",
       price: 999,
@@ -66,6 +68,7 @@ export default function LandingPage() {
       rating: 4.8,
       enrollments: 85,
       lessonsCount: 18,
+      modulesCount: 4,
       durationHours: 18,
       category: "Frontend Development",
       price: 1499,
@@ -79,6 +82,7 @@ export default function LandingPage() {
       rating: 4.7,
       enrollments: 210,
       lessonsCount: 6,
+      modulesCount: 2,
       durationHours: 3,
       category: "Development Tools",
       price: 0,
@@ -209,7 +213,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Floating elements */}
-                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4">
                   <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <MonitorPlay size={24} />
                   </div>
@@ -218,7 +222,7 @@ export default function LandingPage() {
                     <p className="text-xs font-medium text-slate-500">Always up-to-date</p>
                   </div>
                 </div>
-                <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700 delay-500">
+                <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4">
                   <div className="size-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
                     <Award size={24} />
                   </div>
@@ -309,8 +313,6 @@ export default function LandingPage() {
                   <CourseCard
                     key={course.id || i}
                     {...course}
-                    className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
-                    style={{ animationDelay: `${i * 150}ms` } as any}
                   />
                 ))}
               </div>

@@ -64,6 +64,7 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     setIsPlaying(false);
@@ -71,6 +72,7 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
     setCurrentTime(0);
     setError(false);
     setIsBuffering(false);
+    setHasStarted(false);
     if (initialDuration) setDuration(initialDuration);
     if (videoRef.current) videoRef.current.load();
   }, [resolvedVideoUrl, initialDuration]);
@@ -96,6 +98,7 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
 
   const togglePlay = useCallback(() => {
     if (!videoRef.current) return;
+    setHasStarted(true);
     if (isPlaying) {
       videoRef.current.pause();
     } else {
@@ -259,6 +262,18 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
           playsInline
         />
 
+        {/* Start Overlay */}
+        {!hasStarted && !error && (
+          <div
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 cursor-pointer group/start"
+            onClick={togglePlay}
+          >
+            <div className="size-20 bg-primary/90 text-white rounded-full flex items-center justify-center backdrop-blur-md shadow-2xl group-hover/start:scale-110 group-hover/start:bg-primary transition-all duration-300">
+              <Play className="size-10 ml-1.5 fill-current" />
+            </div>
+          </div>
+        )}
+
         {/* Buffering Indicator */}
         {isBuffering && !error && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/10 backdrop-blur-[1px]">
@@ -289,12 +304,12 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
         <div
           className={cn(
             "absolute inset-0 flex flex-col justify-end transition-all duration-500 z-40 pb-0",
-            showControls || !isPlaying ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
+            hasStarted ? (showControls || !isPlaying ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none") : "opacity-0 pointer-events-none"
           )}
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 30%, transparent 70%)' }}
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)' }}
         >
           {/* Progress Slider (integrated on top of bar) */}
-          <div className="px-3 md:px-6 relative -mb-2 group/slider z-50">
+          <div className="w-full relative -mb-3 px-1 group/slider z-50">
             <Slider
               value={[progress]}
               max={100}
@@ -306,7 +321,7 @@ export function LessonVideoPlayer({ thumbnail, videoUrl, duration: initialDurati
             />
           </div>
 
-          <div className="px-4 md:px-8 pb-3 md:pb-6 flex items-center justify-between gap-4">
+          <div className="px-4 md:px-6 pb-2 md:pb-4 pt-4 flex items-center justify-between gap-4">
             {/* Left Controls */}
             <div className="flex items-center gap-1 md:gap-4">
               <Tooltip>

@@ -539,28 +539,26 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
               </div>
             </div>
 
-            {/* Instructor Card */}
+            {/* Course Details Card - Moved from below */}
             <div className="bg-white rounded-2xl border border-border p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <GraduationCap className="size-5 text-primary" />
+                  <Layers className="size-5 text-primary" />
                 </div>
-                <h3 className="text-base font-black text-text-primary tracking-tight">Your Instructor</h3>
+                <h3 className="text-base font-black text-text-primary tracking-tight">Course Details</h3>
               </div>
-              <div className="flex items-start gap-4">
-                <div className="size-14 rounded-2xl bg-linear-to-br from-primary/30 to-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black text-xl shrink-0">
-                  {course.author?.name?.charAt(0)?.toUpperCase() || 'I'}
-                </div>
-                <div className="space-y-1.5 flex-1 min-w-0">
-                  <p className="text-sm font-black text-text-primary">{course.author?.name || 'Expert Instructor'}</p>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">
-                    <GraduationCap className="size-3" />
-                    Verified Instructor
-                  </span>
-                  <p className="text-xs text-text-secondary leading-relaxed pt-1">
-                    Expert educator committed to delivering high-quality, hands-on learning experiences for students of all backgrounds.
-                  </p>
-                </div>
+              <div className="space-y-3">
+                {[
+                  { label: 'Category', value: course.category || 'Development' },
+                  { label: 'Level', value: course.level || 'All Levels' },
+                  { label: 'Last Updated', value: new Date(course.updatedAt || course.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) },
+                  { label: 'Status', value: (course.status?.charAt(0).toUpperCase() + course.status?.slice(1)) || 'Published' },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0">
+                    <span className="text-xs font-semibold text-text-muted">{label}</span>
+                    <span className="text-xs font-bold text-text-primary">{value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -586,28 +584,6 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
               </div>
             )}
 
-            {/* Category & Tags Card */}
-            <div className="bg-white rounded-2xl border border-border p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Layers className="size-5 text-primary" />
-                </div>
-                <h3 className="text-base font-black text-text-primary tracking-tight">Course Details</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { label: 'Category', value: course.category || 'Development' },
-                  { label: 'Level', value: course.level || 'All Levels' },
-                  { label: 'Last Updated', value: new Date(course.updatedAt || course.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) },
-                  { label: 'Status', value: (course.status?.charAt(0).toUpperCase() + course.status?.slice(1)) || 'Published' },
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0">
-                    <span className="text-xs font-semibold text-text-muted">{label}</span>
-                    <span className="text-xs font-bold text-text-primary">{value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Share Card */}
             <div className="bg-linear-to-br from-primary/8 to-primary/3 rounded-2xl border border-primary/20 p-6 space-y-3 text-center">

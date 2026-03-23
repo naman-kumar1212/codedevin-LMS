@@ -21,6 +21,7 @@ interface CourseCardProps {
   isFree?: boolean;
   enrollments?: number;
   lessonsCount?: number;
+  modulesCount?: number;
   durationHours?: number;
   rating?: number;
   progress?: number; // student view — 0-100
@@ -42,6 +43,7 @@ export function CourseCard({
   isFree,
   enrollments,
   lessonsCount,
+  modulesCount,
   durationHours,
   rating,
   progress,
@@ -50,14 +52,14 @@ export function CourseCard({
   className,
 }: CourseCardProps) {
   const cardContent = (
-    <Card className={cn('group overflow-hidden hover:shadow-xl transition-all duration-500 flex flex-col h-full border-slate-200 rounded-2xl bg-white', className)}>
+    <Card className={cn('group overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full border-slate-200 rounded-2xl bg-white', className)}>
       {/* Thumbnail */}
       <div className="relative aspect-video bg-slate-100 overflow-hidden">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
+            className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-50">
@@ -65,8 +67,6 @@ export function CourseCard({
           </div>
         )}
         
-        {/* Subtle Overlay */}
-        <div className="absolute inset-0 bg-slate-900/10 group-hover:opacity-0 transition-opacity duration-500" />
 
         {/* Level badge */}
         {level && (
@@ -112,16 +112,20 @@ export function CourseCard({
               {category}
             </Badge>
           )}
-          {lessonsCount != null && (
-            <div className="flex items-center gap-1.5 ml-auto">
+          {(lessonsCount != null || modulesCount != null) && (
+            <div className="flex items-center gap-1.5 ml-auto text-[10px] font-bold uppercase tracking-widest text-slate-500">
               <PlayCircle size={14} className="text-slate-400" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{lessonsCount} Lessons</span>
+              <span>
+                {modulesCount != null && `${modulesCount} ${modulesCount === 1 ? 'Module' : 'Modules'}`}
+                {modulesCount != null && lessonsCount != null && ' · '}
+                {lessonsCount != null && `${lessonsCount} ${lessonsCount === 1 ? 'Lesson' : 'Lessons'}`}
+              </span>
             </div>
           )}
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-lg font-bold tracking-tight text-slate-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors duration-300">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
             {title}
           </h3>
           {description && (
@@ -165,7 +169,7 @@ export function CourseCard({
           )}
         </div>
 
-        <div className="flex items-center text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="flex items-center text-xs font-bold text-primary transition-colors group-hover:text-primary/80">
           View Details <ChevronRight size={14} className="ml-1" />
         </div>
       </CardFooter>

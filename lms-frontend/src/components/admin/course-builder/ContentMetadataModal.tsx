@@ -18,23 +18,26 @@ import { cn } from '@/lib/utils';
 
 interface Props {
   lessonId: string;
-  lessonType: 'video' | 'pdf';
+  lessonType: 'video' | 'pdf' | 'recording' | 'resource' | string;
   initialTitle?: string;
+  initialDescription?: string;
+  initialLearningOutcome?: string;
+  initialThumbnailUrl?: string;
   onSave: (updatedLesson: any) => void;
   onClose: () => void;
 }
 
-export function ContentMetadataModal({ lessonId, lessonType, initialTitle, onSave, onClose }: Props) {
-  const isVideo = lessonType === 'video';
+export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initialDescription, initialLearningOutcome, initialThumbnailUrl, onSave, onClose }: Props) {
+  const isVideo = lessonType === 'video' || lessonType === 'recording';
 
   const [form, setForm] = useState({
     title: initialTitle || '',
-    description: '',
-    learningOutcome: '',
+    description: initialDescription || '',
+    learningOutcome: initialLearningOutcome || '',
   });
   const [saving, setSaving] = useState(false);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(initialThumbnailUrl || null);
   const thumbnailRef = useRef<HTMLInputElement>(null);
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {

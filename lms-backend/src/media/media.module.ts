@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaService } from '../prisma/prisma.service';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 import { LocalMediaProvider } from './local-media.provider';
@@ -14,6 +15,7 @@ import { MEDIA_PROVIDER } from './media.interface';
   controllers: [MediaController],
   providers: [
     MediaService,
+    PrismaService,
     {
       provide: MEDIA_PROVIDER,
       useClass: LocalMediaProvider,

@@ -4,12 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { 
-  Users, 
-  BookOpen, 
-  Wallet, 
-  Award, 
-  Plus, 
+import {
+  Users,
+  BookOpen,
+  Wallet,
+  Award,
+  Plus,
   ChevronRight,
   TrendingUp,
   Radio,
@@ -20,6 +20,7 @@ import { StatCard } from '@/components/ui/StatCard';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { cn } from '@/lib/utils';
+import { DataTable } from '@/components/ui/DataTable';
 
 export default function AdminDashboardPage() {
   const [timeRange, setTimeRange] = useState('7d');
@@ -43,7 +44,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1,2,3,4].map(i => <div key={i} className="h-32 bg-slate-200/60 rounded-2xl animate-pulse" />)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-slate-200/60 rounded-2xl animate-pulse" />)}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-10 gap-8">
           <div className="xl:col-span-6 h-96 bg-slate-200/60 rounded-2xl animate-pulse" />
@@ -58,28 +59,28 @@ export default function AdminDashboardPage() {
 
   const statCardsData = [
     {
-      label: 'Platform Students',
+      label: 'Total Students',
       value: stats?.totalStudents?.toLocaleString() || '1,250',
       icon: Users,
       change: '+12.5%',
       trend: 'up' as const,
     },
     {
-      label: 'Active Enrollments',
+      label: 'Total Enrollments',
       value: stats?.totalEnrollments?.toLocaleString() || '3,420',
       icon: BookOpen,
       change: '+8.2%',
       trend: 'up' as const,
     },
     {
-      label: 'Fiscal Revenue',
+      label: 'Total Revenue',
       value: stats ? `₹${stats.totalRevenue.toLocaleString('en-IN')}` : '₹2,09,889',
       icon: Wallet,
       change: '+15.4%',
       trend: 'up' as const,
     },
     {
-      label: 'Technical Lessons',
+      label: 'Active Courses',
       value: '170+',
       icon: Award,
       change: 'New Library',
@@ -93,9 +94,9 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold text-text-primary tracking-tight">Dashboard</h1>
-          <p className="text-text-secondary mt-1 text-sm">Institutional platform orchestration and growth oversight.</p>
+          <p className="text-text-secondary mt-1 text-sm">Overview of your LMS platform and student growth.</p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="bg-bg-surface p-1 rounded-xl flex items-center gap-1 border border-border shadow-sm">
             {['24h', '7d', '30d'].map((range) => (
@@ -104,8 +105,8 @@ export default function AdminDashboardPage() {
                 onClick={() => setTimeRange(range)}
                 className={cn(
                   "px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
-                  timeRange === range 
-                    ? 'bg-primary text-white shadow-sm' 
+                  timeRange === range
+                    ? 'bg-primary text-white shadow-sm'
                     : 'text-text-muted hover:text-text-primary hover:bg-bg-subtle'
                 )}
               >
@@ -125,7 +126,7 @@ export default function AdminDashboardPage() {
       {/* Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCardsData.map((card, idx) => (
-          <StatCard 
+          <StatCard
             key={idx}
             title={card.label}
             value={card.value}
@@ -140,48 +141,52 @@ export default function AdminDashboardPage() {
         {/* Recent Enrollments */}
         <div className="xl:col-span-6 bg-bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-border flex justify-between items-center bg-bg-subtle/30">
-            <h2 className="text-lg font-bold tracking-tight text-text-primary">Recent Enrollment Stream</h2>
+            <h2 className="text-lg font-bold tracking-tight text-text-primary">Recent Enrollments</h2>
             <Link href="/admin/students">
               <Button variant="link" size="sm" className="text-primary gap-2 p-0 h-auto font-bold uppercase tracking-widest text-[10px] group">
-                Audit All
+                View All
                 <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-bg-subtle/50">
-                  <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Stakeholder</th>
-                  <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Unit</th>
-                  <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Verification</th>
-                  <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest text-right">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {(stats?.recentEnrollments || []).slice(0, 6).map((enr: any) => (
-                  <tr key={enr.id} className="hover:bg-bg-subtle/30 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-primary text-xs font-bold shadow-sm group-hover:border-primary/30 transition-all">
-                          {enr.student?.name?.charAt(0) || 'U'}
-                        </div>
-                        <span className="text-sm font-medium text-text-primary">{enr.student?.name}</span>
+          <div className="overflow-x-auto p-0">
+            <DataTable
+              data={(stats?.recentEnrollments || []).slice(0, 6)}
+              className="border-none shadow-none rounded-none"
+              columns={[
+                {
+                  header: "Student",
+                  cell: (enr: any) => (
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-primary text-xs font-bold shadow-sm group-hover:border-primary/30 transition-all">
+                        {enr.student?.name?.charAt(0) || 'U'}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-text-secondary truncate max-w-[200px]">
-                      {enr.course?.title}
-                    </td>
-                    <td className="px-6 py-4">
-                      <StatusBadge variant="success" className="text-[9px]">Active Access</StatusBadge>
-                    </td>
-                    <td className="px-6 py-4 text-right text-[10px] font-bold text-text-muted tabular-nums uppercase">
-                      {new Date(enr.enrolledAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <span className="text-sm font-medium text-text-primary">{enr.student?.name}</span>
+                    </div>
+                  )
+                },
+                {
+                  header: "Course",
+                  cell: (enr: any) => (
+                    <span className="text-sm text-text-secondary truncate max-w-[200px] block">{enr.course?.title}</span>
+                  )
+                },
+                {
+                  header: "Status",
+                  cell: () => (
+                    <StatusBadge variant="success" className="text-[9px]">Active</StatusBadge>
+                  )
+                },
+                {
+                  header: "Date",
+                  className: "text-right",
+                  headerClassName: "text-right",
+                  cell: (enr: any) => (
+                    <span className="text-[10px] font-bold text-text-muted tabular-nums uppercase">{new Date(enr.enrolledAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
+                  )
+                }
+              ]}
+            />
           </div>
         </div>
 
@@ -189,7 +194,7 @@ export default function AdminDashboardPage() {
         <div className="xl:col-span-4 space-y-6">
           <div className="bg-bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 border-b border-border flex justify-between items-center bg-bg-subtle/30">
-              <h2 className="text-lg font-bold tracking-tight text-text-primary">Live Instruction</h2>
+              <h2 className="text-lg font-bold tracking-tight text-text-primary">Upcoming Classes</h2>
               <Button variant="outline" size="sm" className="h-8 text-[10px] uppercase tracking-widest gap-2">
                 <Calendar size={14} />
                 Schedule
@@ -202,14 +207,14 @@ export default function AdminDashboardPage() {
                   <p className="text-xl font-bold">20</p>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-1">Platform Architecture v5</h3>
+                  <h3 className="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-1">Introduction to Programming</h3>
                   <p className="text-[10px] text-text-muted font-bold mt-1 flex items-center gap-2">
                     <Radio size={12} className="text-primary" />
                     15:00 UTC <span className="opacity-30">•</span> Global Stream
                   </p>
                   <div className="flex mt-4 gap-3">
-                    <Button size="sm" className="flex-1 h-9 text-[9px] uppercase tracking-widest">Join Unit</Button>
-                    <Button variant="outline" size="sm" className="flex-1 h-9 text-[9px] uppercase tracking-widest">Meta Data</Button>
+                    <Button size="sm" className="flex-1 h-9 text-[9px] uppercase tracking-widest">Join Live</Button>
+                    <Button variant="outline" size="sm" className="flex-1 h-9 text-[9px] uppercase tracking-widest">Manage</Button>
                   </div>
                 </div>
               </div>
@@ -219,13 +224,13 @@ export default function AdminDashboardPage() {
           {/* Institutional Actions */}
           <div className="bg-bg-surface p-6 rounded-xl shadow-sm border border-border flex flex-col">
             <div className="pb-4 border-b border-border mb-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Executive Command</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Quick Actions</p>
             </div>
             <div className="space-y-3">
               {[
-                { label: 'Initialize Course', icon: Plus, path: '/admin/courses/create' },
-                { label: 'Fiscal Analytics', icon: Wallet, path: '/admin/payments' },
-                { label: 'Core Governance', icon: Award, path: '/admin/settings' }
+                { label: 'Create Course', icon: Plus, path: '/admin/courses/create' },
+                { label: 'View Payments', icon: Wallet, path: '/admin/payments' },
+                { label: 'Settings', icon: Award, path: '/admin/settings' }
               ].map((cmd, i) => (
                 <Link key={i} href={cmd.path} className="flex items-center justify-between p-4 bg-bg-subtle/50 rounded-xl hover:bg-primary/5 transition-all group/cmd border border-transparent hover:border-primary/20">
                   <div className="flex items-center gap-3">
@@ -246,8 +251,8 @@ export default function AdminDashboardPage() {
       <div className="bg-bg-surface p-8 rounded-xl border border-border shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-text-primary uppercase">Revenue Matrix</h2>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em] mt-1">Annual Growth Projection • 2026</p>
+            <h2 className="text-xl font-bold tracking-tight text-text-primary uppercase">Revenue Overview</h2>
+            <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em] mt-1">Revenue for 2026</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex bg-bg-subtle p-1 rounded-xl border border-border">
@@ -288,4 +293,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 

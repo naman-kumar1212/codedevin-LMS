@@ -13,6 +13,9 @@ export interface Lesson {
   providerFileId?: string;
   videoUrl?: string;
   resourceUrl?: string;
+  description?: string;
+  learningOutcome?: string;
+  thumbnailUrl?: string;
 }
 
 export interface Module {

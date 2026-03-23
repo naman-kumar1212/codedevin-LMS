@@ -21,6 +21,7 @@ import { randomUUID } from 'crypto';
 import { existsSync, mkdirSync } from 'fs';
 import type { Request } from 'express';
 import { MediaService } from './media.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -43,7 +44,10 @@ function createStorage(subdir: string) {
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('ADMIN')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+  constructor(
+    private readonly mediaService: MediaService,
+    private readonly prisma: PrismaService,
+  ) { }
 
   /**
    * Upload a video file for a specific lesson.
@@ -97,6 +101,36 @@ export class MediaController {
   ) {
     if (!file) throw new BadRequestException('PDF file is required');
     return this.mediaService.uploadPDF(lessonId, file, meta);
+  }
+
+  /**
+   * Upload a course thumbnail/preview image.
+   * Updates Course.thumbnailUrl with the path to the stored image.
+   */
+  @Post('upload/thumbnail/:courseId')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: createStorage('thumbnails'),
+      fileFilter(_req, file, cb) {
+        if (!file.mimetype.startsWith('image/')) {
+          return cb(new BadRequestException('Only image files allowed'), false);
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+    }),
+  )
+  async uploadCourseThumbnail(
+    @Param('courseId') courseId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Image file is required');
+    const thumbnailUrl = `/public/uploads/thumbnails/${file.filename}`;
+    await this.prisma.course.update({
+      where: { id: courseId },
+      data: { thumbnailUrl },
+    });
+    return { thumbnailUrl };
   }
 
   /**

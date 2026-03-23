@@ -1,4 +1,5 @@
 .agents
+.agent
 .superdesign
 skills-lock.json
 node_modules
@@ -19,5 +20,6 @@ Markdown
 **/.superdesign
 **/skills-lock.json
 **/.agents
+**/.agent
 **/stitch
 **/Markdown
