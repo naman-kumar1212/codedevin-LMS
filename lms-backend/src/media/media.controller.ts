@@ -134,6 +134,36 @@ export class MediaController {
   }
 
   /**
+   * Upload a lesson thumbnail/cover image.
+   * Updates Lesson.thumbnailUrl with the path to the stored image.
+   */
+  @Post('upload/lesson-thumbnail/:lessonId')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: createStorage('lesson-thumbnails'),
+      fileFilter(_req, file, cb) {
+        if (!file.mimetype.startsWith('image/')) {
+          return cb(new BadRequestException('Only image files allowed'), false);
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+    }),
+  )
+  async uploadLessonThumbnail(
+    @Param('lessonId') lessonId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Image file is required');
+    const thumbnailUrl = `/public/uploads/lesson-thumbnails/${file.filename}`;
+    await this.prisma.lesson.update({
+      where: { id: lessonId },
+      data: { thumbnail: thumbnailUrl },
+    });
+    return { thumbnailUrl };
+  }
+
+  /**
    * Update content metadata (title, description, thumbnail, learningOutcome)
    * after upload — used by the content metadata modal.
    */

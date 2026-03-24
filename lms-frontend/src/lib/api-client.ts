@@ -124,6 +124,7 @@ export const api = {
 
   // Quizzes
   getQuizForLesson: (lessonId: string) => apiClient.get(`/lessons/${lessonId}/quiz`),
+  getQuizById: (quizId: string) => apiClient.get(`/quizzes/${quizId}`),
   submitQuizAttempt: (quizId: string, answers: Record<string, string>) =>
     apiClient.post(`/quizzes/${quizId}/attempt`, { answers }),
   createQuiz: (lessonId: string, data: { title: string; passingScore: number }) =>
@@ -180,6 +181,21 @@ export const api = {
     const form = new FormData();
     form.append('file', file);
     return apiClient.post(`/media/upload/thumbnail/${courseId}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: onProgress
+        ? (e) => onProgress(Math.round((e.loaded * 100) / (e.total ?? 1)))
+        : undefined,
+    });
+  },
+
+  uploadLessonThumbnail: (
+    lessonId: string,
+    file: File,
+    onProgress?: (pct: number) => void,
+  ) => {
+    const form = new FormData();
+    form.append('file', file);
+    return apiClient.post(`/media/upload/lesson-thumbnail/${lessonId}`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress: onProgress
         ? (e) => onProgress(Math.round((e.loaded * 100) / (e.total ?? 1)))

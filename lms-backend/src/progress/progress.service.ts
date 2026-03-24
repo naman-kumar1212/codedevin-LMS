@@ -75,6 +75,15 @@ export class ProgressService {
         modules: {
           orderBy: { orderIndex: 'asc' },
           include: {
+            quiz: {
+              include: {
+                questions: {
+                  include: {
+                    options: true,
+                  },
+                },
+              },
+            },
             lessons: {
               orderBy: { orderIndex: 'asc' },
               select: { id: true, title: true, type: true, durationSeconds: true },
@@ -101,6 +110,7 @@ export class ProgressService {
     const modules = course.modules.map((m) => ({
       moduleId: m.id,
       title: m.title,
+      quiz: m.quiz,
       totalLessons: m.lessons.length,
       completedLessons: m.lessons.filter((l) => completedSet.has(l.id)).length,
       lessons: m.lessons.map((l) => ({
@@ -143,6 +153,15 @@ export class ProgressService {
         modules: {
           orderBy: { orderIndex: 'asc' },
           include: {
+            quiz: {
+              include: {
+                questions: {
+                  include: {
+                    options: true,
+                  },
+                },
+              },
+            },
             lessons: {
               orderBy: { orderIndex: 'asc' },
               select: { id: true, title: true, type: true, durationSeconds: true },
@@ -161,6 +180,7 @@ export class ProgressService {
     const modules = course.modules.map((m) => ({
       moduleId: m.id,
       title: m.title,
+      quiz: m.quiz,
       totalLessons: m.lessons.length,
       completedLessons: 0,
       lessons: m.lessons.map((l) => ({

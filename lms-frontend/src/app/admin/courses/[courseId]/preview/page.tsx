@@ -31,9 +31,11 @@ import {
   ArrowRight,
   ShieldCheck,
   LayoutDashboard,
-  Loader2
+  Loader2,
+  HelpCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getThumbnailUrl } from '@/lib/image-utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/Button';
 import { Separator } from '@/components/ui/separator';
@@ -296,7 +298,7 @@ export default function AdminCourseLandingPreview() {
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900">{lesson.title}</span>
-                                {lesson.type === 'VIDEO' && (
+                                {lesson.type === 'video' && (
                                   <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1">
                                     <Clock className="size-2.5" />
                                     {formatDuration(lesson.durationSeconds)}
@@ -307,6 +309,28 @@ export default function AdminCourseLandingPreview() {
                             <ArrowRight className="size-3 text-slate-300 group-hover:text-primary transition-colors translate-x-1 opacity-0 group-hover:opacity-100" />
                           </Link>
                         ))}
+                        {/* Module Quiz */}
+                        {mod.quiz && (
+                          <Link
+                            href={`/admin/courses/${courseId}/preview/quiz/${mod.quiz.id}`}
+                            className="flex items-center justify-between p-3 rounded-xl bg-indigo-50/60 border border-indigo-100 hover:bg-indigo-50 hover:border-indigo-300 transition-all group/quiz"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="size-7 rounded-lg bg-white border border-indigo-200 flex items-center justify-center group-hover/quiz:bg-indigo-50 transition-colors">
+                                <HelpCircle className="size-3.5 text-indigo-500" />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-indigo-700 group-hover/quiz:text-indigo-800 transition-colors">{mod.quiz.title}</span>
+                                <span className="text-[10px] font-medium text-indigo-400">
+                                  {mod.quiz.questions?.length || 0} questions
+                                </span>
+                              </div>
+                            </div>
+                            <span className="text-[10px] font-black text-indigo-600 bg-white border border-indigo-200 px-2 py-0.5 rounded-full group-hover/quiz:bg-indigo-100 transition-colors">
+                              Quiz
+                            </span>
+                          </Link>
+                        )}
                       </div>
                     )}
                   </div>
@@ -323,12 +347,8 @@ export default function AdminCourseLandingPreview() {
             <div className="absolute -top-24 -right-24 size-48 bg-blue-500/5 blur-3xl rounded-full" />
 
             <div className="aspect-video rounded-2xl bg-slate-50 overflow-hidden relative group border border-slate-200">
-              {course.thumbnailUrl && <img src={course.thumbnailUrl} className="size-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt="Thumbnail" />}
-              <div className="absolute inset-0 flex items-center justify-center bg-slate-900/5 group-hover:bg-slate-900/10 transition-colors">
-                <div className="size-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-xl group-hover:scale-110 transition-transform duration-500">
-                  <PlayCircle className="size-7 text-blue-600" />
-                </div>
-              </div>
+              {course.thumbnailUrl && <img src={getThumbnailUrl(course.thumbnailUrl)} className="size-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt="Thumbnail" />}
+              {/* Preview thumbnail without play overlay */}
             </div>
 
             <div className="space-y-4 relative">

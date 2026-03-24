@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { BookOpen, Users, Clock, Star, PlayCircle, BarChart, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getThumbnailUrl } from '@/lib/image-utils';
 
 interface CourseCardProps {
   id: string;
@@ -57,7 +58,7 @@ export function CourseCard({
       <div className="relative aspect-video bg-slate-100 overflow-hidden">
         {thumbnailUrl ? (
           <img
-            src={thumbnailUrl}
+            src={getThumbnailUrl(thumbnailUrl)}
             alt={title}
             className="w-full h-full object-cover"
           />

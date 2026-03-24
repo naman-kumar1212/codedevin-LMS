@@ -19,8 +19,10 @@ import type { Lesson, Module } from '@/components/admin/course-builder/types';
 import {
   Rocket, BookOpen, Layers, ArrowRight, ArrowLeft, Plus, X,
   Check, ChevronRight, FileText, BadgeCent, ShieldCheck, Smartphone,
-  Upload, Video, FileIcon, AlertCircle, HelpCircle, RefreshCw, Trash2
+  Upload, Video, FileIcon, AlertCircle, HelpCircle, RefreshCw, Trash2,
+  ImageIcon
 } from 'lucide-react';
+import { getThumbnailUrl } from '@/lib/image-utils';
 import {
   Dialog,
   DialogContent,
@@ -58,6 +60,9 @@ interface PendingModal {
   lessonId: string;
   lessonType: 'video' | 'pdf';
   initialTitle: string;
+  initialDescription: string;
+  initialLearningOutcome: string;
+  initialThumbnail: string;
   moduleId: string;
 }
 
@@ -78,9 +83,13 @@ export default function CreateCoursePage() {
     description: '',
     price: 0,
     isFree: true,
+    thumbnailUrl: '',
     category: 'Development',
     level: 'Beginner',
   });
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
 
   // ── Modules state ─────────────────────────────────────────────────────────
   const [modules, setModules] = useState<Module[]>([]);
@@ -123,10 +132,18 @@ export default function CreateCoursePage() {
   // ── Mutations ─────────────────────────────────────────────────────────────
   const createMutation = useMutation({
     mutationFn: (data: any) => api.createCourse(data),
-    onSuccess: (res) => {
+    onSuccess: (res: any) => {
       const id = res.data.id;
       setCourseId(id);
       setStep(2);
+      
+      // Upload thumbnail if available
+      if (thumbnailFile) {
+        api.uploadCourseThumbnail(id, thumbnailFile).then(thumbRes => {
+          setBasicInfo(prev => ({ ...prev, thumbnailUrl: thumbRes.data.thumbnailUrl }));
+        });
+      }
+      
       queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
     },
   });
@@ -138,6 +155,13 @@ export default function CreateCoursePage() {
       router.push('/admin/courses');
     },
   });
+
+  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setThumbnailFile(file);
+    setThumbnailPreview(URL.createObjectURL(file));
+  };
 
   // ── Step 1 submit ─────────────────────────────────────────────────────────
   const handleStep1Submit = (e: React.FormEvent) => {
@@ -283,7 +307,15 @@ export default function CreateCoursePage() {
       );
 
       // Open metadata modal
-      setPendingModal({ lessonId, lessonType: type, initialTitle: newLesson.title, moduleId });
+      setPendingModal({ 
+        lessonId, 
+        lessonType: type, 
+        initialTitle: newLesson.title, 
+        initialDescription: '',
+        initialLearningOutcome: '',
+        initialThumbnail: '',
+        moduleId 
+      });
     } catch (err: any) {
       const errMsg = err?.response?.data?.message || 'Upload failed';
       setUploads((prev) => ({ ...prev, [lessonId]: { ...prev[lessonId], error: errMsg } }));
@@ -303,7 +335,15 @@ export default function CreateCoursePage() {
     setModules((prev) =>
       prev.map((m) =>
         m.id === moduleId
-          ? { ...m, lessons: m.lessons.map((l) => (l.id === lessonId ? { ...l, title: updated.title ?? l.title } : l)) }
+          ? { 
+              ...m, 
+              lessons: m.lessons.map((l) => (l.id === lessonId ? { 
+                ...l, 
+                title: updated.title ?? l.title,
+                learningOutcome: updated.learningOutcome ?? l.learningOutcome,
+                thumbnail: updated.thumbnail ?? l.thumbnail
+              } : l)) 
+            }
           : m,
       ),
     );
@@ -363,6 +403,9 @@ export default function CreateCoursePage() {
           lessonId={pendingModal.lessonId}
           lessonType={pendingModal.lessonType}
           initialTitle={pendingModal.initialTitle}
+          initialDescription={pendingModal.initialDescription}
+          initialLearningOutcome={pendingModal.initialLearningOutcome}
+          initialThumbnail={pendingModal.initialThumbnail}
           onSave={handleMetadataSave}
           onClose={() => setPendingModal(null)}
         />
@@ -580,6 +623,47 @@ export default function CreateCoursePage() {
                   </div>
                 </div>
               )}
+
+              {/* Course Preview Image */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700">Course Preview Image</label>
+                <div className="flex items-start gap-4">
+                  <div className="size-24 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden">
+                    {thumbnailPreview || basicInfo.thumbnailUrl ? (
+                      <img
+                        src={thumbnailPreview || getThumbnailUrl(basicInfo.thumbnailUrl)}
+                        alt="Course preview"
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <ImageIcon className="size-8 text-slate-300" />
+                    )}
+                  </div>
+                  <label className="flex-1 cursor-pointer">
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 hover:border-primary/50 hover:bg-primary/5 transition-colors">
+                      {thumbnailUploading ? (
+                        <div className="flex items-center gap-2 text-primary text-sm font-medium">
+                          <div className="size-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                          Uploading...
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="size-5 text-slate-400" />
+                          <span className="text-xs font-medium text-slate-600">Click to upload preview image</span>
+                          <span className="text-xs text-slate-400">PNG, JPG, WEBP up to 5 MB</span>
+                        </>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleThumbnailUpload}
+                      disabled={thumbnailUploading}
+                    />
+                  </label>
+                </div>
+              </div>
 
               {createMutation.isError && (
                 <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">

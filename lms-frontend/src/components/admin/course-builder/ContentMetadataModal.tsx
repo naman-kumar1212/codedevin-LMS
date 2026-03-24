@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { X, Upload, Video, FileText, Save, Loader2 } from 'lucide-react';
+import { getThumbnailUrl } from '@/lib/image-utils';
 import { api } from '@/lib/api-client';
 import {
   Dialog,
@@ -22,12 +23,12 @@ interface Props {
   initialTitle?: string;
   initialDescription?: string;
   initialLearningOutcome?: string;
-  initialThumbnailUrl?: string;
+  initialThumbnail?: string;
   onSave: (updatedLesson: any) => void;
   onClose: () => void;
 }
 
-export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initialDescription, initialLearningOutcome, initialThumbnailUrl, onSave, onClose }: Props) {
+export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initialDescription, initialLearningOutcome, initialThumbnail, onSave, onClose }: Props) {
   const isVideo = lessonType === 'video' || lessonType === 'recording';
 
   const [form, setForm] = useState({
@@ -37,7 +38,7 @@ export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initi
   });
   const [saving, setSaving] = useState(false);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(initialThumbnailUrl || null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(initialThumbnail || null);
   const thumbnailRef = useRef<HTMLInputElement>(null);
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,9 +52,26 @@ export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initi
     if (!form.title.trim()) return;
     setSaving(true);
     try {
-      const payload: Record<string, string> = { title: form.title };
+      let thumbnail = initialThumbnail;
+
+      // 1. Upload thumbnail if new file selected
+      if (thumbnailFile) {
+        try {
+          const uploadRes = await api.uploadLessonThumbnail(lessonId, thumbnailFile);
+          thumbnail = uploadRes.data.thumbnailUrl;
+        } catch (uploadErr) {
+          console.error('Thumbnail upload failed:', uploadErr);
+          // We continue but the thumbnail might not be updated
+        }
+      }
+
+      // 2. Save metadata
+      const payload: any = { 
+        title: form.title,
+        thumbnail: thumbnail 
+      };
       if (isVideo) payload.description = form.description;
-      else payload.learningOutcome = form.learningOutcome;
+      payload.learningOutcome = form.learningOutcome;
 
       const res = await api.updateLessonMeta(lessonId, payload);
       onSave(res.data);
@@ -108,63 +126,66 @@ export function ContentMetadataModal({ lessonId, lessonType, initialTitle, initi
             />
           </div>
 
-          {isVideo ? (
-            <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-300">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 ml-1">Description</label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  rows={4}
-                  placeholder="Tell learners what this video is about..."
-                  className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-colors resize-none shadow-sm"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 ml-1">Thumbnail Cover</label>
-                <div
-                  onClick={() => thumbnailRef.current?.click()}
-                  className="group relative h-40 bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors" />
-
-                  {thumbnailPreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumbnailPreview} alt="Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  ) : (
-                    <div className="flex flex-col items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
-                      <div className="size-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-                        <Upload className="size-4" />
-                      </div>
-                      <p className="text-xs font-medium uppercase tracking-wider">Click to upload cover</p>
-                    </div>
-                  )}
-                </div>
-                <input
-                  ref={thumbnailRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleThumbnailChange}
-                  className="hidden"
-                />
-                {thumbnailFile && (
-                  <p className="text-xs text-emerald-600 font-medium ml-1 animate-in fade-in">
-                    ✓ {thumbnailFile.name}
-                  </p>
-                )}
-              </div>
+          {isVideo && (
+            <div className="space-y-2 animate-in slide-in-from-bottom-2 duration-300">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 ml-1">Description</label>
+              <textarea
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                rows={3}
+                placeholder="Tell learners what this video is about..."
+                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-colors resize-none shadow-sm"
+              />
             </div>
-          ) : (
+          )}
+
+          {!isVideo && (
             <div className="space-y-2 animate-in slide-in-from-bottom-2 duration-300">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 ml-1">Learning Outcomes</label>
               <textarea
                 value={form.learningOutcome}
                 onChange={(e) => setForm({ ...form, learningOutcome: e.target.value })}
-                rows={6}
+                rows={3}
                 placeholder="What will students learn? e.g. Master the core principles of..."
                 className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-colors resize-none shadow-sm"
               />
+            </div>
+          )}
+
+          {/* Thumbnail — only for video/recording lessons */}
+          {isVideo && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 ml-1">Thumbnail Cover</label>
+              <div
+                onClick={() => thumbnailRef.current?.click()}
+                className="group relative h-40 bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors" />
+
+                {thumbnailPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={getThumbnailUrl(thumbnailPreview)} alt="Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-slate-400 group-hover:text-primary transition-colors">
+                    <div className="size-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                      <Upload className="size-4" />
+                    </div>
+                    <p className="text-xs font-medium uppercase tracking-wider">Click to upload cover</p>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={thumbnailRef}
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+                className="hidden"
+              />
+              {thumbnailFile && (
+                <p className="text-xs text-emerald-600 font-medium ml-1 animate-in fade-in">
+                  ✓ {thumbnailFile.name}
+                </p>
+              )}
             </div>
           )}
         </div>

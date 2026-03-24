@@ -32,9 +32,11 @@ import {
   AlertCircle,
   ArrowRight,
   Loader2,
+  HelpCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { getThumbnailUrl } from '@/lib/image-utils';
 
 export default function CourseDetailPage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = React.use(params);
@@ -292,7 +294,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
                 {/* Preview thumbnail */}
                 <div className="aspect-video bg-bg-subtle relative group overflow-hidden">
                   {course.thumbnailUrl ? (
-                    <img src={course.thumbnailUrl} alt={course.title} className="size-full object-cover" />
+                    <img src={getThumbnailUrl(course.thumbnailUrl)} alt={course.title} className="size-full object-cover" />
                   ) : (
                     <div className="size-full flex flex-col items-center justify-center gap-3 text-text-muted">
                       <div className="size-16 rounded-2xl bg-white shadow-md border border-border flex items-center justify-center">
@@ -301,12 +303,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
                       <p className="text-xs font-semibold">Course Preview</p>
                     </div>
                   )}
-                  {/* Play overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors">
-                    <div className="size-14 rounded-full bg-white/90 backdrop-blur shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
-                      <PlayCircle className="size-8 text-primary" />
-                    </div>
-                  </div>
+                  {/* Preview thumbnail without play overlay */}
                 </div>
 
                 {/* Card Body */}
@@ -479,7 +476,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
                                 </div>
                                 <div>
                                   <p className="text-xs font-semibold text-text-secondary">{lesson.title}</p>
-                                  {lesson.duration && (
+                                  {lesson.type === 'video' && lesson.duration && (
                                     <p className="text-[10px] font-medium text-text-muted flex items-center gap-1 mt-0.5">
                                       <Clock className="size-2.5" />
                                       {lesson.duration}
@@ -499,6 +496,34 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
                               }
                             </div>
                           ))}
+                          {/* Module Quiz */}
+                          {mod.quiz && (
+                            <Link
+                              href={access?.hasAccess ? `/course/${course.id}/quiz/${mod.quiz.id}` : '#'}
+                              onClick={(e) => {
+                                if (!access?.hasAccess) {
+                                  e.preventDefault();
+                                  handleEnrollClick();
+                                }
+                              }}
+                              className="flex items-center justify-between px-5 py-3.5 bg-indigo-50/40 border-t border-indigo-100/60 hover:bg-indigo-50 transition-colors group/quiz"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="size-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0 shadow-sm group-hover/quiz:border-indigo-300 transition-colors">
+                                  <HelpCircle className="size-3.5 text-indigo-500" />
+                                </div>
+                                <div>
+                                  <p className="text-xs font-semibold text-text-secondary group-hover/quiz:text-indigo-700 transition-colors">{mod.quiz.title}</p>
+                                  <p className="text-[10px] font-medium text-indigo-500 mt-0.5">
+                                    {mod.quiz.questions?.length || 0} questions
+                                  </p>
+                                </div>
+                              </div>
+                              <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full shrink-0 group-hover/quiz:bg-indigo-100 transition-colors">
+                                Quiz
+                              </span>
+                            </Link>
+                          )}
                         </div>
                       )}
                     </div>

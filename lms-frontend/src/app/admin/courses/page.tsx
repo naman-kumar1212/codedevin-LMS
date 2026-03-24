@@ -39,6 +39,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from '@/lib/utils';
+import { getThumbnailUrl } from '@/lib/image-utils';
 
 export default function AdminCoursesPage() {
   const queryClient = useQueryClient();
@@ -209,7 +210,7 @@ export default function AdminCoursesPage() {
                 <div className="flex items-center gap-4 group/item">
                   <div className="size-12 rounded-md bg-slate-50 overflow-hidden border border-slate-200 shrink-0">
                     {course.thumbnailUrl ? (
-                      <img src={course.thumbnailUrl} alt="" className="size-full object-cover" />
+                      <img src={getThumbnailUrl(course.thumbnailUrl)} alt="" className="size-full object-cover" />
                     ) : (
                       <div className="size-full flex items-center justify-center text-slate-400">
                         <Book className="size-5" />

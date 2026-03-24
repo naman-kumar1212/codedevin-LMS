@@ -133,8 +133,8 @@ export default function LessonPlayerPage() {
     router.push(`/course/${courseId}`);
   }, [progress, lessonId, courseId, router]);
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds) return '00:00';
+  const formatDuration = (seconds?: number | null) => {
+    if (!seconds || seconds <= 0) return '';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -142,24 +142,34 @@ export default function LessonPlayerPage() {
 
   const sidebarModules = useMemo(() => {
     if (!progress) return [];
-    return progress.modules.map(mod => ({
-      id: mod.moduleId,
-      title: mod.title,
-      lessons: mod.lessons.map(l => {
-        // Fallback to course data if durationSeconds is missing in progress meta
-        const courseLesson = course?.modules?.flatMap((m: any) => m.lessons)
-          .find((cl: any) => cl.id === l.lessonId);
-        
-        return {
-          id: l.lessonId,
-          title: l.title,
-          duration: formatDuration(l.durationSeconds || courseLesson?.durationSeconds),
-          type: (l.type === 'resource' || l.type === 'pdf' ? 'pdf' : 'video') as 'video' | 'pdf',
-          completed: l.isCompleted,
-          active: l.lessonId === lessonId
-        };
-      })
-    }));
+    return progress.modules.map(mod => {
+      // Find corresponding module in course data for quiz info
+      const courseModule = course?.modules?.find((m: any) => m.id === mod.moduleId);
+
+      return {
+        id: mod.moduleId,
+        title: mod.title,
+        lessons: mod.lessons.map(l => {
+          // Fallback to course data if durationSeconds is missing in progress meta
+          const courseLesson = course?.modules?.flatMap((m: any) => m.lessons)
+            .find((cl: any) => cl.id === l.lessonId);
+          
+          return {
+            id: l.lessonId,
+            title: l.title,
+            duration: formatDuration(l.durationSeconds || courseLesson?.durationSeconds),
+            type: (l.type === 'resource' || l.type === 'pdf' ? 'pdf' : 'video') as 'video' | 'pdf',
+            completed: l.isCompleted,
+            active: l.lessonId === lessonId
+          };
+        }),
+        quiz: courseModule?.quiz ? {
+          id: courseModule.quiz.id,
+          title: courseModule.quiz.title,
+          questions: courseModule.quiz.questions || [],
+        } : undefined,
+      };
+    });
   }, [progress, course, lessonId]);
 
   // Resources tab removed — PDFs are handled as dedicated lessons
@@ -239,6 +249,7 @@ export default function LessonPlayerPage() {
           progress={progress?.percentage || 0}
           modules={sidebarModules}
           onLessonClick={(id) => router.push(`/course/${courseId}/lesson/${id}`)}
+          onQuizClick={(id) => router.push(`/course/${courseId}/quiz/${id}`)}
           onNextLesson={handleNextLesson}
         />
       }

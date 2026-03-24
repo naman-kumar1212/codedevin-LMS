@@ -20,6 +20,7 @@ import {
   ValidateNested,
   IsBoolean,
   IsIn,
+  IsObject,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -42,6 +43,7 @@ class AddQuestionDto {
 }
 
 class SubmitAttemptDto {
+  @IsObject()
   answers: Record<string, string>;
 }
 
@@ -81,6 +83,16 @@ export class QuizzesController {
     return this.quizzesService.addQuestion(quizId, dto);
   }
 
+  /** Student: get quiz by ID */
+  @Get('quizzes/:id')
+  getQuizById(@Param('id') id: string, @Req() req: Request) {
+    return this.quizzesService.getQuizById(
+      id,
+      (req.user as any).id,
+      (req.user as any).role === 'admin',
+    );
+  }
+
   /** Student: get quiz for a lesson */
   @Get('lessons/:lessonId/quiz')
   getQuizForLesson(@Param('lessonId') lessonId: string, @Req() req: Request) {
@@ -101,6 +113,7 @@ export class QuizzesController {
       quizId,
       (req.user as any).id,
       dto.answers,
+      (req.user as any).role === 'admin',
     );
   }
 

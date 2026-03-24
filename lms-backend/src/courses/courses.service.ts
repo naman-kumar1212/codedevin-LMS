@@ -158,6 +158,14 @@ export class CoursesService {
                 orderIndex: true,
               },
             },
+            quiz: {
+              include: {
+                questions: {
+                  orderBy: { orderIndex: 'asc' },
+                  include: { options: { orderBy: { orderIndex: 'asc' } } },
+                },
+              },
+            },
           },
         },
         _count: { select: { enrollments: true } },

@@ -51,7 +51,7 @@ interface LessonDetail {
   videoUrl?: string;
   resourceUrl?: string;
   description?: string;
-  thumbnailUrl?: string;
+  thumbnail?: string;
   durationSeconds?: number;
 }
 
@@ -160,8 +160,8 @@ export default function AdminLessonPreviewPage() {
     router.push(`/admin/courses`);
   }, [progress, lessonId, courseId, router]);
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds) return '00:00';
+  const formatDuration = (seconds?: number | null) => {
+    if (!seconds || seconds <= 0) return '';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
@@ -169,24 +169,34 @@ export default function AdminLessonPreviewPage() {
 
   const sidebarModules = useMemo(() => {
     if (!progress) return [];
-    return progress.modules.map(mod => ({
-      id: mod.moduleId,
-      title: mod.title,
-      lessons: mod.lessons.map(l => {
-        // Fallback to course data if durationSeconds is missing in progress meta
-        const courseLesson = course?.modules?.flatMap((m: any) => m.lessons)
-          .find((cl: any) => cl.id === l.lessonId);
-        
-        return {
-          id: l.lessonId,
-          title: l.title,
-          duration: formatDuration(l.durationSeconds || courseLesson?.durationSeconds),
-          type: (l.type === 'resource' || l.type === 'pdf' ? 'pdf' : 'video') as 'video' | 'pdf',
-          completed: false,
-          active: l.lessonId === lessonId,
-        };
-      }),
-    }));
+    return progress.modules.map(mod => {
+      // Find corresponding module in course data for quiz info
+      const courseModule = course?.modules?.find((m: any) => m.id === mod.moduleId);
+
+      return {
+        id: mod.moduleId,
+        title: mod.title,
+        lessons: mod.lessons.map(l => {
+          // Fallback to course data if durationSeconds is missing in progress meta
+          const courseLesson = course?.modules?.flatMap((m: any) => m.lessons)
+            .find((cl: any) => cl.id === l.lessonId);
+          
+          return {
+            id: l.lessonId,
+            title: l.title,
+            duration: formatDuration(l.durationSeconds || courseLesson?.durationSeconds),
+            type: (l.type === 'resource' || l.type === 'pdf' ? 'pdf' : 'video') as 'video' | 'pdf',
+            completed: false,
+            active: l.lessonId === lessonId,
+          };
+        }),
+        quiz: courseModule?.quiz ? {
+          id: courseModule.quiz.id,
+          title: courseModule.quiz.title,
+          questions: courseModule.quiz.questions || [],
+        } : undefined,
+      };
+    });
   }, [progress, course, lessonId]);
 
   if (loading) {
@@ -253,6 +263,7 @@ export default function AdminLessonPreviewPage() {
           modules={sidebarModules}
           isAdmin={true}
           onLessonClick={handleLessonClick}
+          onQuizClick={(id) => router.push(`/admin/courses/${courseId}/preview/quiz/${id}`)}
           onNextLesson={handleNextLesson}
         />
       }
@@ -273,7 +284,7 @@ export default function AdminLessonPreviewPage() {
 
         {isVideo ? (
           <LessonVideoPlayer 
-            thumbnail={lesson?.thumbnailUrl || course?.thumbnailUrl}
+            thumbnail={lesson?.thumbnail || course?.thumbnailUrl}
             videoUrl={lesson?.videoUrl}
             duration={lesson?.durationSeconds}
             onPlay={() => console.log('[Admin Preview] Playing:', lesson?.title)}

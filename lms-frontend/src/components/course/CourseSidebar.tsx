@@ -32,10 +32,17 @@ interface Lesson {
   active?: boolean;
 }
 
+interface Quiz {
+  id: string;
+  title: string;
+  questions: any[];
+}
+
 interface Module {
   id: string;
   title: string;
   lessons: Lesson[];
+  quiz?: Quiz;
 }
 
 interface CourseSidebarProps {
@@ -43,11 +50,13 @@ interface CourseSidebarProps {
   modules: Module[];
   isAdmin?: boolean;
   onLessonClick?: (lessonId: string) => void;
+  onQuizClick?: (quizId: string) => void;
   onNextLesson?: () => void;
   onToggle?: () => void;
 }
 
-export function CourseSidebar({ progress, modules, isAdmin, onLessonClick, onNextLesson, onToggle }: CourseSidebarProps) {
+export function CourseSidebar({ progress, modules, isAdmin, onLessonClick, onQuizClick, onNextLesson, onToggle }: CourseSidebarProps) {
+
   return (
     <div className="flex flex-col h-full bg-white border-r border-border font-sans overflow-hidden">
       {/* Progress Header */}
@@ -143,7 +152,7 @@ export function CourseSidebar({ progress, modules, isAdmin, onLessonClick, onNex
                               {lesson.title}
                             </p>
                             <div className="flex items-center gap-3 mt-1.5">
-                              {lesson.type !== 'pdf' && (
+                              {lesson.type !== 'pdf' && lesson.duration && (
                                 <span className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground/70 tracking-tight">
                                   <Clock className="size-2.5" />
                                   {lesson.duration}
@@ -164,6 +173,29 @@ export function CourseSidebar({ progress, modules, isAdmin, onLessonClick, onNex
                       </div>
                     );
                   })}
+
+                  {module.quiz && (
+                    <div 
+                      onClick={() => onQuizClick?.(module.quiz!.id)}
+                      className="group relative flex flex-col gap-1.5 p-3.5 rounded-xl border border-transparent mx-2 hover:bg-indigo-50/60 hover:border-indigo-200/60 cursor-pointer transition-all active:scale-[0.98]"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5 size-5 rounded-md flex items-center justify-center bg-indigo-100 text-indigo-600 shrink-0">
+                          <FileQuestion className="size-3" strokeWidth={2.5} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-medium text-muted-foreground group-hover:text-foreground leading-tight tracking-tight">
+                            {module.quiz.title}
+                          </p>
+                          <div className="flex items-center gap-3 mt-1.5">
+                            <Badge variant="outline" className="text-[9px] h-4 font-black uppercase tracking-widest px-1 py-0 border-0 bg-indigo-100/80 text-indigo-600">
+                              Quiz · {module.quiz.questions?.length || 0} Qs
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>

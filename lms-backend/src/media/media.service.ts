@@ -32,9 +32,11 @@ export class MediaService {
     await this.prisma.lesson.update({
       where: { id: lessonId },
       data: {
+        type: 'video',
         providerFileId: result.providerFileId,
         provider: 'local',
         videoUrl: result.url,
+        resourceUrl: null,
         status: 'ready',
         ...(meta?.title ? { title: meta.title } : {}),
         ...(meta?.description ? { description: meta.description } : {}),
@@ -59,9 +61,12 @@ export class MediaService {
     await this.prisma.lesson.update({
       where: { id: lessonId },
       data: {
+        type: 'pdf',
         providerFileId: result.providerFileId,
         provider: 'local',
         resourceUrl: result.url,
+        videoUrl: null,
+        durationSeconds: null,
         status: 'ready',
         ...(meta?.title ? { title: meta.title } : {}),
         ...(meta?.learningOutcome ? { learningOutcome: meta.learningOutcome } : {}),

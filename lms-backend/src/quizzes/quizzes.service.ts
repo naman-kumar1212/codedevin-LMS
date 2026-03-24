@@ -88,10 +88,10 @@ export class QuizzesService {
     });
   }
 
-  // ── Student: Get quiz for a lesson (no isCorrect) ────────────────────────
-  async getQuizForLesson(lessonId: string, studentId: string) {
+  // ── Student: Get quiz by ID (no isCorrect) ──────────────────────────────
+  async getQuizById(quizId: string, studentId: string, isAdmin = false) {
     const quiz = await this.prisma.quiz.findUnique({
-      where: { lessonId },
+      where: { id: quizId },
       include: {
         questions: {
           orderBy: { orderIndex: 'asc' },
@@ -103,22 +103,26 @@ export class QuizzesService {
           },
         },
         lesson: { include: { module: { select: { courseId: true } } } },
+        module: { select: { courseId: true } },
       },
     });
-    if (!quiz) throw new NotFoundException('No quiz for this lesson');
+    if (!quiz) throw new NotFoundException('Quiz not found');
 
-    const courseId = quiz.lesson?.module.courseId;
+    const courseId = quiz.lesson?.module.courseId || quiz.module?.courseId;
     if (!courseId) throw new NotFoundException('Course ID not found for this quiz');
 
-    const enrolled = await this.prisma.enrollment.findUnique({
-      where: {
-        studentId_courseId: {
-          studentId,
-          courseId,
+    // Enroll check skip for admins
+    if (!isAdmin) {
+      const enrolled = await this.prisma.enrollment.findUnique({
+        where: {
+          studentId_courseId: {
+            studentId,
+            courseId,
+          },
         },
-      },
-    });
-    if (!enrolled) throw new ForbiddenException('You must be enrolled to take this quiz');
+      });
+      if (!enrolled) throw new ForbiddenException('You must be enrolled to take this quiz');
+    }
 
     const attemptsUsed = await this.prisma.quizAttempt.count({
       where: { quizId: quiz.id, studentId },
@@ -127,8 +131,23 @@ export class QuizzesService {
     return {
       ...quiz,
       attemptsUsed,
-      attemptsRemaining: Math.max(0, 3 - attemptsUsed),
+      attemptsRemaining: isAdmin ? 999 : Math.max(0, 3 - attemptsUsed),
     };
+  }
+
+  // ── Student: Get quiz for a lesson (no isCorrect) ────────────────────────
+  async getQuizForLesson(lessonId: string, studentId: string) {
+    const lesson = await this.prisma.lesson.findUnique({
+      where: { id: lessonId },
+    });
+    if (!lesson) throw new NotFoundException('Lesson not found');
+
+    const quiz = await this.prisma.quiz.findUnique({
+      where: { lessonId },
+    });
+    if (!quiz) throw new NotFoundException('No quiz for this lesson');
+
+    return this.getQuizById(quiz.id, studentId);
   }
 
   // ── Student: Submit quiz attempt ─────────────────────────────────────────
@@ -136,11 +155,13 @@ export class QuizzesService {
     quizId: string,
     studentId: string,
     answers: Record<string, string>,
+    isAdmin = false,
   ) {
     const attemptsUsed = await this.prisma.quizAttempt.count({
       where: { quizId, studentId },
     });
-    if (attemptsUsed >= 3) {
+
+    if (!isAdmin && attemptsUsed >= 3) {
       throw new ForbiddenException(
         'You have used all 3 attempts for this quiz.',
       );
@@ -159,15 +180,17 @@ export class QuizzesService {
     const courseId = quiz.lesson?.module.courseId || quiz.module?.courseId;
     if (!courseId) throw new NotFoundException('Course ID not found for this quiz');
 
-    const enrolled = await this.prisma.enrollment.findUnique({
-      where: {
-        studentId_courseId: {
-          studentId,
-          courseId,
+    if (!isAdmin) {
+      const enrolled = await this.prisma.enrollment.findUnique({
+        where: {
+          studentId_courseId: {
+            studentId,
+            courseId,
+          },
         },
-      },
-    });
-    if (!enrolled) throw new ForbiddenException('You must be enrolled to submit this quiz');
+      });
+      if (!enrolled) throw new ForbiddenException('You must be enrolled to submit this quiz');
+    }
 
     // Score MCQ questions
     let correctCount = 0;
@@ -191,9 +214,9 @@ export class QuizzesService {
       data: { studentId, quizId, score, isPassed },
     });
 
-    // If passed, mark quiz lesson as completed
+    // If passed, mark quiz lesson as completed (skip for admins)
     let lessonCompleted = false;
-    if (isPassed && quiz.lessonId) {
+    if (!isAdmin && isPassed && quiz.lessonId) {
       await this.prisma.lessonProgress.upsert({
         where: {
           studentId_lessonId: {

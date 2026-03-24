@@ -6,6 +6,7 @@ import { GripVertical, Trash2, Video, FileText, Loader2, CheckCircle2, AlertCirc
 import type { Lesson } from './types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { getThumbnailUrl } from '@/lib/image-utils';
 
 interface Props {
   lesson: Lesson;
@@ -82,12 +83,21 @@ export function SortableLesson({ lesson, onDelete, onEdit }: Props) {
         <GripVertical size={16} />
       </button>
 
-      {/* Type icon */}
+      {/* Type icon / Thumbnail */}
       <div className={cn(
-        "size-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300",
-        typeInfo.bg,
+        "size-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300 overflow-hidden border border-slate-100",
+        !lesson.thumbnail && typeInfo.bg,
       )}>
-        <TypeIcon className={cn("size-5", typeInfo.color)} strokeWidth={2} />
+        {lesson.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img 
+            src={getThumbnailUrl(lesson.thumbnail)} 
+            alt="" 
+            className="size-full object-cover"
+          />
+        ) : (
+          <TypeIcon className={cn("size-5", typeInfo.color)} strokeWidth={2} />
+        )}
       </div>
 
       {/* Title */}

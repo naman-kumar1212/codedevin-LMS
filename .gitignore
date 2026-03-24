@@ -1,5 +1,6 @@
 .agents
 .agent
+.vscode
 .superdesign
 skills-lock.json
 node_modules

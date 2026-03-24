@@ -47,6 +47,7 @@ import {
 } from '@dnd-kit/sortable';
 import { SortableModule } from '@/components/admin/course-builder/SortableModule';
 import { ContentMetadataModal } from '@/components/admin/course-builder/ContentMetadataModal';
+import { getThumbnailUrl } from '@/lib/image-utils';
 import { QuizBuilder, Quiz } from '@/components/admin/course-builder/QuizBuilder';
 import type { Lesson, Module } from '@/components/admin/course-builder/types';
 import {
@@ -252,19 +253,22 @@ export default function EditCoursePage() {
 
     try {
       const uploader = type === 'video' ? api.uploadVideo : api.uploadPDF;
-      await uploader(
+      const res = await uploader(
         lessonId,
         file,
         { title: newLesson.title },
         (pct) => setUploads((prev) => ({ ...prev, [lessonId as string]: { ...prev[lessonId as string], progress: pct } })),
       );
 
-      // Mark ready
+      // Mark ready and update with actual backend data (duration, type, etc)
       setUploads((prev) => ({ ...prev, [lessonId as string]: { ...prev[lessonId as string], done: true, progress: 100 } }));
       setModules((prev) =>
         prev.map((m) =>
           m.id === moduleId
-            ? { ...m, lessons: m.lessons.map((l: any) => (l.id === lessonId ? { ...l, status: 'ready' } : l)) }
+            ? { 
+                ...m, 
+                lessons: m.lessons.map((l: any) => (l.id === lessonId ? { ...l, ...res.data, status: 'ready' } : l)) 
+              }
             : m,
         ),
       );
@@ -293,7 +297,7 @@ export default function EditCoursePage() {
       initialTitle: lesson.title,
       initialDescription: lesson.description || '',
       initialLearningOutcome: lesson.learningOutcome || '',
-      initialThumbnailUrl: lesson.thumbnailUrl || ''
+      initialThumbnail: lesson.thumbnail || ''
     });
   };
 
@@ -422,19 +426,19 @@ export default function EditCoursePage() {
           initialTitle={pendingModal.initialTitle}
           initialDescription={pendingModal.initialDescription}
           initialLearningOutcome={pendingModal.initialLearningOutcome}
-          initialThumbnailUrl={pendingModal.initialThumbnailUrl}
+          initialThumbnail={pendingModal.initialThumbnail}
           onSave={(updated: any) => {
             const { moduleId, lessonId } = pendingModal;
             setModules((prev) =>
               prev.map((m) =>
                 m.id === moduleId
-                  ? { ...m, lessons: m.lessons.map((l: any) => (l.id === lessonId ? { 
-                      ...l, 
-                      title: updated.title ?? l.title,
-                      description: updated.description ?? l.description,
-                      learningOutcome: updated.learningOutcome ?? l.learningOutcome,
-                      thumbnailUrl: updated.thumbnailUrl ?? l.thumbnailUrl
-                   } : l)) }
+                  ? { 
+                      ...m, 
+                      lessons: m.lessons.map((l: any) => (l.id === lessonId ? { 
+                        ...l, 
+                        ...updated 
+                      } : l)) 
+                    }
                   : m,
               ),
             );
@@ -474,7 +478,7 @@ export default function EditCoursePage() {
             <div className="absolute top-1/2 -translate-y-1/2 left-12 right-12 h-0.5 bg-slate-100 z-0" />
             <div 
                 className="absolute top-1/2 -translate-y-1/2 left-12 h-0.5 bg-primary z-10 transition-all duration-500 ease-in-out" 
-                style={{ width: `${((step - 1) / 3) * 100}%` }}
+                style={{ width: `${((step - 1) / 4) * 100}%` }}
             />
             {steps.map((s) => (
             <div key={s.id} className="relative z-20 flex flex-col items-center gap-2 bg-white px-2">
@@ -605,9 +609,7 @@ export default function EditCoursePage() {
                         <div className="size-24 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden">
                           {basicInfo.thumbnailUrl ? (
                             <img
-                              src={basicInfo.thumbnailUrl.startsWith('/public')
-                                ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'}${basicInfo.thumbnailUrl}`
-                                : basicInfo.thumbnailUrl}
+                              src={getThumbnailUrl(basicInfo.thumbnailUrl)}
                               alt="Course preview"
                               className="size-full object-cover"
                             />

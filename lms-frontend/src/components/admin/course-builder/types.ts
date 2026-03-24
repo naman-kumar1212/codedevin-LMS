@@ -15,7 +15,7 @@ export interface Lesson {
   resourceUrl?: string;
   description?: string;
   learningOutcome?: string;
-  thumbnailUrl?: string;
+  thumbnail?: string;
 }
 
 export interface Module {
