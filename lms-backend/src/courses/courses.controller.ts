@@ -32,18 +32,20 @@ export class CoursesController {
     return this.coursesService.findAll(search, type);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(id);
-  }
-
   // ── Admin: Courses CRUD ───────────────────────────────────────────────────
 
+  // IMPORTANT: 'admin/all' must be declared BEFORE ':id' so NestJS matches
+  // the literal path first, before the wildcard parameterized route.
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   findAllAdmin() {
     return this.coursesService.findAllAdmin();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.coursesService.findOne(id);
   }
 
   @Post()

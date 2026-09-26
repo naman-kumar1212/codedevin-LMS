@@ -100,8 +100,9 @@ export default function CreateCoursePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const activeUploadTarget = useRef<{ moduleId: string; type: 'video' | 'pdf' } | null>(null);
 
-  // ── Quiz tab state ────────────────────────────────────────────────────────
+  // ── Quiz modal state ──────────────────────────────────────────────────
   const [activeQuizModuleId, setActiveQuizModuleId] = useState<string | null>(null);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
   // ── Modal states for replacements ──────────────────────────────────────
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
@@ -164,9 +165,31 @@ export default function CreateCoursePage() {
   };
 
   // ── Step 1 submit ─────────────────────────────────────────────────────────
-  const handleStep1Submit = (e: React.FormEvent) => {
+  const [isCreatingCourse, setIsCreatingCourse] = useState(false);
+
+  const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate(basicInfo);
+    if (isCreatingCourse) return;
+
+    // Guard: if course was already created (user navigated back to step 1),
+    // don't create a duplicate course — just advance to the next step.
+    if (courseId) {
+      try {
+        setIsCreatingCourse(true);
+        await api.updateCourse(courseId, basicInfo);
+        setStep(2);
+      } catch (err) {
+        toast.error('Update Failed', { description: 'Could not update course details.' });
+      } finally {
+        setIsCreatingCourse(false);
+      }
+      return;
+    }
+
+    setIsCreatingCourse(true);
+    createMutation.mutate(basicInfo, {
+      onSettled: () => setIsCreatingCourse(false)
+    });
   };
 
   // ── Module management ─────────────────────────────────────────────────────
@@ -365,13 +388,16 @@ export default function CreateCoursePage() {
 
   const handleAddQuiz = (moduleId: string) => {
     setActiveQuizModuleId(moduleId);
-    setStep(4);
+    setIsQuizModalOpen(true);
   };
 
   const handleQuizSaved = (moduleId: string, quiz: any) => {
     setModules((prev) =>
       prev.map((m) => (m.id === moduleId ? { ...m, quiz } : m)),
     );
+    setIsQuizModalOpen(false);
+    setActiveQuizModuleId(null);
+    import('sonner').then(({ toast }) => toast.success('Module quiz saved successfully'));
   };
 
   // ── Upload status tracker ─────────────────────────────────────────────────
@@ -394,6 +420,34 @@ export default function CreateCoursePage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
+      {/* Quiz Builder Modal */}
+      <Dialog open={isQuizModalOpen} onOpenChange={setIsQuizModalOpen}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white p-0">
+          <div className="p-8">
+            <div className="flex items-center justify-between mb-6">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold text-slate-900">Module Quiz Builder</DialogTitle>
+                <DialogDescription className="text-slate-500">
+                  Configure assessment questions for {modules.find(m => m.id === activeQuizModuleId)?.title}
+                </DialogDescription>
+              </DialogHeader>
+              <Button variant="ghost" size="icon" onClick={() => setIsQuizModalOpen(false)} className="rounded-full">
+                <X className="size-5" />
+              </Button>
+            </div>
+            
+            {activeQuizModuleId && (
+              <QuizBuilder
+                moduleId={activeQuizModuleId}
+                moduleTitle={modules.find(m => m.id === activeQuizModuleId)?.title || ''}
+                quiz={modules.find(m => m.id === activeQuizModuleId)?.quiz ?? null}
+                onQuizSaved={(quiz) => handleQuizSaved(activeQuizModuleId, quiz)}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Hidden file input for uploads */}
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelected} />
 
@@ -428,7 +482,7 @@ export default function CreateCoursePage() {
                   placeholder="e.g. Introduction to React"
                   value={newModuleTitle}
                   onChange={(e) => setNewModuleTitle(e.target.value)}
-                  className="h-10 text-sm bg-white border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+                  className="h-10 text-sm bg-white border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                 />
               </div>
             </div>
@@ -483,7 +537,7 @@ export default function CreateCoursePage() {
         </div>
         <Link
           href="/admin/courses"
-          className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-200 transition-all shadow-sm"
+          className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-200 shadow-sm"
         >
           <X className="size-4" />
           <span className="text-sm font-bold">Discard Draft</span>
@@ -495,7 +549,7 @@ export default function CreateCoursePage() {
         <div className="flex items-center justify-between relative px-8">
           <div className="absolute top-1/2 -translate-y-1/2 left-16 right-16 h-1 bg-slate-100 z-0" />
           <div
-            className="absolute top-1/2 -translate-y-1/2 left-16 h-1 bg-primary z-10 transition-all duration-500 ease-in-out"
+            className="absolute top-1/2 -translate-y-1/2 left-16 h-1 bg-primary z-10"
             style={{ width: `${((step - 1) / (steps.length - 1)) * (100 - 12)}%` }}
           />
           {steps.map((s) => (
@@ -565,7 +619,7 @@ export default function CreateCoursePage() {
                   value={basicInfo.description}
                   onChange={(e) => setBasicInfo({ ...basicInfo, description: e.target.value })}
                   placeholder="Describe what learners will achieve in this course..."
-                  className="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors resize-none"
+                  className="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary resize-none"
                 />
               </div>
 
@@ -618,7 +672,7 @@ export default function CreateCoursePage() {
                       type="number"
                       value={basicInfo.price}
                       onChange={(e) => setBasicInfo({ ...basicInfo, price: Number(e.target.value) })}
-                      className="w-full h-10 bg-white border border-slate-200 rounded-md pl-7 pr-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+                      className="w-full h-10 bg-white border border-slate-200 rounded-md pl-7 pr-3 text-sm text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                     />
                   </div>
                 </div>
@@ -691,7 +745,7 @@ export default function CreateCoursePage() {
 
         {/* ── Step 2: Module Builder ────────────────────────────────────── */}
         {step === 2 && (
-          <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div className="p-12">
             <div className="mb-10 flex items-end justify-between gap-6">
               <div>
                 <h2 className="text-2xl font-bold text-slate-900">Curriculum Structure</h2>
@@ -759,7 +813,7 @@ export default function CreateCoursePage() {
 
         {/* ── Step 3: Content Upload ────────────────────────────────────── */}
         {step === 3 && (
-          <div className="p-12 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div className="p-12">
             <div className="mb-10">
               <h2 className="text-2xl font-bold text-slate-900">Upload Content</h2>
               <p className="text-slate-500 mt-2 font-medium">

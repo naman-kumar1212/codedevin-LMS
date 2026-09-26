@@ -32,25 +32,25 @@ export default function AdminDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-700">
+      <div className="max-w-7xl mx-auto space-y-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="h-8 w-64 bg-slate-200/60 rounded-md animate-pulse" />
-            <div className="h-4 w-96 bg-slate-200/60 rounded-md animate-pulse" />
+            <div className="h-8 w-64 bg-slate-200/60 rounded-md" />
+            <div className="h-4 w-96 bg-slate-200/60 rounded-md" />
           </div>
           <div className="flex items-center gap-4">
-            <div className="h-10 w-32 bg-slate-200/60 rounded-xl animate-pulse" />
-            <div className="h-10 w-32 bg-slate-200/60 rounded-lg animate-pulse" />
+            <div className="h-10 w-32 bg-slate-200/60 rounded-xl" />
+            <div className="h-10 w-32 bg-slate-200/60 rounded-lg" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-slate-200/60 rounded-2xl animate-pulse" />)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-slate-200/60 rounded-2xl" />)}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-10 gap-8">
-          <div className="xl:col-span-6 h-96 bg-slate-200/60 rounded-2xl animate-pulse" />
+          <div className="xl:col-span-6 h-96 bg-slate-200/60 rounded-2xl" />
           <div className="xl:col-span-4 space-y-6">
-            <div className="h-48 bg-slate-200/60 rounded-2xl animate-pulse" />
-            <div className="h-48 bg-slate-200/60 rounded-2xl animate-pulse" />
+            <div className="h-48 bg-slate-200/60 rounded-2xl" />
+            <div className="h-48 bg-slate-200/60 rounded-2xl" />
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-500">
+    <div className="max-w-7xl mx-auto space-y-10">
       {/* Platform Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -104,7 +104,7 @@ export default function AdminDashboardPage() {
                 key={range}
                 onClick={() => setTimeRange(range)}
                 className={cn(
-                  "px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
+                  "px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest",
                   timeRange === range
                     ? 'bg-primary text-white shadow-sm'
                     : 'text-text-muted hover:text-text-primary hover:bg-bg-subtle'
@@ -145,7 +145,7 @@ export default function AdminDashboardPage() {
             <Link href="/admin/students">
               <Button variant="link" size="sm" className="text-primary gap-2 p-0 h-auto font-bold uppercase tracking-widest text-[10px] group">
                 View All
-                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <ChevronRight size={14} className="group-hover:translate-x-1" />
               </Button>
             </Link>
           </div>
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
                   header: "Student",
                   cell: (enr: any) => (
                     <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-primary text-xs font-bold shadow-sm group-hover:border-primary/30 transition-all">
+                    <div className="size-9 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-primary text-xs font-bold shadow-sm group-hover:border-primary/30">
                         {enr.student?.name?.charAt(0) || 'U'}
                       </div>
                       <span className="text-sm font-medium text-text-primary">{enr.student?.name}</span>
@@ -201,13 +201,13 @@ export default function AdminDashboardPage() {
               </Button>
             </div>
             <div className="p-6 flex flex-col gap-4">
-              <div className="flex items-start gap-4 p-5 rounded-xl bg-bg-subtle border border-border group hover:border-primary/20 transition-all">
+              <div className="flex items-start gap-4 p-5 rounded-xl bg-bg-subtle border border-border group hover:border-primary/20">
                 <div className="bg-primary text-white p-3 rounded-xl text-center min-w-[60px] shadow-lg shadow-primary/10">
                   <p className="text-[9px] font-bold uppercase tracking-widest opacity-80">MAR</p>
                   <p className="text-xl font-bold">20</p>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-1">Introduction to Programming</h3>
+                  <h3 className="text-sm font-bold text-text-primary group-hover:text-primary line-clamp-1">Introduction to Programming</h3>
                   <p className="text-[10px] text-text-muted font-bold mt-1 flex items-center gap-2">
                     <Radio size={12} className="text-primary" />
                     15:00 UTC <span className="opacity-30">•</span> Global Stream
@@ -232,14 +232,14 @@ export default function AdminDashboardPage() {
                 { label: 'View Payments', icon: Wallet, path: '/admin/payments' },
                 { label: 'Settings', icon: Award, path: '/admin/settings' }
               ].map((cmd, i) => (
-                <Link key={i} href={cmd.path} className="flex items-center justify-between p-4 bg-bg-subtle/50 rounded-xl hover:bg-primary/5 transition-all group/cmd border border-transparent hover:border-primary/20">
+                <Link key={i} href={cmd.path} className="flex items-center justify-between p-4 bg-bg-subtle/50 rounded-xl hover:bg-primary/5 group/cmd border border-transparent hover:border-primary/20">
                   <div className="flex items-center gap-3">
-                    <div className="size-9 rounded-lg bg-white border border-border flex items-center justify-center text-primary shadow-sm group-hover/cmd:scale-110 transition-all duration-300">
+                    <div className="size-9 rounded-lg bg-white border border-border flex items-center justify-center text-primary shadow-sm">
                       <cmd.icon size={16} />
                     </div>
                     <span className="text-sm font-bold text-text-primary tracking-tight">{cmd.label}</span>
                   </div>
-                  <ChevronRight size={14} className="text-text-muted opacity-30 group-hover/cmd:opacity-100 group-hover/cmd:translate-x-1 transition-all" />
+                  <ChevronRight size={14} className="text-text-muted opacity-30 group-hover/cmd:opacity-100 group-hover/cmd:translate-x-1" />
                 </Link>
               ))}
             </div>
@@ -257,10 +257,10 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-4">
             <div className="flex bg-bg-subtle p-1 rounded-xl border border-border">
               <button className="px-5 py-1.5 bg-primary text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">Trajectory</button>
-              <button className="px-5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-primary transition-all">Tabular</button>
+              <button className="px-5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-primary">Tabular</button>
             </div>
             <div className="h-8 w-px bg-border mx-2"></div>
-            <button className="size-9 flex items-center justify-center bg-bg-surface border border-border rounded-lg text-text-muted hover:text-primary transition-all">
+            <button className="size-9 flex items-center justify-center bg-bg-surface border border-border rounded-lg text-text-muted hover:text-primary">
               <MoreHorizontal size={20} />
             </button>
           </div>

@@ -55,7 +55,7 @@ export function ProgressBar({
         <Progress
           value={clamped}
           className={cn(
-            'bg-slate-100 border border-slate-50 transition-all duration-700 ease-in-out',
+            'bg-slate-100 border border-slate-50',
             sizeClass[size],
             variantClass[variant as keyof typeof variantClass] || variantClass.default
           )}

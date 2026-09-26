@@ -82,22 +82,22 @@ export default function AdminLiveClassesPage() {
                 {/* Header Skeleton */}
                 <div className="flex justify-between gap-4">
                     <div className="space-y-2">
-                        <div className="h-8 w-48 bg-slate-200/60 rounded animate-pulse" />
-                        <div className="h-4 w-72 bg-slate-200/60 rounded animate-pulse" />
+                        <div className="h-8 w-48 bg-slate-200/60 rounded" />
+                        <div className="h-4 w-72 bg-slate-200/60 rounded" />
                     </div>
-                    <div className="h-10 w-32 bg-slate-200/60 rounded animate-pulse" />
+                    <div className="h-10 w-32 bg-slate-200/60 rounded" />
                 </div>
 
                 {/* Control Bar Skeleton */}
                 <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="h-10 w-64 bg-slate-200/60 rounded animate-pulse" />
-                    <div className="h-10 flex-1 bg-slate-200/60 rounded animate-pulse" />
+                    <div className="h-10 w-64 bg-slate-200/60 rounded" />
+                    <div className="h-10 flex-1 bg-slate-200/60 rounded" />
                 </div>
 
                 {/* Grid Skeleton */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5, 6].map(i => (
-                        <div key={i} className="bg-white rounded-lg border border-slate-100 h-64 animate-pulse" />
+                        <div key={i} className="bg-white rounded-lg border border-slate-100 h-64" />
                     ))}
                 </div>
             </div>
@@ -117,13 +117,13 @@ export default function AdminLiveClassesPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Link href="/admin/dashboard" className="hidden sm:flex h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded-md items-center justify-center text-sm font-medium gap-2">
+                    <Link href="/admin/dashboard" className="hidden sm:flex h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md items-center justify-center text-sm font-medium gap-2">
                         <ArrowLeft className="size-4" />
                         Back
                     </Link>
                     <Button
                         onClick={() => setIsCreateModalOpen(true)}
-                        className="bg-primary hover:bg-primary/90 text-white h-9 px-4 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+                        className="bg-primary hover:bg-primary/90 text-white h-9 px-4 rounded-md text-sm font-medium flex items-center gap-2"
                     >
                         <Plus className="size-4" />
                         Schedule Session
@@ -138,7 +138,7 @@ export default function AdminLiveClassesPage() {
                         <button
                             key={tab}
                             onClick={() => setFilter(tab as any)}
-                            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors flex-1 sm:flex-none ${filter === tab
+                            className={`px-3 py-1.5 rounded text-sm font-medium flex-1 sm:flex-none ${filter === tab
                                 ? 'bg-white text-slate-900 shadow-sm'
                                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
                                 }`}
@@ -152,14 +152,14 @@ export default function AdminLiveClassesPage() {
                     <input
                         type="text"
                         placeholder="Search sessions by title or instructor..."
-                        className="w-full h-10 bg-white border border-slate-200 rounded-md py-2 pl-9 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+                        className="w-full h-10 bg-white border border-slate-200 rounded-md py-2 pl-9 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                     />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredClasses.length > 0 ? filteredClasses.map((cls: any) => (
-                    <div key={cls.id} className="bg-white rounded-lg border border-slate-200 p-5 hover:border-slate-300 transition-colors flex flex-col">
+                    <div key={cls.id} className="bg-white rounded-lg border border-slate-200 p-5 hover:border-slate-300 flex flex-col">
                         <div className="flex items-start justify-between mb-6">
                             <div className="bg-slate-50 text-slate-700 py-1.5 px-3 rounded text-center border border-slate-100">
                                 <p className="text-[10px] font-semibold uppercase text-slate-500">
@@ -201,12 +201,12 @@ export default function AdminLiveClassesPage() {
                             <div className="flex gap-2">
                                 <a
                                     href={cls.zoomJoinUrl} target="_blank" rel="noreferrer"
-                                    className="bg-primary text-white size-8 rounded hover:bg-primary/90 transition-colors flex items-center justify-center"
+                                    className="bg-primary text-white size-8 rounded hover:bg-primary/90 flex items-center justify-center"
                                     title="Join Session"
                                 >
                                     <Video className="size-4" />
                                 </a>
-                                <button className="size-8 bg-white border border-slate-200 text-slate-600 rounded flex items-center justify-center hover:bg-slate-50 transition-colors">
+                                <button className="size-8 bg-white border border-slate-200 text-slate-600 rounded flex items-center justify-center hover:bg-slate-50">
                                     <Settings2 className="size-4" />
                                 </button>
                             </div>

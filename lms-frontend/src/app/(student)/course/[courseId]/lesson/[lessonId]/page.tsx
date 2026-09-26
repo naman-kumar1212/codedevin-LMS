@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { 
   Loader2, 
   AlertCircle,
-  ShieldCheck
+  ShieldCheck,
+  FileText,
+  PlayCircle,
 } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import { Button } from '@/components/ui/Button';
@@ -61,18 +63,25 @@ export default function LessonPlayerPage() {
   const [course, setCourse] = useState<any>(null);
   const [lesson, setLesson] = useState<LessonDetail | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Two separate loading flags:
+  // - initialLoading: true only on first page mount (shows full-page skeleton)
+  // - lessonLoading: true when switching lessons (shows only the content area skeleton)
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [lessonLoading, setLessonLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Track whether we've done the first load
+  const isFirstLoad = useRef(true);
 
   const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
 
-  const loadData = useCallback(async () => {
+  /**
+   * Load course + progress. Only fetched once on mount.
+   * Lesson is extracted from already-loaded course data on subsequent switches.
+   */
+  const loadCourseAndProgress = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
-
-      // Admins use the dedicated admin preview endpoint (no enrollment needed).
-      // Regular students use the standard progress endpoint (requires enrollment).
       const [courseRes, progressRes] = await Promise.all([
         api.getCourse(courseId),
         isAdmin
@@ -80,34 +89,76 @@ export default function LessonPlayerPage() {
           : api.getCourseProgress(courseId),
       ]);
 
-      const courseData = courseRes.data;
-      setCourse(courseData);
+      setCourse(courseRes.data);
       setProgress(progressRes.data);
-
-      // Find the current lesson in the course curriculum
-      let foundLesson = null;
-      for (const mod of courseData.modules || []) {
-        const found = mod.lessons?.find((l: any) => l.id === lessonId);
-        if (found) { foundLesson = found; break; }
-      }
-
-      if (foundLesson) {
-        setLesson(foundLesson);
-      } else {
-        setError('Lesson not found in curriculum.');
-      }
+      return courseRes.data;
     } catch (err) {
-      console.error('Failed to load lesson data', err);
-      setError('Failed to synchronize classroom data.');
-    } finally {
-      setLoading(false);
+      console.error('Failed to load course data', err);
+      throw err;
     }
-  }, [courseId, lessonId, isAdmin]);
+  }, [courseId, isAdmin]);
 
+  /**
+   * Find and set the current lesson from already-loaded course data.
+   * Does NOT trigger a full-page loading state.
+   */
+  const resolveLesson = useCallback((courseData: any, targetLessonId: string) => {
+    let foundLesson = null;
+    for (const mod of courseData.modules || []) {
+      const found = mod.lessons?.find((l: any) => l.id === targetLessonId);
+      if (found) { foundLesson = found; break; }
+    }
 
+    if (foundLesson) {
+      setLesson(foundLesson);
+      setError(null);
+    } else {
+      setError('Lesson not found in curriculum.');
+    }
+  }, []);
+
+  // ── Initial mount: load everything  ──────────────────────────────────────
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    let cancelled = false;
+
+    const init = async () => {
+      setInitialLoading(true);
+      setError(null);
+      try {
+        const courseData = await loadCourseAndProgress();
+        if (!cancelled) resolveLesson(courseData, lessonId);
+      } catch {
+        if (!cancelled) setError('Failed to synchronize classroom data.');
+      } finally {
+        if (!cancelled) {
+          setInitialLoading(false);
+          isFirstLoad.current = false;
+        }
+      }
+    };
+
+    init();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId]); // Only re-run full init when the course itself changes
+
+  // ── Lesson switch: resolve from cached course data only ───────────────────
+  useEffect(() => {
+    // Skip — the initial load effect above handles the first lessonId
+    if (isFirstLoad.current) return;
+    // Skip if course not loaded yet
+    if (!course) return;
+
+    // Show a lightweight content-area placeholder during the switch
+    setLessonLoading(true);
+    // Small timeout to let React flush the skeleton UI before setting new lesson
+    const timer = setTimeout(() => {
+      resolveLesson(course, lessonId);
+      setLessonLoading(false);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [lessonId, course, resolveLesson]);
 
   const handleDurationChange = (newDuration: number) => {
     if (lesson && (!lesson.durationSeconds || lesson.durationSeconds === 0)) {
@@ -143,14 +194,12 @@ export default function LessonPlayerPage() {
   const sidebarModules = useMemo(() => {
     if (!progress) return [];
     return progress.modules.map(mod => {
-      // Find corresponding module in course data for quiz info
       const courseModule = course?.modules?.find((m: any) => m.id === mod.moduleId);
 
       return {
         id: mod.moduleId,
         title: mod.title,
         lessons: mod.lessons.map(l => {
-          // Fallback to course data if durationSeconds is missing in progress meta
           const courseLesson = course?.modules?.flatMap((m: any) => m.lessons)
             .find((cl: any) => cl.id === l.lessonId);
           
@@ -172,22 +221,21 @@ export default function LessonPlayerPage() {
     });
   }, [progress, course, lessonId]);
 
-  // Resources tab removed — PDFs are handled as dedicated lessons
-
-  if (loading) {
+  // ── Full-page initial loading skeleton ────────────────────────────────────
+  if (initialLoading) {
     return (
-      <div className="flex h-screen bg-bg-page animate-in fade-in duration-700 font-sans">
+      <div className="flex h-screen bg-bg-page font-sans">
         <div className="w-80 border-r border-border bg-bg-surface flex flex-col pt-20">
           <div className="px-6 py-4 space-y-4">
-            <div className="h-4 w-3/4 bg-bg-subtle rounded animate-pulse" />
-            <div className="h-2 w-full bg-bg-subtle rounded-full animate-pulse" />
+            <div className="h-4 w-3/4 bg-bg-subtle rounded" />
+            <div className="h-2 w-full bg-bg-subtle rounded-full" />
           </div>
           <div className="flex-1 overflow-hidden px-6 space-y-6 pt-4">
              {[1, 2, 3].map(i => (
                 <div key={i} className="space-y-3">
-                   <div className="h-4 w-2/3 bg-bg-subtle rounded animate-pulse" />
+                   <div className="h-4 w-2/3 bg-bg-subtle rounded" />
                    {[1, 2].map(j => (
-                      <div key={j} className="h-12 w-full bg-bg-subtle/50 rounded-xl animate-pulse" />
+                      <div key={j} className="h-12 w-full bg-bg-subtle/50 rounded-xl" />
                    ))}
                 </div>
              ))}
@@ -196,23 +244,12 @@ export default function LessonPlayerPage() {
 
         <div className="flex-1 flex flex-col pt-20 overflow-y-auto">
           <div className="max-w-5xl mx-auto w-full p-8 space-y-8">
-            <div className="aspect-video w-full bg-slate-900 rounded-[32px] animate-pulse flex items-center justify-center">
+            <div className="aspect-video w-full bg-slate-900 rounded-[32px] flex items-center justify-center">
                <Loader2 className="size-8 text-white/20 animate-spin" />
             </div>
-            
             <div className="space-y-4">
-              <div className="h-6 w-32 bg-bg-subtle rounded-full animate-pulse" />
-              <div className="h-10 w-2/3 bg-bg-subtle rounded-xl animate-pulse" />
-            </div>
-
-            <div className="space-y-6">
-               <div className="flex gap-8 border-b border-border pb-4">
-                  {[1, 2, 3].map(i => <div key={i} className="h-4 w-24 bg-bg-subtle rounded animate-pulse" />)}
-               </div>
-               <div className="space-y-3">
-                  <div className="h-4 w-full bg-bg-subtle rounded animate-pulse" />
-                  <div className="h-4 w-3/4 bg-bg-subtle rounded animate-pulse" />
-               </div>
+              <div className="h-6 w-32 bg-bg-subtle rounded-full" />
+              <div className="h-10 w-2/3 bg-bg-subtle rounded-xl" />
             </div>
           </div>
         </div>
@@ -220,7 +257,8 @@ export default function LessonPlayerPage() {
     );
   }
 
-  if (error) {
+  // ── Error state ───────────────────────────────────────────────────────────
+  if (error && !lesson) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-bg-page text-text-muted gap-6 font-sans p-6 text-center">
         <div className="size-16 bg-error/10 text-error rounded-full flex items-center justify-center">
@@ -238,9 +276,29 @@ export default function LessonPlayerPage() {
   }
 
   const normalizedType = lesson?.type?.toLowerCase();
-  const isPdf = normalizedType === 'pdf';
-  const isVideo = normalizedType === 'video';
+  const isPdf = normalizedType === 'pdf' || normalizedType === 'resource';
+  const isVideo = normalizedType === 'video' || normalizedType === 'recording';
 
+  // ── Lesson content area skeleton (shown only during lesson switch) ────────
+  const lessonContentSkeleton = (
+    <div className="space-y-6">
+      <div className="aspect-video w-full bg-slate-100 rounded-[32px] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          {isPdf
+            ? <FileText className="size-10 text-slate-300 mx-auto" />
+            : <PlayCircle className="size-10 text-slate-300 mx-auto" />
+          }
+          <p className="text-sm font-medium text-slate-400">Loading lesson…</p>
+        </div>
+      </div>
+      <div className="space-y-3">
+        <div className="h-6 w-28 bg-slate-100 rounded-full" />
+        <div className="h-9 w-2/3 bg-slate-100 rounded-xl" />
+      </div>
+    </div>
+  );
+
+  // ── Main layout (sidebar always mounted, only content area transitions) ────
   return (
     <CoursePlayerLayout 
       courseTitle={course?.title}
@@ -254,64 +312,68 @@ export default function LessonPlayerPage() {
         />
       }
     >
-      <div className="space-y-6">
-        {isVideo ? (
-          <LessonVideoPlayer 
-            thumbnail={lesson?.thumbnailUrl || course?.thumbnailUrl}
-            videoUrl={lesson?.videoUrl}
-            duration={lesson?.durationSeconds}
-            onPlay={() => console.log('Playing:', lesson?.title)}
-            onDurationChange={handleDurationChange}
-          />
-        ) : isPdf ? (
-          <LessonPdfViewer 
-            pdfUrl={lesson?.resourceUrl || ''}
-            title={lesson?.title || 'Resource'}
-          />
-        ) : (
-          <div className="aspect-video w-full bg-slate-100 rounded-[32px] flex items-center justify-center border-2 border-dashed border-border/40 font-sans">
-             <div className="text-center">
-                <AlertCircle className="size-12 text-muted-foreground/30 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-text-primary tracking-tight">Content Placeholder</h3>
-                <p className="text-sm text-text-muted max-w-xs mx-auto mt-2">This lesson content is not yet available in the player.</p>
+      {lessonLoading ? lessonContentSkeleton : (
+        <div className="space-y-6">
+          {isVideo ? (
+            <LessonVideoPlayer 
+              key={lesson?.id} // force re-mount only when lesson ID changes
+              thumbnail={lesson?.thumbnailUrl || course?.thumbnailUrl}
+              videoUrl={lesson?.videoUrl}
+              duration={lesson?.durationSeconds}
+              onPlay={() => console.log('Playing:', lesson?.title)}
+              onDurationChange={handleDurationChange}
+            />
+          ) : isPdf ? (
+            <LessonPdfViewer 
+              key={lesson?.id}
+              pdfUrl={lesson?.resourceUrl || ''}
+              title={lesson?.title || 'Resource'}
+            />
+          ) : (
+            <div className="aspect-video w-full bg-slate-100 rounded-[32px] flex items-center justify-center border-2 border-dashed border-border/40 font-sans">
+               <div className="text-center">
+                  <AlertCircle className="size-12 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-text-primary tracking-tight">Content Placeholder</h3>
+                  <p className="text-sm text-text-muted max-w-xs mx-auto mt-2">This lesson content is not yet available in the player.</p>
+               </div>
+            </div>
+          )}
+
+          {/* Admin Preview Mode banner */}
+          {isAdmin && (
+            <div className="flex items-center gap-3 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl">
+              <ShieldCheck className="size-4 text-amber-600 shrink-0" />
+              <p className="text-xs font-semibold text-amber-700">
+                <span className="font-bold">Admin Preview Mode</span> — You are viewing this lesson as an administrator. Progress is not tracked.
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-4">
+             <div className="flex items-center gap-3">
+                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/20">
+                  {isPdf ? 'Resource' : (lesson?.type === 'recording' ? 'Recording' : 'Video Lesson')}
+                </span>
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-tighter">
+                  Lesson ID: {lesson?.id.split('-')[0]}
+                </span>
              </div>
+             <h1 className="text-3xl font-black text-text-primary tracking-tight leading-none">
+               {lesson?.title}
+             </h1>
           </div>
-        )}
 
-        {/* Admin Preview Mode banner */}
-        {isAdmin && (
-          <div className="flex items-center gap-3 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl">
-            <ShieldCheck className="size-4 text-amber-600 shrink-0" />
-            <p className="text-xs font-semibold text-amber-700">
-              <span className="font-bold">Admin Preview Mode</span> — You are viewing this lesson as an administrator. Progress is not tracked.
-            </p>
-          </div>
-        )}
-
-        <div className="space-y-4">
-           <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/20">
-                {isPdf ? 'Resource' : (lesson?.type === 'recording' ? 'Recording' : 'Video Lesson')}
-              </span>
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-tighter">
-                Lesson ID: {lesson?.id.split('-')[0]}
-              </span>
-           </div>
-           <h1 className="text-3xl font-black text-text-primary tracking-tight leading-none">
-             {lesson?.title}
-           </h1>
+          <LessonTabs
+            description={lesson?.description || course?.description || "Master this topic with our expert-led instruction."}
+            instructor={{
+              name: course?.author?.name || 'CodeDevin Expert',
+              role: 'Lead Instructor',
+              avatar: course?.author?.avatar || undefined
+            }}
+            isPdf={isPdf}
+          />
         </div>
-
-        <LessonTabs
-          description={lesson?.description || course?.description || "Master this topic with our expert-led instruction."}
-          instructor={{
-            name: course?.author?.name || 'CodeDevin Expert',
-            role: 'Lead Instructor',
-            avatar: course?.author?.avatar || undefined
-          }}
-          isPdf={isPdf}
-        />
-      </div>
+      )}
     </CoursePlayerLayout>
   );
 }

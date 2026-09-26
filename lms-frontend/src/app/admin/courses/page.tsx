@@ -84,24 +84,24 @@ export default function AdminCoursesPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 font-sans">
+      <div className="max-w-7xl mx-auto space-y-8 font-sans">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="h-8 w-48 bg-slate-100 rounded-md animate-pulse" />
-            <div className="h-4 w-72 bg-slate-100 rounded-md animate-pulse" />
+            <div className="h-8 w-48 bg-slate-100 rounded-md" />
+            <div className="h-4 w-72 bg-slate-100 rounded-md" />
           </div>
-          <div className="h-10 w-32 bg-slate-100 rounded-md animate-pulse" />
+          <div className="h-10 w-32 bg-slate-100 rounded-md" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-28 bg-slate-100 rounded-md animate-pulse" />
+            <div key={i} className="h-28 bg-slate-100 rounded-md" />
           ))}
         </div>
-        <div className="h-16 w-full bg-slate-100 rounded-md animate-pulse" />
+        <div className="h-16 w-full bg-slate-100 rounded-md" />
         <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
-          <div className="h-12 bg-slate-50 border-b border-slate-200 animate-pulse" />
+          <div className="h-12 bg-slate-50 border-b border-slate-200" />
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-20 bg-white animate-pulse border-b border-slate-100" />
+            <div key={i} className="h-20 bg-white border-b border-slate-100" />
           ))}
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function AdminCoursesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500 font-sans pb-16 p-6 lg:p-8">
+    <div className="max-w-7xl mx-auto space-y-6 font-sans pb-16 p-6 lg:p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -155,7 +155,7 @@ export default function AdminCoursesPage() {
       {/* Controls */}
       <div className="bg-white p-3 rounded-md border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-4">
         <div className="relative flex-1 w-full group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
           <Input
             type="text"
             placeholder="Search courses..."
@@ -170,7 +170,7 @@ export default function AdminCoursesPage() {
               key={f}
               onClick={() => setFilter(f)}
               className={cn(
-                "px-3 py-1.5 rounded text-xs font-medium transition-colors",
+                "px-3 py-1.5 rounded text-xs font-medium",
                 filter === f
                   ? "bg-white text-primary shadow-sm border border-slate-200"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -184,7 +184,7 @@ export default function AdminCoursesPage() {
 
       {/* Registry */}
       {filteredCourses && filteredCourses.length === 0 ? (
-        <div className="bg-white rounded-md border border-slate-200 p-16 flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
+        <div className="bg-white rounded-md border border-slate-200 p-16 flex flex-col items-center justify-center text-center">
           <div className="size-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-4 border border-slate-100">
             <BookOpen className="size-6" />
           </div>
@@ -278,7 +278,7 @@ export default function AdminCoursesPage() {
               header: "Actions",
               className: "text-right",
               cell: (course: any) => (
-                <div className="flex items-center justify-end gap-1 transition-opacity">
+                <div className="flex items-center justify-end gap-1">
                   <Link href={`/admin/courses/${course.id}/edit`}>
                     <Button variant="ghost" size="icon" className="size-8 rounded-md text-slate-400 hover:text-primary hover:bg-primary/5">
                       <Edit3 className="size-4" />

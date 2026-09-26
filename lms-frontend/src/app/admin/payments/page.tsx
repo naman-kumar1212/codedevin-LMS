@@ -43,7 +43,7 @@ export default function AdminPaymentsPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6 p-6 lg:p-8 animate-pulse">
+      <div className="max-w-7xl mx-auto space-y-6 p-6 lg:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
           <div className="space-y-4">
             <div className="h-12 w-64 bg-slate-100 rounded-xl" />
@@ -89,22 +89,22 @@ export default function AdminPaymentsPage() {
       {/* Control Surface */}
       <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col lg:flex-row items-center gap-4">
         <div className="relative flex-1 group w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
           <Input
             type="text"
             placeholder="Search by transaction ID, student, or course..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-50 border-none rounded-md py-2 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+            className="w-full bg-slate-50 border-none rounded-md py-2 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/20 outline-none"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full lg:w-auto">
-          <Button variant="outline" className="h-10 px-4 rounded-md border-slate-200 text-slate-600 font-medium text-sm hover:text-primary hover:border-primary/20 transition-all gap-2 shadow-sm bg-white">
+          <Button variant="outline" className="h-10 px-4 rounded-md border-slate-200 text-slate-600 font-medium text-sm hover:text-primary hover:border-primary/20 gap-2 shadow-sm bg-white">
             <Filter className="size-4" />
             Filters
           </Button>
-          <Button className="h-10 px-4 rounded-md bg-primary text-white font-medium text-sm shadow-sm hover:bg-primary/90 transition-colors gap-2 border-none">
+          <Button className="h-10 px-4 rounded-md bg-primary text-white font-medium text-sm shadow-sm hover:bg-primary/90 gap-2 border-none">
             <Download className="size-4" />
             Export Payments
           </Button>
@@ -188,7 +188,7 @@ export default function AdminPaymentsPage() {
           </div>
 
           <div className="flex items-center gap-4 bg-white p-1 rounded-lg border border-slate-200/60 shadow-sm">
-            <Link href="/admin/dashboard" className="h-8 px-4 rounded-md text-xs font-medium text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors flex items-center gap-2">
+            <Link href="/admin/dashboard" className="h-8 px-4 rounded-md text-xs font-medium text-slate-600 hover:text-primary hover:bg-slate-50 flex items-center gap-2">
               <LayoutDashboard size={14} />
               Dashboard
             </Link>

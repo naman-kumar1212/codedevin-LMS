@@ -36,7 +36,7 @@ export class LocalMediaProvider implements MediaProvider {
 
     return {
       providerFileId: file.filename,
-      url: `/public/uploads/videos/${file.filename}`,
+      url: `/api/media/stream/videos/${file.filename}`,
     };
   }
 
@@ -46,7 +46,7 @@ export class LocalMediaProvider implements MediaProvider {
 
     return {
       providerFileId: file.filename,
-      url: `/public/uploads/pdfs/${file.filename}`,
+      url: `/api/media/stream/pdfs/${file.filename}`,
       size: file.size,
     };
   }
@@ -54,9 +54,9 @@ export class LocalMediaProvider implements MediaProvider {
   getUrl(_provider: string, providerFileId: string): string {
     // For local files, determine type from filename extension
     if (providerFileId.match(/\.(pdf)$/i)) {
-      return `/public/uploads/pdfs/${providerFileId}`;
+      return `/api/media/stream/pdfs/${providerFileId}`;
     }
-    return `/public/uploads/videos/${providerFileId}`;
+    return `/api/media/stream/videos/${providerFileId}`;
   }
 
   async deleteMedia(providerFileId: string): Promise<void> {

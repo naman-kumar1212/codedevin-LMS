@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-type Variant = 'success' | 'warning' | 'error' | 'info' | 'default' | 'secondary';
+type Variant = 'success' | 'warning' | 'error' | 'info' | 'default' | 'secondary' | 'destructive' | 'outline';
 
 interface StatusBadgeProps {
   children: React.ReactNode;
@@ -9,26 +9,28 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-const variantMap: Record<Variant, string> = {
-  success: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50',
-  warning: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50',
-  error:   'bg-red-50 text-red-700 border-red-200 hover:bg-red-50',
-  info:    'bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-50',
-  default: 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/10',
-  secondary: 'bg-muted text-muted-foreground border-border hover:bg-muted',
+const variantStyles: Record<Variant, string> = {
+  success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  warning: 'bg-amber-50 text-amber-700 border-amber-200',
+  error:   'bg-red-50 text-red-700 border-red-200',
+  info:    'bg-sky-50 text-sky-700 border-sky-200',
+  default:
+    "border-transparent bg-primary text-primary-foreground shadow",
+  secondary:
+    "border-transparent bg-secondary text-secondary-foreground",
+  destructive:
+    "border-transparent bg-destructive text-destructive-foreground shadow",
+  outline: "text-foreground border-border",
 };
 
 export function StatusBadge({ children, variant = 'default', className }: StatusBadgeProps) {
   return (
-    <Badge
-      variant="outline"
-      className={cn(
-        'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border',
-        variantMap[variant],
-        className
-      )}
-    >
+    <div className={cn(
+      'px-2.5 py-0.5 rounded-full text-xs font-medium border tabular-nums whitespace-nowrap',
+      variantStyles[variant],
+      className
+    )}>
       {children}
-    </Badge>
+    </div>
   );
 }

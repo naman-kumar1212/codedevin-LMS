@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -53,14 +54,16 @@ export function CourseCard({
   className,
 }: CourseCardProps) {
   const cardContent = (
-    <Card className={cn('group overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full border-slate-200 rounded-2xl bg-white', className)}>
+    <Card className={cn('group overflow-hidden flex flex-col h-full border-slate-200 rounded-2xl bg-white shadow-sm', className)}>
       {/* Thumbnail */}
       <div className="relative aspect-video bg-slate-100 overflow-hidden">
         {thumbnailUrl ? (
-          <img
-            src={getThumbnailUrl(thumbnailUrl)}
+          <Image
+            src={getThumbnailUrl(thumbnailUrl) || ''}
             alt={title}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-50">
@@ -126,7 +129,7 @@ export function CourseCard({
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-lg font-bold tracking-tight text-slate-900 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 line-clamp-2 leading-snug group-hover:text-primary">
             {title}
           </h3>
           {description && (
@@ -170,7 +173,7 @@ export function CourseCard({
           )}
         </div>
 
-        <div className="flex items-center text-xs font-bold text-primary transition-colors group-hover:text-primary/80">
+        <div className="flex items-center text-xs font-bold text-primary">
           View Details <ChevronRight size={14} className="ml-1" />
         </div>
       </CardFooter>

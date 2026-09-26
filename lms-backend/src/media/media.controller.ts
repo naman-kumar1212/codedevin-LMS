@@ -25,6 +25,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import sharp from 'sharp';
+import { dirname, parse } from 'path';
 
 function createStorage(subdir: string) {
   return diskStorage({
@@ -125,7 +127,26 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('Image file is required');
-    const thumbnailUrl = `/public/uploads/thumbnails/${file.filename}`;
+    
+    const inputPath = file.path;
+    const filename = `${parse(file.filename).name}.webp`;
+    const outputPath = join(dirname(inputPath), filename);
+
+    try {
+      await sharp(inputPath)
+        .resize({ width: 1280, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+      
+      // Delete original file
+      const { unlinkSync } = await import('fs');
+      unlinkSync(inputPath);
+    } catch (error) {
+      console.error('Sharp error:', error);
+      // If sharp fails, we might still have the original file if it didn't throw before toFile
+    }
+
+    const thumbnailUrl = `/public/uploads/thumbnails/${filename}`;
     await this.prisma.course.update({
       where: { id: courseId },
       data: { thumbnailUrl },
@@ -155,7 +176,24 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('Image file is required');
-    const thumbnailUrl = `/public/uploads/lesson-thumbnails/${file.filename}`;
+    
+    const inputPath = file.path;
+    const filename = `${parse(file.filename).name}.webp`;
+    const outputPath = join(dirname(inputPath), filename);
+
+    try {
+      await sharp(inputPath)
+        .resize({ width: 1280, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+      
+      const { unlinkSync } = await import('fs');
+      unlinkSync(inputPath);
+    } catch (error) {
+      console.error('Sharp error:', error);
+    }
+
+    const thumbnailUrl = `/public/uploads/lesson-thumbnails/${filename}`;
     await this.prisma.lesson.update({
       where: { id: lessonId },
       data: { thumbnail: thumbnailUrl },

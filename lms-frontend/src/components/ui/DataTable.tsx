@@ -74,7 +74,7 @@ export function DataTable<T extends Record<string, any>>({
   if (!data.length) {
     return (
       <div className={cn('rounded-[2rem] border border-border/50 overflow-hidden bg-white shadow-sm', className)}>
-        <div className="py-24 text-center animate-in fade-in duration-700">
+        <div className="py-24 text-center">
           <div className="size-16 bg-muted/40 rounded-3xl mx-auto mb-4 flex items-center justify-center text-muted-foreground/20">
             <TableIcon size={32} />
           </div>
@@ -86,7 +86,7 @@ export function DataTable<T extends Record<string, any>>({
   }
 
   return (
-    <div className={cn('rounded-[2rem] border border-border/50 overflow-hidden bg-white shadow-sm transition-all duration-500 hover:shadow-xl hover:shadow-slate-200/40', className)}>
+    <div className={cn('rounded-[2rem] border border-border/50 overflow-hidden bg-white shadow-sm', className)}>
       <TableComponent>
         <TableHeader>
           <TableRow className="hover:bg-transparent bg-slate-50/50 border-b border-border/40">
@@ -107,7 +107,7 @@ export function DataTable<T extends Record<string, any>>({
               key={row.id || `row-${i}`}
               onClick={() => onRowClick?.(row)}
               className={cn(
-                'group transition-all duration-300 border-b border-border/20 last:border-0',
+                'group border-b border-border/20 last:border-0',
                 onRowClick && 'cursor-pointer hover:bg-slate-50',
                 typeof rowClassName === 'function' ? rowClassName(row, i) : rowClassName
               )}
@@ -131,7 +131,7 @@ export function DataTable<T extends Record<string, any>>({
               ))}
               {onRowClick && (
                 <TableCell className="w-10 text-right pr-6">
-                  <ChevronRight size={16} className="text-muted-foreground/20 transition-all duration-300 transform group-hover:text-primary group-hover:translate-x-1" />
+                  <ChevronRight size={16} className="text-muted-foreground/20 group-hover:text-primary" />
                 </TableCell>
               )}
             </TableRow>

@@ -1,26 +1,56 @@
-.agents
-.agent
-.vscode
-.superdesign
-skills-lock.json
-node_modules
-.DS_Store
-*.log
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build and export outputs
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.next/
+**/.next/
+
+# Environment files (never commit real credentials)
 .env
-.next
-build
-dist
-out
-stitch
-Markdown
-**/node_modules
-**/.next
-**/build
-**/dist
-**/out
-**/.superdesign
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Logs and debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+**/logs/
+
+# IDEs, Editors & OS Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Agent & AI tool workspace directories
+.agent/
+.agents/
+.superdesign/
+skills-lock.json
 **/skills-lock.json
-**/.agents
-**/.agent
-**/stitch
-**/Markdown
+**/stitch/
+**/Markdown/
+
+# Testing & Coverage
+coverage/
+**/coverage/
+
+# Misc / Temp
+*.tmp
+*.tsbuildinfo

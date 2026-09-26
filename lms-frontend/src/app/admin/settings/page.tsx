@@ -37,43 +37,39 @@ export default function AdminSettingsPage() {
   if (isLoading || !user) {
     return (
       <div className="max-w-7xl mx-auto p-8 space-y-12">
-        {/* Header Skeleton */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="space-y-4">
-            <Skeleton className="h-10 w-64 rounded-xl" />
-            <Skeleton className="h-4 w-96 rounded-md" />
+            <div className="h-10 w-64 rounded-xl bg-slate-200/60" />
+            <div className="h-4 w-96 rounded-md bg-slate-200/60" />
           </div>
-          <Skeleton className="h-10 w-48 rounded-md" />
+          <div className="h-10 w-48 rounded-md bg-slate-200/60" />
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
-          {/* Sidebar Skeleton */}
           <div className="xl:col-span-3 space-y-4">
             {[1, 2, 3, 4, 5].map(i => (
-              <Skeleton key={i} className="h-10 w-full rounded-md" />
+              <div key={i} className="h-10 w-full rounded-md bg-slate-200/60" />
             ))}
           </div>
-
-          {/* Content Area Skeleton */}
           <div className="xl:col-span-9">
             <div className="bg-white p-8 rounded-xl border border-slate-100 min-h-[600px] space-y-8">
               <div className="space-y-3">
-                <Skeleton className="h-8 w-64" />
-                <Skeleton className="h-4 w-96" />
+                <div className="h-8 w-64 bg-slate-200/60 rounded" />
+                <div className="h-4 w-96 bg-slate-200/60 rounded" />
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <Skeleton className="h-24 rounded-xl" />
-                <Skeleton className="h-24 rounded-xl" />
+                <div className="h-24 rounded-xl bg-slate-200/60" />
+                <div className="h-24 rounded-xl bg-slate-200/60" />
               </div>
 
               <div className="space-y-4">
-                <Skeleton className="h-4 w-40" />
-                <Skeleton className="h-12 rounded-md" />
+                <div className="h-4 w-40 bg-slate-200/60 rounded" />
+                <div className="h-12 rounded-md bg-slate-200/60" />
               </div>
 
               <div className="pt-8 border-t border-slate-100 flex justify-end">
-                <Skeleton className="h-10 w-32 rounded-md" />
+                <div className="h-10 w-32 rounded-md bg-slate-200/60" />
               </div>
             </div>
           </div>
@@ -83,7 +79,7 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-8 space-y-10 animate-in fade-in duration-700">
+    <div className="max-w-7xl mx-auto p-8 space-y-10">
       {/* Page Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
         <div>
@@ -95,11 +91,11 @@ export default function AdminSettingsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/dashboard" className="h-10 px-4 bg-white hover:bg-slate-50 text-slate-600 transition-colors rounded-md flex items-center gap-2 text-sm font-medium border border-slate-200 shadow-sm">
+          <Link href="/admin/dashboard" className="h-10 px-4 bg-white hover:bg-slate-50 text-slate-600 rounded-md flex items-center gap-2 text-sm font-medium border border-slate-200 shadow-sm">
             <LayoutDashboard size={14} />
             Dashboard
           </Link>
-          <button className="bg-primary text-white h-10 px-4 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
+          <button className="bg-primary text-white h-10 px-4 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 flex items-center gap-2">
             <Save className="size-4" />
             Commit Changes
           </button>
@@ -114,13 +110,13 @@ export default function AdminSettingsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-md transition-colors group ${activeTab === tab.id
+                className={`flex items-center justify-between px-4 py-2.5 rounded-md group ${activeTab === tab.id
                     ? 'bg-primary/10 text-primary font-medium'
                     : 'text-slate-600 hover:bg-slate-50 font-medium'
                   }`}
               >
                 <div className="flex items-center gap-3">
-                  <tab.icon className={`size-4 ${activeTab === tab.id ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600 transition-colors'
+                  <tab.icon className={`size-4 ${activeTab === tab.id ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'
                     }`} />
                   <span className="text-sm">{tab.label}</span>
                 </div>
@@ -143,7 +139,7 @@ export default function AdminSettingsPage() {
         <div className="xl:col-span-9">
           <div className="bg-white p-6 lg:p-8 rounded-xl border border-slate-200/60 shadow-sm min-h-[600px] relative overflow-hidden">
             {activeTab === 'General' && (
-              <div className="space-y-8 animate-in fade-in duration-500 relative z-10">
+              <div className="space-y-8 relative z-10">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Academic Protocols</h2>
                   <p className="text-slate-500 mt-2 text-sm max-w-2xl">Fine-tune global learning preferences and institutional standards.</p>
@@ -179,18 +175,18 @@ export default function AdminSettingsPage() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Global Announcement Broadcast</label>
                     <div className="relative group bg-white border border-slate-200 rounded-md shadow-sm">
-                      <Bell className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Bell className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
                       <input
                         type="text"
                         placeholder="Broadcast a message to all active students..."
-                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/20 outline-none"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-slate-100 flex justify-end">
-                  <button className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
+                  <button className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 flex items-center gap-2">
                     <Save className="size-4" />
                     Save Protocols
                   </button>
@@ -199,7 +195,7 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'Profile' && (
-              <div className="space-y-8 animate-in fade-in duration-500 relative z-10">
+              <div className="space-y-8 relative z-10">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Administrative Identity</h2>
                   <p className="text-slate-500 mt-2 text-sm max-w-2xl">Update your professional profile and contact information.</p>
@@ -208,7 +204,7 @@ export default function AdminSettingsPage() {
                 <div className="flex flex-col sm:flex-row items-center gap-8 p-8 bg-white border border-slate-200 shadow-sm rounded-xl">
                   <div className="size-24 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold relative group overflow-hidden border border-primary/20">
                     {user?.name?.charAt(0) || 'A'}
-                    <div className="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <div className="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer">
                       <Upload className="size-6 text-white" />
                     </div>
                   </div>
@@ -232,30 +228,30 @@ export default function AdminSettingsPage() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Legal Designation / Full Name</label>
                     <div className="relative group bg-white border border-slate-200 rounded-md shadow-sm">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
                       <input
                         type="text"
                         defaultValue={user?.name || ''}
-                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary/20 outline-none"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Contact Electronic Mail</label>
                     <div className="relative group bg-white border border-slate-200 rounded-md shadow-sm">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
                       <input
                         type="email"
                         defaultValue={user?.email || ''}
-                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                        className="w-full bg-transparent border-none rounded-md py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary/20 outline-none"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-end items-center gap-4">
-                  <button className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Discard Alterations</button>
-                  <button className="w-full sm:w-auto bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+                  <button className="text-sm font-medium text-slate-500 hover:text-slate-900">Discard Alterations</button>
+                  <button className="w-full sm:w-auto bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm hover:bg-primary/90 flex items-center justify-center gap-2">
                     <Save className="size-4" />
                     Synchronize Identity
                   </button>
@@ -264,9 +260,9 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'Security' && (
-              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center animate-in fade-in duration-500 py-16">
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center py-16">
                 <div className="size-24 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 mb-8 shadow-sm group">
-                  <Database className="size-10 group-hover:text-primary transition-colors" />
+                  <Database className="size-10 group-hover:text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Infrastructure Vault</h2>
                 <p className="text-slate-500 mt-4 text-sm max-w-sm leading-relaxed">
@@ -283,7 +279,7 @@ export default function AdminSettingsPage() {
       </div>
 
       {/* Persistence Ledger */}
-      <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 hover:opacity-100 transition-opacity duration-300">
+      <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 hover:opacity-100">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2.5">
             <ShieldCheck className="size-4 text-slate-400" />

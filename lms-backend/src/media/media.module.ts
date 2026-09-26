@@ -3,6 +3,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { MediaController } from './media.controller';
+import { MediaStreamController } from './media-stream.controller';
 import { MediaService } from './media.service';
 import { LocalMediaProvider } from './local-media.provider';
 import { MEDIA_PROVIDER } from './media.interface';
@@ -12,7 +13,7 @@ import { MEDIA_PROVIDER } from './media.interface';
     MulterModule.register({}),
     PrismaModule,
   ],
-  controllers: [MediaController],
+  controllers: [MediaController, MediaStreamController],
   providers: [
     MediaService,
     PrismaService,

@@ -31,25 +31,18 @@ import { Button } from '@/components/ui/Button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-function AnimatedProgress({ value, color, label }: { value: number; color?: string; label?: string }) {
-  const [displayValue, setDisplayValue] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDisplayValue(value), 100);
-    return () => clearTimeout(timer);
-  }, [value]);
-
+function StaticProgress({ value, color, label }: { value: number; color?: string; label?: string }) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-end">
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</span>
-        <span className="text-xs font-bold tabular-nums">{Math.round(displayValue)}%</span>
+        <span className="text-xs font-bold tabular-nums">{Math.round(value)}%</span>
       </div>
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary/50">
         <div
-          className="h-full transition-all duration-1000 ease-out flex items-center justify-end pr-1"
+          className="h-full flex items-center justify-end pr-1"
           style={{
-            width: `${displayValue}%`,
+            width: `${value}%`,
             backgroundColor: color || 'var(--primary)',
             boxShadow: `0 0 12px ${color || 'var(--primary)'}40`
           }}
@@ -64,10 +57,10 @@ function AnimatedProgress({ value, color, label }: { value: number; color?: stri
 function PremiumCard({ title, subtitle, icon: Icon, children, className }: any) {
   return (
     <div className={cn(
-      "relative overflow-hidden rounded-2xl border bg-card/50 backdrop-blur-sm p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 group",
+      "relative overflow-hidden rounded-2xl border bg-card/50 backdrop-blur-sm p-6 shadow-sm group",
       className
     )}>
-      <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07]">
         <Icon size={120} />
       </div>
       <div className="relative">
@@ -94,34 +87,34 @@ export default function AdminAnalyticsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10 pb-20 animate-in fade-in duration-700">
+      <div className="space-y-10 pb-20">
         {/* Header Skeleton */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-3">
-            <div className="h-4 w-32 bg-bg-subtle rounded-md animate-pulse" />
-            <div className="h-10 w-64 bg-bg-subtle rounded-xl animate-pulse" />
-            <div className="h-4 w-96 bg-bg-subtle rounded-md animate-pulse" />
+            <div className="h-4 w-32 bg-bg-subtle rounded-md" />
+            <div className="h-10 w-64 bg-bg-subtle rounded-xl" />
+            <div className="h-4 w-96 bg-bg-subtle rounded-md" />
           </div>
-          <div className="h-10 w-48 bg-bg-subtle rounded-lg animate-pulse" />
+          <div className="h-10 w-48 bg-bg-subtle rounded-lg" />
         </div>
 
         {/* Stats Grid Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-[120px] rounded-2xl bg-bg-surface border border-border animate-pulse" />
+            <div key={i} className="h-[120px] rounded-2xl bg-bg-surface border border-border" />
           ))}
         </div>
 
         {/* Charts Row Skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 h-[400px] bg-bg-surface rounded-3xl border border-border animate-pulse" />
-          <div className="h-[400px] bg-bg-surface rounded-3xl border border-border animate-pulse" />
+          <div className="lg:col-span-2 h-[400px] bg-bg-surface rounded-3xl border border-border" />
+          <div className="h-[400px] bg-bg-surface rounded-3xl border border-border" />
         </div>
 
         {/* Table Skeleton */}
         <div className="space-y-4">
-          <div className="h-12 w-full bg-bg-subtle rounded-xl animate-pulse" />
-          <div className="bg-white rounded-[32px] border border-border overflow-hidden h-[300px] animate-pulse" />
+          <div className="h-12 w-full bg-bg-subtle rounded-xl" />
+          <div className="bg-white rounded-[32px] border border-border overflow-hidden h-[300px]" />
         </div>
       </div>
     );
@@ -129,7 +122,7 @@ export default function AdminAnalyticsPage() {
 
   if (!stats) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[600px] space-y-6 text-center animate-in zoom-in-95 duration-500">
+      <div className="flex flex-col items-center justify-center min-h-[600px] space-y-6 text-center">
         <div className="size-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 shadow-sm">
           <Activity size={32} />
         </div>
@@ -141,7 +134,7 @@ export default function AdminAnalyticsPage() {
         </div>
         <Button
           onClick={() => window.location.reload()}
-          className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm transition-colors hover:bg-primary/90"
+          className="bg-primary text-white h-10 px-6 rounded-md text-sm font-medium shadow-sm"
         >
           Retry
         </Button>
@@ -150,7 +143,7 @@ export default function AdminAnalyticsPage() {
   }
 
   return (
-    <div className="space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 pb-20">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -169,7 +162,7 @@ export default function AdminAnalyticsPage() {
           <Button variant="outline" className="hidden sm:flex text-sm font-medium h-10 px-4 rounded-md">
             Last 30 Days
           </Button>
-          <Button className="h-10 px-4 rounded-md text-sm font-medium shadow-sm bg-primary text-white border-none hover:bg-primary/90 transition-colors">
+          <Button className="h-10 px-4 rounded-md text-sm font-medium shadow-sm bg-primary text-white border-none hover:bg-primary/90">
             Export Dataset
           </Button>
         </div>
@@ -236,11 +229,11 @@ export default function AdminAnalyticsPage() {
                     style={{ height: '100%' }}
                   />
                   <div
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-primary rounded-sm transition-all duration-300 group-hover/bar:bg-primary/80"
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[8px] bg-primary rounded-sm group-hover/bar:bg-primary/80"
                     style={{ height: `${h}px` }}
                   />
                 </div>
-                <p className="text-xs font-medium text-slate-400 group-hover/bar:text-slate-600 transition-colors">M{i + 1}</p>
+                <p className="text-xs font-medium text-slate-400 group-hover/bar:text-slate-600">M{i + 1}</p>
               </div>
             ))}
           </div>

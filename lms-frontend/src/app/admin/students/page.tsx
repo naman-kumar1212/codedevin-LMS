@@ -82,38 +82,38 @@ export default function AdminStudentsPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-700 font-sans p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-6 font-sans p-6 lg:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-3">
-            <div className="h-10 w-64 bg-slate-200/60 rounded-xl animate-pulse" />
-            <div className="h-5 w-96 bg-slate-200/60 rounded-lg animate-pulse" />
+            <div className="h-10 w-64 bg-slate-200/60 rounded-xl" />
+            <div className="h-5 w-96 bg-slate-200/60 rounded-lg" />
           </div>
-          <div className="h-10 w-40 bg-slate-200/60 rounded-xl animate-pulse border border-slate-200/60" />
+          <div className="h-10 w-40 bg-slate-200/60 rounded-xl border border-slate-200/60" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 bg-slate-200/60 rounded-xl animate-pulse" />
+            <div key={i} className="h-32 bg-slate-200/60 rounded-xl" />
           ))}
         </div>
-        <div className="h-16 w-full bg-slate-200/60 rounded-xl animate-pulse border border-slate-200/60" />
+        <div className="h-16 w-full bg-slate-200/60 rounded-xl border border-slate-200/60" />
         <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden shadow-sm">
           <div className="p-8 border-b border-slate-100 grid grid-cols-6 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-4 bg-slate-200/60 rounded animate-pulse" />
+              <div key={i} className="h-4 bg-slate-200/60 rounded" />
             ))}
           </div>
           <div className="p-8 space-y-8">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="grid grid-cols-6 gap-4 items-center">
                 <div className="flex items-center gap-4 col-span-1">
-                  <div className="size-12 rounded-2xl bg-slate-200/60 animate-pulse" />
+                  <div className="size-12 rounded-2xl bg-slate-200/60" />
                   <div className="space-y-2 flex-1">
-                    <div className="h-3 w-24 bg-slate-200/60 rounded animate-pulse" />
-                    <div className="h-2 w-32 bg-slate-200/60 rounded animate-pulse" />
+                    <div className="h-3 w-24 bg-slate-200/60 rounded" />
+                    <div className="h-2 w-32 bg-slate-200/60 rounded" />
                   </div>
                 </div>
                 {[1, 2, 3, 4, 5].map(j => (
-                  <div key={j} className="h-4 bg-slate-200/60 rounded animate-pulse mx-auto w-20" />
+                  <div key={j} className="h-4 bg-slate-200/60 rounded mx-auto w-20" />
                 ))}
               </div>
             ))}
@@ -124,7 +124,7 @@ export default function AdminStudentsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-1000 font-sans pb-16 p-6 lg:p-8">
+    <div className="max-w-7xl mx-auto space-y-6 font-sans pb-16 p-6 lg:p-8">
       {/* Platform Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
@@ -169,7 +169,7 @@ export default function AdminStudentsPage() {
               key={f}
               onClick={() => setActiveFilter(f)}
               className={cn(
-                "px-4 py-1.5 rounded-md text-xs font-medium uppercase tracking-wider transition-colors duration-200",
+                "px-4 py-1.5 rounded-md text-xs font-medium uppercase tracking-wider",
                 activeFilter === f
                   ? "bg-white text-primary shadow-sm border border-slate-100"
                   : "text-slate-500 hover:text-slate-900"
@@ -181,18 +181,18 @@ export default function AdminStudentsPage() {
         </div>
         <div className="h-8 w-px bg-slate-100 hidden lg:block" />
         <div className="relative flex-1 w-full group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-focus-within:text-primary" />
           <Input
             type="text"
             placeholder="Query records by name, email, or ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-50 border-transparent rounded-lg py-2 pl-10 pr-4 text-sm font-medium placeholder:text-slate-400 focus:bg-white focus:border-primary/20 transition-all outline-none h-10"
+            className="w-full bg-slate-50 border-transparent rounded-lg py-2 pl-10 pr-4 text-sm font-medium placeholder:text-slate-400 focus:bg-white focus:border-primary/20 outline-none h-10"
           />
         </div>
         <div className="flex gap-3 w-full lg:w-auto">
-          <Button variant="outline" className="h-10 px-4 rounded-md border-slate-200 text-slate-600 hover:text-slate-900 transition-colors shadow-sm gap-2 text-sm font-medium">
-            <Download className="size-4 text-slate-400 group-hover:text-primary transition-colors" />
+          <Button variant="outline" className="h-10 px-4 rounded-md border-slate-200 text-slate-600 hover:text-slate-900 shadow-sm gap-2 text-sm font-medium">
+            <Download className="size-4 text-slate-400 group-hover:text-primary" />
             Export Students
           </Button>
         </div>
@@ -200,7 +200,7 @@ export default function AdminStudentsPage() {
 
       {/* Registry Table */}
       {students && students.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200/60 p-16 flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-500 shadow-sm">
+        <div className="bg-white rounded-xl border border-slate-200/60 p-16 flex flex-col items-center justify-center text-center shadow-sm">
           <div className="size-16 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 mb-6 border border-slate-100 shadow-sm">
             <Users className="size-8" />
           </div>
@@ -232,7 +232,7 @@ export default function AdminStudentsPage() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col flex-1 min-w-0">
-                      <p className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors tracking-tight truncate">{student.name}</p>
+                      <p className="text-sm font-bold text-slate-900 group-hover:text-primary tracking-tight truncate">{student.name}</p>
                       <div className="flex flex-col gap-1 mt-1">
                         <div className="flex items-center gap-1.5">
                           <Mail size={12} className="text-slate-400 shrink-0" />
@@ -325,7 +325,7 @@ export default function AdminStudentsPage() {
                       variant="outline"
                       size="icon"
                       onClick={() => window.location.href = `/admin/students/${student.id}`}
-                      className="size-8 rounded-md border-slate-200 text-slate-500 hover:text-primary transition-colors hover:border-primary/30 shadow-sm bg-white"
+                      className="size-8 rounded-md border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 shadow-sm bg-white"
                       title="View Profile"
                     >
                       <Eye className="size-4" />
@@ -336,7 +336,7 @@ export default function AdminStudentsPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="size-8 rounded-md border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm bg-white"
+                          className="size-8 rounded-md border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 shadow-sm bg-white"
                           title="Delete Student"
                         >
                           <Trash2 className="size-4" />

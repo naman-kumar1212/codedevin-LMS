@@ -65,14 +65,14 @@ export default function AdminNotificationsPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex justify-between gap-4">
           <div className="space-y-2">
-            <div className="h-8 w-48 bg-slate-200/60 rounded animate-pulse" />
-            <div className="h-4 w-72 bg-slate-200/60 rounded animate-pulse" />
+            <div className="h-8 w-48 bg-slate-200/60 rounded" />
+            <div className="h-4 w-72 bg-slate-200/60 rounded" />
           </div>
-          <div className="h-10 w-32 bg-slate-200/60 rounded animate-pulse" />
+          <div className="h-10 w-32 bg-slate-200/60 rounded" />
         </div>
         <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-24 bg-white rounded-lg border border-slate-100 animate-pulse" />
+            <div key={i} className="h-24 bg-white rounded-lg border border-slate-100" />
           ))}
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function AdminNotificationsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/dashboard" className="hidden sm:flex h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded-md items-center justify-center text-sm font-medium gap-2">
+          <Link href="/admin/dashboard" className="hidden sm:flex h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md items-center justify-center text-sm font-medium gap-2">
             <ArrowLeft className="size-4" />
             Back
           </Link>
@@ -101,7 +101,7 @@ export default function AdminNotificationsPage() {
               variant="outline" 
               onClick={() => markAllReadMutation.mutate()}
               disabled={markAllReadMutation.isPending}
-              className="h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded-md items-center gap-2 text-sm font-medium"
+              className="h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md items-center gap-2 text-sm font-medium"
             >
               <Check className="size-4" />
               Mark All Read
@@ -139,7 +139,7 @@ export default function AdminNotificationsPage() {
                 key={notif.id}
                 onClick={() => !notif.isRead && markReadMutation.mutate(notif.id)}
                 className={cn(
-                  "group relative overflow-hidden bg-white rounded-lg border transition-colors p-4 flex gap-4",
+                  "group relative overflow-hidden bg-white rounded-lg border p-4 flex gap-4",
                   notif.isRead 
                     ? "border-slate-200" 
                     : "border-primary/20 bg-primary/2 hover:border-primary/30 cursor-pointer"
@@ -185,7 +185,7 @@ export default function AdminNotificationsPage() {
                   </div>
                   
                   {!notif.isRead && (
-                    <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="shrink-0 opacity-0 group-hover:opacity-100">
                       <div className="size-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
                          <CheckCircle2 className="size-4" />
                       </div>

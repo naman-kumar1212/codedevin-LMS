@@ -180,7 +180,7 @@ export default function AdminCourseLandingPreview() {
   };
 
   return (
-    <div className="space-y-8 font-sans animate-in fade-in zoom-in-95 duration-500">
+    <div className="space-y-8 font-sans">
 
       {/* Admin Quick Action Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-blue-600">
@@ -285,7 +285,7 @@ export default function AdminCourseLandingPreview() {
                     </button>
 
                     {isOpen && (
-                      <div className="px-5 pb-4 space-y-2 animate-in slide-in-from-top-2 duration-300">
+                      <div className="px-5 pb-4 space-y-2">
                         {mod.lessons?.map((lesson: any) => (
                           <Link
                             key={lesson.id}
